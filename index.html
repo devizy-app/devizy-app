@@ -862,6 +862,35 @@ async function generateDevis() {
     state.descGlobale = 'Réfection complète salle de bain';
     buildDevisScreen();
   }
+  async function sauvegarderDevis(devisData) {
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    console.log('Utilisateur non connecté');
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from('devis')
+    .insert({
+      artisan_id: user.id,
+      client_nom: devisData.clientNom || 'Client',
+      client_email: devisData.clientEmail || '',
+      prestations: devisData.prestations || [],
+      total_ht: devisData.totalHt || 0,
+      total_ttc: devisData.totalTtc || 0,
+      tva_pct: 10,
+      statut: 'brouillon',
+      transcription: devisData.transcription || ''
+    });
+
+  if (error) {
+    console.error('Erreur sauvegarde:', error);
+  } else {
+    console.log('Devis sauvegardé !', data);
+    alert('Devis sauvegardé avec succès !');
+  }
+}
 }
 
 function buildDevisScreen() {
