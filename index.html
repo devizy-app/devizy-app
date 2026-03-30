@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  window.addEventListener('load', function() {
-    window._supabase = window.supabase.createClient(
-      'https://pvcghstklmmmlxavrmhy.supabase.co',
-      'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
-    );
-  });
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+  window.supabase = createClient(
+    'https://pvcghstklmmmlxavrmhy.supabase.co',
+    'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
+  );
+  window.supabaseReady = true;
+  window.dispatchEvent(new Event('supabase-ready'));
 </script>
 <meta name="theme-color" content="#0D3D25">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -547,44 +547,51 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 
 <script>
 // ═══ CONNEXION SUPABASE ═══
-document.getElementById('login-btn').addEventListener('click', async function() {
-  var email = document.getElementById('login-email').value.trim();
-  var msg = document.getElementById('login-msg');
-  if (!email) { msg.textContent = 'Entrez votre email'; return; }
-  msg.textContent = 'Envoi en cours...';
-  try {
-    var result = await window._supabase.auth.signInWithOtp({ email: email });
-    if (result.error) {
-      msg.textContent = 'Erreur : ' + result.error.message;
-    } else {
-      msg.textContent = '✓ Lien envoyé ! Vérifiez votre email.';
+function initSupabaseAuth() {
+  document.getElementById('login-btn').addEventListener('click', async function() {
+    var email = document.getElementById('login-email').value.trim();
+    var msg = document.getElementById('login-msg');
+    if (!email) { msg.textContent = 'Entrez votre email'; return; }
+    msg.textContent = 'Envoi en cours...';
+    try {
+      var result = await window.supabase.auth.signInWithOtp({ email: email });
+      if (result.error) {
+        msg.textContent = 'Erreur : ' + result.error.message;
+      } else {
+        msg.textContent = '✓ Lien envoyé ! Vérifiez votre email.';
+      }
+    } catch(e) {
+      msg.textContent = 'Erreur : ' + e.message;
     }
-  } catch(e) {
-    msg.textContent = 'Erreur de connexion : ' + e.message;
-  }
-});
+  });
 
-// Vérifier session existante
-window._supabase.auth.getSession().then(function(result) {
-  if (result.data && result.data.session) {
-    document.getElementById('screen-login').style.display = 'none';
-  }
-});
+  window.supabase.auth.getSession().then(function(result) {
+    if (result.data && result.data.session) {
+      document.getElementById('screen-login').style.display = 'none';
+    }
+  });
 
-// Écouter connexion via lien magique
-window._supabase.auth.onAuthStateChange(function(event, session) {
-  if (session) {
-    document.getElementById('screen-login').style.display = 'none';
-  }
-});
+  window.supabase.auth.onAuthStateChange(function(event, session) {
+    if (session) {
+      document.getElementById('screen-login').style.display = 'none';
+    }
+  });
+}
+
+if (window.supabaseReady) {
+  initSupabaseAuth();
+} else {
+  window.addEventListener('supabase-ready', initSupabaseAuth);
+}
 
 // ═══ SAUVEGARDE DEVIS ═══
 async function sauvegarderDevis(devisData) {
   try {
-    var sessionResult = await window._supabase.auth.getSession();
+    if (!window.supabase) { console.log('Supabase non prêt'); return; }
+    var sessionResult = await window.supabase.auth.getSession();
     var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
     if (!user) { console.log('Non connecté — devis non sauvegardé'); return; }
-    var result = await supabase.from('devis').insert({
+    var result = await window.supabase.from('devis').insert({
       artisan_id: user.id,
       client_nom: devisData.clientNom || 'Client',
       client_email: devisData.clientEmail || '',
