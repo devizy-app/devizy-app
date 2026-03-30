@@ -3,10 +3,12 @@
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabase = window.supabase.createClient(
-    'https://pvcghstklmmmlxavrmhy.supabase.co',
-    'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
-  );
+  window.addEventListener('load', function() {
+    window._supabase = window.supabase.createClient(
+      'https://pvcghstklmmmlxavrmhy.supabase.co',
+      'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
+    );
+  });
 </script>
 <meta name="theme-color" content="#0D3D25">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -551,7 +553,7 @@ document.getElementById('login-btn').addEventListener('click', async function() 
   if (!email) { msg.textContent = 'Entrez votre email'; return; }
   msg.textContent = 'Envoi en cours...';
   try {
-    var result = await supabase.auth.signInWithOtp({ email: email });
+    var result = await window._supabase.auth.signInWithOtp({ email: email });
     if (result.error) {
       msg.textContent = 'Erreur : ' + result.error.message;
     } else {
@@ -563,14 +565,14 @@ document.getElementById('login-btn').addEventListener('click', async function() 
 });
 
 // Vérifier session existante
-supabase.auth.getSession().then(function(result) {
+window._supabase.auth.getSession().then(function(result) {
   if (result.data && result.data.session) {
     document.getElementById('screen-login').style.display = 'none';
   }
 });
 
 // Écouter connexion via lien magique
-supabase.auth.onAuthStateChange(function(event, session) {
+window._supabase.auth.onAuthStateChange(function(event, session) {
   if (session) {
     document.getElementById('screen-login').style.display = 'none';
   }
@@ -579,7 +581,7 @@ supabase.auth.onAuthStateChange(function(event, session) {
 // ═══ SAUVEGARDE DEVIS ═══
 async function sauvegarderDevis(devisData) {
   try {
-    var sessionResult = await supabase.auth.getSession();
+    var sessionResult = await window._supabase.auth.getSession();
     var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
     if (!user) { console.log('Non connecté — devis non sauvegardé'); return; }
     var result = await supabase.from('devis').insert({
