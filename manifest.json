@@ -1,0 +1,25 @@
+{
+  "name": "Devizy — Devis vocal BTP",
+  "short_name": "Devizy",
+  "description": "Créez vos devis BTP par la voix en 3 minutes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D3D25",
+  "theme_color": "#186040",
+  "orientation": "portrait",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
