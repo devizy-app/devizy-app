@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-  window.supabase = createClient(
-    'https://pvcghstklmmmlxavrmhy.supabase.co',
-    'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
-  );
-  window.supabaseReady = true;
-  window.dispatchEvent(new Event('supabase-ready'));
-</script>
 <meta name="theme-color" content="#0D3D25">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -56,18 +47,18 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
 
 .topbar { background: var(--g-dark); padding: 52px 18px 16px; display: flex; align-items: center; gap: 10px; }
-.topbar-home { background: var(--g-dark); padding: 52px 18px 20px; }
+.topbar-home { background: var(--g-dark); padding: 48px 18px 10px; }
 .back-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .back-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .topbar-title { color: #fff; font-size: 16px; font-weight: 500; flex: 1; }
 .topbar-action { font-size: 13px; color: #9FE1CB; cursor: pointer; }
-.brand { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
-.greeting { color: #9FE1CB; font-size: 13px; margin: 2px 0; }
-.topbar-home h1 { color: #fff; font-size: 24px; font-weight: 500; letter-spacing: -0.5px; }
+.brand { font-size: 16px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+.greeting { color: #9FE1CB; font-size: 12px; margin: 1px 0; }
+.topbar-home h1 { color: #fff; font-size: 18px; font-weight: 500; letter-spacing: -0.3px; }
 .topbar-home-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: #2E6B4A; display: flex; align-items: center; justify-content: center; color: #9FE1CB; font-size: 13px; font-weight: 600; }
 
-.kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 0 16px; margin-top: -14px; margin-bottom: 16px; }
+.kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 0 16px; margin-top: 10px; margin-bottom: 16px; }
 .kpi { background: var(--card); border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); }
 .kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 .kpi-value { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.1; }
@@ -251,17 +242,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 </style>
 </head>
 <body>
-
-<!-- ═══ ÉCRAN DE CONNEXION ═══ -->
-<div id="screen-login" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0D3D25;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;padding:40px;box-sizing:border-box;">
-  <div style="font-family:Georgia,serif;font-size:32px;color:#A8D9C0;letter-spacing:6px;margin-bottom:8px;">DEVIZY</div>
-  <div style="font-size:14px;color:#5BB88A;margin-bottom:48px;">Devis vocal BTP</div>
-  <input id="login-email" type="email" placeholder="Votre email" style="width:100%;max-width:320px;padding:14px 16px;border-radius:8px;border:none;font-size:16px;margin-bottom:12px;box-sizing:border-box;">
-  <button id="login-btn" style="width:100%;max-width:320px;padding:14px;background:#186040;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">
-    Recevoir mon lien de connexion
-  </button>
-  <div id="login-msg" style="color:#A8D9C0;margin-top:20px;font-size:14px;text-align:center;"></div>
-</div>
 
 <div id="app">
 
@@ -546,65 +526,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 </div><!-- #app -->
 
 <script>
-// ═══ CONNEXION SUPABASE ═══
-function initSupabaseAuth() {
-  document.getElementById('login-btn').addEventListener('click', async function() {
-    var email = document.getElementById('login-email').value.trim();
-    var msg = document.getElementById('login-msg');
-    if (!email) { msg.textContent = 'Entrez votre email'; return; }
-    msg.textContent = 'Envoi en cours...';
-    try {
-      var result = await window.supabase.auth.signInWithOtp({ email: email });
-      if (result.error) {
-        msg.textContent = 'Erreur : ' + result.error.message;
-      } else {
-        msg.textContent = '✓ Lien envoyé ! Vérifiez votre email.';
-      }
-    } catch(e) {
-      msg.textContent = 'Erreur : ' + e.message;
-    }
-  });
-
-  window.supabase.auth.getSession().then(function(result) {
-    if (result.data && result.data.session) {
-      document.getElementById('screen-login').style.display = 'none';
-    }
-  });
-
-  window.supabase.auth.onAuthStateChange(function(event, session) {
-    if (session) {
-      document.getElementById('screen-login').style.display = 'none';
-    }
-  });
-}
-
-if (window.supabaseReady) {
-  initSupabaseAuth();
-} else {
-  window.addEventListener('supabase-ready', initSupabaseAuth);
-}
-
-// ═══ SAUVEGARDE DEVIS ═══
-async function sauvegarderDevis(devisData) {
-  try {
-    if (!window.supabase) { console.log('Supabase non prêt'); return; }
-    var sessionResult = await window.supabase.auth.getSession();
-    var user = sessionResult.data && sessionResult.data.session ? sessionResult.data.session.user : null;
-    if (!user) { console.log('Non connecté — devis non sauvegardé'); return; }
-    var result = await window.supabase.from('devis').insert({
-      artisan_id: user.id,
-      client_nom: devisData.clientNom || 'Client',
-      client_email: devisData.clientEmail || '',
-      prestations: devisData.prestations || [],
-      total_ht: devisData.totalHt || 0,
-      total_ttc: devisData.totalTtc || 0,
-      tva_pct: 10,
-      statut: 'brouillon',
-      transcription: devisData.transcription || ''
-    });
-    if (result.error) { console.error('Erreur sauvegarde:', result.error); }
-    else { console.log('Devis sauvegardé !'); showToast('Devis sauvegardé ✓'); }
-  } catch(e) { console.error('Erreur:', e); }
 }
 
 // ═══ STATE ═══
@@ -807,15 +728,7 @@ async function generateDevis() {
     state.descGlobale='Réfection salle de bain';
   }
   buildDevisScreen();
-  // Sauvegarder après génération
-  sauvegarderDevis({
-    clientNom: state.client.prenom+' '+state.client.nom,
-    clientEmail: state.client.email,
-    prestations: state.lignes,
-    totalHt: state._ht||0,
-    totalTtc: state._ttc||0,
-    transcription: state.transcription
-  });
+
 }
 
 function buildDevisScreen() {
