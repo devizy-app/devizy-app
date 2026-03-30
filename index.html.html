@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DevisBTP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g-dark: #1A3A2A;
+  --g-med: #0F6E56;
+  --g-mid: #1D9E75;
+  --g-light: #E1F5EE;
+  --g-pale: #F0FAF6;
+  --g-border: #9FE1CB;
+  --bg: #F7F8F6;
+  --card: #FFFFFF;
+  --text: #1A1A1A;
+  --text-muted: #6B7280;
+  --text-light: #9CA3AF;
+  --border: #E5E7EB;
+  --border-med: #D1D5DB;
+  --amber: #F59E0B;
+  --amber-bg: #FFFBEB;
+  --red: #EF4444;
+  --red-bg: #FEF2F2;
+  --blue: #3B82F6;
+  --blue-bg: #EFF6FF;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overscroll-behavior: none; }
+input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
+
+/* ── APP SHELL ── */
+#app { max-width: 430px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; position: relative; background: var(--bg); overflow: hidden; }
+.screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+.scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--g-dark); padding: 52px 18px 16px; display: flex; align-items: center; gap: 10px; }
+.topbar-home { background: var(--g-dark); padding: 52px 18px 20px; }
+.back-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.back-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.topbar-title { color: #fff; font-size: 16px; font-weight: 500; flex: 1; }
+.topbar-action { font-size: 13px; color: #9FE1CB; cursor: pointer; }
+.brand { font-size: 20px; font-weight: 600; color: #fff; letter-spacing: -0.3px; }
+.greeting { color: #9FE1CB; font-size: 13px; margin: 2px 0; }
+.topbar-home h1 { color: #fff; font-size: 24px; font-weight: 500; letter-spacing: -0.5px; }
+.topbar-home-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: #2E6B4A; display: flex; align-items: center; justify-content: center; color: #9FE1CB; font-size: 13px; font-weight: 600; }
+
+/* ── KPI ROW ── */
+.kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 0 16px; margin-top: -14px; margin-bottom: 16px; }
+.kpi { background: var(--card); border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); }
+.kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.kpi-value { font-size: 17px; font-weight: 600; color: var(--text); line-height: 1.1; }
+.kpi-value.green { color: var(--g-med); }
+.kpi-value.amber { color: #B45309; }
+.kpi-sub { font-size: 10px; color: var(--text-light); margin-top: 1px; }
+
+/* ── SECTION ── */
+.section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 10px; }
+.section-title { font-size: 15px; font-weight: 500; }
+.see-all { font-size: 13px; color: var(--g-med); cursor: pointer; }
+.filters { display: flex; gap: 6px; padding: 0 16px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.chip { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-med); color: var(--text-muted); cursor: pointer; white-space: nowrap; background: var(--card); transition: all 0.15s; }
+.chip.active { background: var(--g-dark); color: #fff; border-color: transparent; }
+
+/* ── DEVIS CARDS ── */
+.devis-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+.dcard { background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); cursor: pointer; transition: box-shadow 0.15s; }
+.dcard:active { box-shadow: none; }
+.dc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.dc-client { font-size: 14px; font-weight: 500; }
+.dc-date { font-size: 11px; color: var(--text-muted); }
+.dc-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+.dc-bottom { display: flex; justify-content: space-between; align-items: center; }
+.dc-amount { font-size: 15px; font-weight: 600; }
+.dc-marge { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.marge-dot { width: 6px; height: 6px; border-radius: 50%; }
+.marge-lbl { font-size: 11px; color: var(--text-muted); }
+.badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
+.badge.brouillon { background: #F3F4F6; color: #374151; }
+.badge.envoye { background: var(--blue-bg); color: #1E40AF; }
+.badge.signe { background: var(--g-light); color: #065F46; }
+.badge.refuse { background: var(--red-bg); color: #B91C1C; }
+
+/* ── FAB + NAVBAR ── */
+.navbar { background: var(--card); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 8px 0 20px; position: absolute; bottom: 0; left: 0; right: 0; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+.nav-item svg { width: 22px; height: 22px; }
+.nav-lbl { font-size: 10px; color: var(--text-light); }
+.nav-item.active .nav-lbl { color: var(--g-med); }
+.fab-wrap { flex: 1; display: flex; justify-content: center; }
+.fab { width: 52px; height: 52px; border-radius: 50%; background: var(--g-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); }
+.fab svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ── VOCAL SCREEN ── */
+.vocal-client { margin: 16px; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
+.v-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--g-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #065F46; flex-shrink: 0; }
+.v-name { font-size: 14px; font-weight: 500; }
+.v-addr { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.vocal-zone { margin: 0 16px; background: var(--card); border-radius: 20px; padding: 24px 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.vocal-state { font-size: 13px; color: var(--text-muted); text-align: center; }
+.waveform { display: flex; align-items: center; justify-content: center; gap: 3px; height: 50px; }
+.wbar { width: 4px; border-radius: 2px; background: var(--g-med); transition: height 0.1s; }
+.mic-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+.mic-btn:active { transform: scale(0.95); }
+.mic-btn.recording { background: #DC2626; }
+.mic-btn svg { width: 32px; height: 32px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
+.timer { font-size: 26px; font-weight: 500; font-family: 'DM Mono', monospace; color: var(--text); }
+.vocal-hint { font-size: 12px; color: var(--text-light); text-align: center; line-height: 1.5; }
+.transcript-box { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); }
+.transcript-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.transcript-text { font-size: 13px; color: var(--text); line-height: 1.6; min-height: 40px; }
+.cursor { display: inline-block; width: 2px; height: 13px; background: var(--g-med); margin-left: 2px; vertical-align: middle; animation: blink 0.8s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+.gen-btn { margin: 12px 16px 0; width: calc(100% - 32px); padding: 16px; background: var(--g-dark); color: #fff; font-size: 15px; font-weight: 500; border: none; border-radius: var(--radius); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
+.gen-btn:disabled { background: var(--border-med); cursor: default; }
+.gen-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* ── PROCESSING ── */
+.processing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px; }
+.spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--g-med); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.proc-label { font-size: 15px; color: var(--text-muted); text-align: center; }
+
+/* ── DEVIS GENERATED ── */
+.devis-header { margin: 16px 16px 0; background: var(--g-light); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--g-border); }
+.dh-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
+.dh-title { font-size: 14px; font-weight: 600; color: #065F46; }
+.dh-badge { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; background: var(--g-border); color: #04342C; }
+.dh-sub { font-size: 12px; color: var(--g-med); }
+.transcrit-ref { margin: 8px 16px 0; background: var(--bg); border-radius: var(--radius-sm); padding: 10px 12px; border-left: 3px solid var(--g-med); }
+.tr-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.tr-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; font-style: italic; }
+.presta-list { padding: 0 16px; display: flex; flex-direction: column; gap: 6px; }
+.presta-item { background: var(--card); border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); }
+.pi-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.pi-name { font-size: 13px; font-weight: 500; flex: 1; margin-right: 8px; }
+.pi-remove { font-size: 18px; color: var(--text-light); cursor: pointer; line-height: 1; }
+.pi-detail { display: flex; align-items: center; gap: 8px; }
+.pi-input { width: 54px; background: var(--bg); border: 1px solid var(--border-med); border-radius: 7px; padding: 5px 6px; font-size: 12px; text-align: center; font-family: 'DM Mono', monospace; }
+.pi-unit { font-size: 12px; color: var(--text-muted); }
+.pi-price-u { font-size: 12px; color: var(--text-muted); }
+.pi-total { font-size: 13px; font-weight: 600; margin-left: auto; }
+.add-btn { margin: 6px 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); cursor: pointer; color: var(--g-med); font-size: 13px; background: transparent; width: calc(100% - 32px); }
+.add-btn svg { width: 16px; height: 16px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.totaux { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+.total-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+.total-row .lbl { color: var(--text-muted); }
+.total-div { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+.total-main { display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; }
+.rent-wrap { margin-top: 10px; }
+.rent-labels { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.rent-title { font-size: 11px; color: var(--text-muted); }
+.rent-pct { font-size: 12px; font-weight: 600; }
+.rent-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.rent-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+.action-row { margin: 12px 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn { padding: 13px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: opacity 0.15s; border: none; }
+.btn svg { width: 14px; height: 14px; stroke-width: 2; stroke-linecap: round; fill: none; }
+.btn:active { opacity: 0.8; }
+.btn-outline { background: var(--card); border: 1px solid var(--border-med); color: var(--text); }
+.btn-outline svg { stroke: var(--text-muted); }
+.btn-primary { background: var(--g-dark); color: #fff; }
+.btn-primary svg { stroke: #fff; }
+.btn-full { grid-column: 1 / 3; }
+
+/* ── SIGNATURE ── */
+.sig-hdr { margin: 16px 16px 0; background: var(--g-light); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--g-border); }
+.sig-hdr-title { font-size: 14px; font-weight: 600; color: #065F46; margin-bottom: 2px; }
+.sig-hdr-sub { font-size: 12px; color: var(--g-med); }
+.sig-recap { margin: 10px 16px 0; background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); }
+.sig-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+.sig-row .lbl { color: var(--text-muted); }
+.sig-div { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
+.cgv-box { margin: 10px 16px 0; display: flex; gap: 10px; align-items: flex-start; padding: 12px; background: var(--card); border-radius: var(--radius-sm); box-shadow: var(--shadow); cursor: pointer; }
+.cgv-chk { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border-med); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.cgv-chk.checked { background: var(--g-med); border-color: var(--g-med); }
+.cgv-chk.checked svg { opacity: 1; }
+.cgv-chk svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; opacity: 0; }
+.cgv-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+.cgv-text a { color: var(--g-med); }
+.canvas-wrap { margin: 10px 16px 0; background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.canvas-header { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.canvas-lbl { font-size: 13px; font-weight: 500; }
+.canvas-clear { font-size: 12px; color: var(--text-muted); cursor: pointer; }
+canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshair; touch-action: none; background: var(--card); }
+.sig-cta { margin: 10px 16px 0; display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+.btn-danger-outline { background: var(--card); border: 1px solid var(--border-med); color: var(--text-muted); }
+.yousign-badge { margin: 8px 16px 0; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px; background: var(--bg); border-radius: 8px; }
+.ys-icon { width: 18px; height: 18px; border-radius: 5px; background: #EEEDFE; display: flex; align-items: center; justify-content: center; }
+.ys-icon svg { width: 10px; height: 10px; stroke: #534AB7; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.ys-text { font-size: 11px; color: var(--text-muted); }
+.ys-text strong { color: #534AB7; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--g-dark); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── CATALOGUE SHEET ── */
+.sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 50; display: none; }
+.sheet-overlay.open { display: block; }
+.catalog-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-radius: 20px 20px 0 0; padding: 0 0 30px; z-index: 51; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); }
+.catalog-sheet.open { transform: translateY(0); }
+.sheet-handle { width: 36px; height: 4px; background: var(--border-med); border-radius: 2px; margin: 10px auto 14px; }
+.sheet-title { font-size: 16px; font-weight: 500; padding: 0 16px 12px; border-bottom: 1px solid var(--border); }
+.catalog-items { max-height: 300px; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 6px; }
+.cat-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 13px; background: var(--bg); border-radius: var(--radius-sm); cursor: pointer; }
+.cat-item:active { opacity: 0.8; }
+.cat-name { font-size: 13px; font-weight: 500; }
+.cat-price { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.cat-add { width: 24px; height: 24px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; }
+.cat-add svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ── SUIVI ── */
+.sent-header { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 16px 16px; }
+.sent-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--g-light); display: flex; align-items: center; justify-content: center; }
+.sent-icon svg { width: 26px; height: 26px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.sent-title { font-size: 20px; font-weight: 600; }
+.sent-sub { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.5; }
+.tracking-card { margin: 0 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.track-title { font-size: 14px; font-weight: 500; margin-bottom: 16px; }
+.track-step { display: flex; gap: 12px; align-items: flex-start; }
+.track-col { display: flex; flex-direction: column; align-items: center; }
+.track-dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.track-dot.done { background: var(--g-med); }
+.track-dot.done svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; }
+.track-dot.active { background: var(--g-light); border: 2px solid var(--g-med); }
+.track-dot.active .inner { width: 8px; height: 8px; border-radius: 50%; background: var(--g-med); }
+.track-dot.pending { background: var(--bg); border: 2px solid var(--border-med); }
+.track-line { width: 2px; height: 28px; margin: 3px 0; }
+.track-line.done { background: var(--g-med); }
+.track-line.pending { background: var(--border); }
+.track-content { padding-bottom: 22px; padding-top: 2px; }
+.track-lbl { font-size: 13px; font-weight: 500; }
+.track-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.notif-card { margin: 10px 16px 0; background: var(--g-light); border-radius: var(--radius-sm); padding: 12px; border: 1px solid var(--g-border); display: flex; gap: 10px; align-items: flex-start; }
+.notif-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.notif-icon svg { width: 14px; height: 14px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.notif-text { font-size: 12px; color: #065F46; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="topbar-home">
+    <div class="topbar-home-row">
+      <div class="brand">DevisBTP</div>
+      <div class="avatar">ML</div>
+    </div>
+    <div class="greeting">Bonjour, Marc 👋</div>
+    <h1>Vos devis</h1>
+  </div>
+  <div class="scroll-body">
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-label">En cours</div>
+        <div class="kpi-value" id="kpi-count">0</div>
+        <div class="kpi-sub">devis actifs</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Ce mois</div>
+        <div class="kpi-value green" id="kpi-mrr">0 €</div>
+        <div class="kpi-sub">signé</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Taux sign.</div>
+        <div class="kpi-value amber" id="kpi-taux">0%</div>
+        <div class="kpi-sub">conversion</div>
+      </div>
+    </div>
+    <div class="section-header">
+      <span class="section-title">Devis récents</span>
+      <span class="see-all">Tout voir</span>
+    </div>
+    <div class="filters">
+      <div class="chip active" onclick="filterDevis('tous',this)">Tous</div>
+      <div class="chip" onclick="filterDevis('brouillon',this)">Brouillon</div>
+      <div class="chip" onclick="filterDevis('envoye',this)">Envoyé</div>
+      <div class="chip" onclick="filterDevis('signe',this)">Signé</div>
+      <div class="chip" onclick="filterDevis('refuse',this)">Refusé</div>
+    </div>
+    <div class="devis-list" id="devis-list"></div>
+  </div>
+  <div class="navbar">
+    <div class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-lbl" style="color:#0F6E56">Accueil</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      <span class="nav-lbl">Devis</span>
+    </div>
+    <div class="fab-wrap">
+      <button class="fab" onclick="goTo('screen-new-client')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="nav-lbl">Catalogue</span>
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-lbl">Profil</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: NEW CLIENT ═══════════════════════════════ -->
+<div class="screen" id="screen-new-client">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Nouveau devis</span>
+  </div>
+  <div class="scroll-body" style="padding: 16px;">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Renseignez les informations du client avant de dicter le devis.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Prénom</label>
+          <input id="client-prenom" type="text" placeholder="Sophie" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Nom</label>
+          <input id="client-nom" type="text" placeholder="Moreau" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Adresse du chantier</label>
+        <input id="client-adresse" type="text" placeholder="12 rue des Lilas, Toulouse" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label>
+        <input id="client-email" type="email" placeholder="client@email.fr" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
+      </div>
+      <div>
+        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Téléphone</label>
+        <input id="client-tel" type="tel" placeholder="06 12 34 56 78" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
+      </div>
+    </div>
+    <button class="gen-btn" style="margin:24px 0 0;width:100%;" onclick="goToVocal()">
+      <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+      Dicter le devis
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: VOCAL ═══════════════════════════════ -->
+<div class="screen" id="screen-vocal">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Devis vocal</span>
+  </div>
+  <div class="scroll-body">
+    <div class="vocal-client">
+      <div class="v-avatar" id="v-avatar">??</div>
+      <div>
+        <div class="v-name" id="v-name">Client</div>
+        <div class="v-addr" id="v-addr">Adresse du chantier</div>
+      </div>
+    </div>
+    <div class="vocal-zone">
+      <div class="vocal-state" id="vocal-state">Appuyez pour dicter votre devis</div>
+      <div class="waveform" id="waveform">
+        <div class="wbar" style="height:8px" id="wb1"></div><div class="wbar" style="height:14px" id="wb2"></div>
+        <div class="wbar" style="height:10px" id="wb3"></div><div class="wbar" style="height:20px" id="wb4"></div>
+        <div class="wbar" style="height:12px" id="wb5"></div><div class="wbar" style="height:18px" id="wb6"></div>
+        <div class="wbar" style="height:8px" id="wb7"></div><div class="wbar" style="height:16px" id="wb8"></div>
+        <div class="wbar" style="height:10px" id="wb9"></div><div class="wbar" style="height:22px" id="wb10"></div>
+        <div class="wbar" style="height:8px" id="wb11"></div><div class="wbar" style="height:14px" id="wb12"></div>
+      </div>
+      <button class="mic-btn" id="mic-btn" onclick="toggleRec()">
+        <svg id="mic-icon" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+      </button>
+      <div class="timer" id="timer">0:00</div>
+      <div class="vocal-hint" id="vocal-hint">Décrivez les travaux, les matériaux<br>et les quantités à voix haute</div>
+    </div>
+    <div class="transcript-box">
+      <div class="transcript-label">Transcription en direct</div>
+      <div class="transcript-text" id="transcript-text"><span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span></div>
+    </div>
+    <button class="gen-btn" id="gen-btn" onclick="generateDevis()" disabled>
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      Générer le devis avec l'IA
+    </button>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: PROCESSING ═══════════════════════════════ -->
+<div class="screen" id="screen-processing">
+  <div class="topbar">
+    <span class="topbar-title" style="text-align:center;width:100%;">Analyse en cours...</span>
+  </div>
+  <div class="processing">
+    <div class="spinner"></div>
+    <div class="proc-label" id="proc-label">Analyse de la transcription...</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: DEVIS GENERATED ═══════════════════════════════ -->
+<div class="screen" id="screen-devis">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title" id="devis-title">Devis généré</span>
+    <span class="topbar-action" onclick="showToast('Devis sauvegardé ✓')">Sauvegarder</span>
+  </div>
+  <div class="scroll-body">
+    <div class="devis-header">
+      <div class="dh-top">
+        <div class="dh-title" id="dh-numero">DEV-2026-001</div>
+        <div class="dh-badge">Généré par IA</div>
+      </div>
+      <div class="dh-sub" id="dh-client">Client — Adresse</div>
+    </div>
+    <div class="transcrit-ref" style="display:none;" id="transcrit-ref">
+      <div class="tr-label">Extrait de votre dictée</div>
+      <div class="tr-text" id="tr-text"></div>
+    </div>
+    <div style="padding:14px 16px 0;"><span style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Prestations détectées</span></div>
+    <div class="presta-list" id="presta-list"></div>
+    <button class="add-btn" onclick="openCatalog()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter depuis le catalogue
+    </button>
+    <div class="totaux">
+      <div class="total-row"><span class="lbl">Sous-total HT</span><span id="total-ht">0 €</span></div>
+      <div class="total-row"><span class="lbl">TVA 10%</span><span id="total-tva">0 €</span></div>
+      <hr class="total-div">
+      <div class="total-main"><span>Total TTC</span><span id="total-ttc">0 €</span></div>
+      <div class="rent-wrap">
+        <div class="rent-labels">
+          <span class="rent-title">Rentabilité estimée</span>
+          <span class="rent-pct" id="rent-pct">0%</span>
+        </div>
+        <div class="rent-bar-bg"><div class="rent-bar-fill" id="rent-bar"></div></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-outline" onclick="exportPDF()">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Export PDF
+      </button>
+      <button class="btn btn-outline" onclick="showToast('Devis modifié')">
+        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Modifier
+      </button>
+      <button class="btn btn-primary btn-full" onclick="goTo('screen-send')">
+        <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+        Envoyer au client
+      </button>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: SEND ═══════════════════════════════ -->
+<div class="screen" id="screen-send">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Envoyer au client</span>
+  </div>
+  <div class="scroll-body" style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+    <div>
+      <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Destinataire</div>
+      <div style="background:var(--card);border-radius:var(--radius-sm);padding:13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#065F46;flex-shrink:0;" id="send-avatar">SM</div>
+        <div><div style="font-size:14px;font-weight:500;" id="send-name">Sophie Moreau</div><div style="font-size:12px;color:var(--text-muted);" id="send-contact">email</div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Canal d'envoi</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="channel sel" id="ch-email" onclick="selectCh('email')" style="background:var(--card);border:1.5px solid var(--g-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+          <div style="width:28px;height:28px;border-radius:8px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#1E40AF;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
+          <div style="font-size:12px;font-weight:500;">Email</div><div style="font-size:10px;color:var(--text-muted);">Lien de signature</div>
+        </div>
+        <div onclick="selectCh('sms')" id="ch-sms" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#EAF3DE;display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#3B6D11;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div style="font-size:12px;font-weight:500;">SMS</div><div style="font-size:10px;color:var(--text-muted);">Lien court</div>
+        </div>
+        <div onclick="selectCh('wa')" id="ch-wa" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+          <div style="width:28px;height:28px;border-radius:8px;background:var(--g-light);display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#0F6E56;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8A8.5 8.5 0 0 1 12.7 20a8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 3 11.5 8.5 8.5 0 0 1 8.7 4a8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+          <div style="font-size:12px;font-weight:500;">WhatsApp</div><div style="font-size:10px;color:var(--text-muted);">Message direct</div>
+        </div>
+        <div onclick="selectCh('pdf')" id="ch-pdf" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#FAECE7;display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#993C1D;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+          <div style="font-size:12px;font-weight:500;">PDF</div><div style="font-size:10px;color:var(--text-muted);">Export direct</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Message</div>
+      <textarea id="send-msg" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:13px;resize:none;height:80px;background:var(--card);color:var(--text);">Bonjour, veuillez trouver ci-joint votre devis. Vous pouvez le signer directement en ligne. Cordialement, Marc</textarea>
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:15px;font-size:15px;" onclick="sendDevis()">
+      <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M22 2L11 13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+      Envoyer le devis
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: SENT ═══════════════════════════════ -->
+<div class="screen" id="screen-sent">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Devis envoyé</span>
+  </div>
+  <div class="scroll-body">
+    <div class="sent-header">
+      <div class="sent-icon"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div>
+      <div class="sent-title">Devis envoyé !</div>
+      <div class="sent-sub" id="sent-sub">Le client a reçu le devis<br>avec un lien de signature sécurisé.</div>
+    </div>
+    <div class="tracking-card">
+      <div class="track-title">Suivi en temps réel</div>
+      <div class="track-step">
+        <div class="track-col"><div class="track-dot done"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div><div class="track-line done"></div></div>
+        <div class="track-content"><div class="track-lbl">Devis envoyé</div><div class="track-time" id="track-time">Maintenant</div></div>
+      </div>
+      <div class="track-step">
+        <div class="track-col"><div class="track-dot active"><div class="inner"></div></div><div class="track-line pending"></div></div>
+        <div class="track-content"><div class="track-lbl">Ouvert par le client</div><div class="track-time">En attente...</div></div>
+      </div>
+      <div class="track-step">
+        <div class="track-col"><div class="track-dot pending"></div><div class="track-line pending"></div></div>
+        <div class="track-content"><div class="track-lbl">Devis signé</div><div class="track-time">En attente...</div></div>
+      </div>
+      <div class="track-step">
+        <div class="track-col"><div class="track-dot pending"></div></div>
+        <div class="track-content"><div class="track-lbl">Acompte reçu</div><div class="track-time">En attente...</div></div>
+      </div>
+    </div>
+    <div class="notif-card">
+      <div class="notif-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <div class="notif-text"><strong>Notification automatique</strong> — Vous serez alerté dès que le client ouvrira le devis et à la signature.</div>
+    </div>
+    <div style="margin:12px 16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button class="btn btn-outline" onclick="goTo('screen-signature')">Voir signature</button>
+      <button class="btn btn-primary" onclick="goTo('screen-home')">Accueil</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ SCREEN: SIGNATURE ═══════════════════════════════ -->
+<div class="screen" id="screen-signature">
+  <div class="topbar">
+    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Signature client</span>
+  </div>
+  <div class="scroll-body">
+    <div class="sig-hdr">
+      <div class="sig-hdr-title" id="sig-num">DEV-2026-001 — 0 € TTC</div>
+      <div class="sig-hdr-sub">Marc Lambert · Artisan</div>
+    </div>
+    <div class="sig-recap">
+      <div class="sig-row"><span class="lbl">Client</span><span id="sig-client" style="font-weight:500;">–</span></div>
+      <div class="sig-row"><span class="lbl">Chantier</span><span id="sig-addr" style="font-weight:500;">–</span></div>
+      <div class="sig-row"><span class="lbl">Travaux</span><span id="sig-travaux" style="font-weight:500;">–</span></div>
+      <hr class="sig-div">
+      <div class="sig-row"><span class="lbl">Sous-total HT</span><span id="sig-ht">–</span></div>
+      <div class="sig-row"><span class="lbl">TVA 10%</span><span id="sig-tva">–</span></div>
+      <div class="sig-row" style="font-size:15px;font-weight:600;"><span>Total TTC</span><span id="sig-ttc">–</span></div>
+    </div>
+    <div class="cgv-box" onclick="toggleCgv()">
+      <div class="cgv-chk" id="cgv-chk"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div>
+      <div class="cgv-text">J'ai lu et j'accepte les <a>conditions générales de vente</a>. Ma signature électronique a valeur contractuelle.</div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-header">
+        <span class="canvas-lbl">Signez ici avec votre doigt</span>
+        <span class="canvas-clear" onclick="clearCanvas()">Effacer</span>
+      </div>
+      <canvas id="sig-canvas"></canvas>
+    </div>
+    <div class="sig-cta">
+      <button class="btn btn-danger-outline" onclick="goBack()">Refuser</button>
+      <button class="btn btn-primary" id="sign-btn" disabled onclick="doSign()">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;"><polyline points="20,6 9,17 4,12"/></svg>
+        Signer & valider
+      </button>
+    </div>
+    <div class="yousign-badge">
+      <div class="ys-icon"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div>
+      <span class="ys-text">Plan <strong>Pro</strong> · Signature Yousign eIDAS certifiée</span>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CATALOGUE SHEET ═══════════════════════════════ -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeCatalog()"></div>
+<div class="catalog-sheet" id="catalog-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Catalogue de prestations</div>
+  <div class="catalog-items" id="catalog-items"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+</div><!-- #app -->
+
+<script>
+// ═══════════════════════════════ STATE ═══════════════════════════════
+var state = {
+  currentScreen: 'screen-home',
+  history: [],
+  client: { prenom:'', nom:'', adresse:'', email:'', tel:'' },
+  transcription: '',
+  lignes: [],
+  devisNum: 'DEV-2026-' + String(Math.floor(Math.random()*900)+100),
+  selectedCh: 'email',
+  cgvChecked: false,
+  hasSig: false,
+  devisList: [
+    { id:1, client:'Famille Bertrand', desc:'Rénovation salle de bain', montant:4200, marge:38, statut:'signe', date:'24 mars' },
+    { id:2, client:'SCI Les Oliviers', desc:'Extension terrasse 18 m²', montant:6850, marge:22, statut:'envoye', date:'22 mars' },
+    { id:3, client:'M. Lacoste', desc:'Installation électrique', montant:1950, marge:44, statut:'brouillon', date:'19 mars' },
+    { id:4, client:'Résidence du Parc', desc:'Ravalement façade', montant:11800, marge:14, statut:'refuse', date:'15 mars' },
+  ],
+  catalogue: [
+    { nom:'Maçonnerie courante', prix:85, unite:'m²' },
+    { nom:'Peinture intérieure', prix:22, unite:'m²' },
+    { nom:'Pose carrelage 60x60', prix:45, unite:'m²' },
+    { nom:'Installation électrique', prix:65, unite:'point' },
+    { nom:'Plomberie sanitaire', prix:120, unite:'u' },
+    { nom:'Isolation thermique', prix:38, unite:'m²' },
+    { nom:'Pose parquet flottant', prix:30, unite:'m²' },
+    { nom:'Dépose revêtement', prix:15, unite:'m²' },
+    { nom:'Enduit de façade', prix:28, unite:'m²' },
+  ]
+};
+
+// ═══════════════════════════════ NAVIGATION ═══════════════════════════════
+function goTo(id) {
+  document.getElementById(state.currentScreen).classList.remove('active');
+  state.history.push(state.currentScreen);
+  state.currentScreen = id;
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goBack() {
+  if (state.history.length === 0) return;
+  document.getElementById(state.currentScreen).classList.remove('active');
+  var prev = state.history.pop();
+  state.currentScreen = prev;
+  document.getElementById(prev).classList.add('active');
+}
+
+// ═══════════════════════════════ UTILS ═══════════════════════════════
+function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+// ═══════════════════════════════ HOME ═══════════════════════════════
+function renderHome() {
+  var list = state.devisList;
+  var signes = list.filter(function(d){ return d.statut === 'signe'; });
+  var mrr = signes.reduce(function(a,d){ return a+d.montant; }, 0);
+  var actifs = list.filter(function(d){ return d.statut !== 'refuse'; }).length;
+  var taux = list.length ? Math.round(signes.length / list.length * 100) : 0;
+  document.getElementById('kpi-count').textContent = actifs;
+  document.getElementById('kpi-mrr').textContent = fmt(mrr);
+  document.getElementById('kpi-taux').textContent = taux + '%';
+  renderDevisList('tous');
+}
+function renderDevisList(filter) {
+  var list = filter === 'tous' ? state.devisList : state.devisList.filter(function(d){ return d.statut === filter; });
+  var html = '';
+  list.forEach(function(d) {
+    var mc = d.marge >= 30 ? '#1D9E75' : d.marge >= 20 ? '#F59E0B' : '#EF4444';
+    html += '<div class="dcard" onclick="viewDevis('+d.id+')">' +
+      '<div class="dc-top"><span class="dc-client">'+d.client+'</span><span class="dc-date">'+d.date+'</span></div>' +
+      '<div class="dc-desc">'+d.desc+'</div>' +
+      '<div class="dc-bottom"><div><div class="dc-amount">'+fmt(d.montant)+'</div>' +
+      '<div class="dc-marge"><div class="marge-dot" style="background:'+mc+'"></div><span class="marge-lbl">Marge ~'+d.marge+'%</span></div></div>' +
+      '<div class="badge '+d.statut+'">'+ ({signe:'Signé',envoye:'Envoyé',brouillon:'Brouillon',refuse:'Refusé'}[d.statut])+'</div></div></div>';
+  });
+  document.getElementById('devis-list').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun devis</div>';
+}
+function filterDevis(f, el) {
+  document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  renderDevisList(f);
+}
+function viewDevis(id) { goTo('screen-devis'); }
+
+// ═══════════════════════════════ VOCAL ═══════════════════════════════
+var isRec = false, timerInt = null, elapsed = 0, waveInt = null;
+var recognition = null;
+var fullTranscript = '';
+
+function goToVocal() {
+  state.client.prenom = document.getElementById('client-prenom').value || 'Client';
+  state.client.nom = document.getElementById('client-nom').value || '';
+  state.client.adresse = document.getElementById('client-adresse').value || 'Adresse non renseignée';
+  state.client.email = document.getElementById('client-email').value || '';
+  state.client.tel = document.getElementById('client-tel').value || '';
+  var initials = (state.client.prenom[0]||'?') + (state.client.nom[0]||'');
+  document.getElementById('v-avatar').textContent = initials.toUpperCase();
+  document.getElementById('v-name').textContent = state.client.prenom + ' ' + state.client.nom;
+  document.getElementById('v-addr').textContent = state.client.adresse;
+  fullTranscript = '';
+  elapsed = 0;
+  document.getElementById('timer').textContent = '0:00';
+  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span>';
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('vocal-state').textContent = 'Appuyez pour dicter votre devis';
+  resetMicBtn();
+  goTo('screen-vocal');
+}
+
+function resetMicBtn() {
+  var btn = document.getElementById('mic-btn');
+  btn.classList.remove('recording');
+  btn.innerHTML = '<svg id="mic-icon" viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
+}
+
+function toggleRec() {
+  if (!isRec) startRec(); else stopRec();
+}
+
+function startRec() {
+  isRec = true;
+  var btn = document.getElementById('mic-btn');
+  btn.classList.add('recording');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+  document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
+  document.getElementById('vocal-hint').textContent = 'Appuyez de nouveau pour arrêter';
+  elapsed = 0;
+  timerInt = setInterval(function(){
+    elapsed++;
+    var m = Math.floor(elapsed/60), s = elapsed%60;
+    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
+  waveInt = setInterval(animWave, 130);
+
+  // Web Speech API
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SR();
+    recognition.lang = 'fr-FR';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.onresult = function(e) {
+      var interim = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) fullTranscript += e.results[i][0].transcript + ' ';
+        else interim = e.results[i][0].transcript;
+      }
+      document.getElementById('transcript-text').innerHTML = fullTranscript + '<span style="color:var(--text-light);">' + interim + '</span><span class="cursor"></span>';
+    };
+    recognition.onerror = function(){ };
+    recognition.start();
+  } else {
+    // Fallback si Web Speech non disponible
+    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);">Microphone actif — parlez maintenant...<span class="cursor"></span></span>';
+  }
+}
+
+function stopRec() {
+  isRec = false;
+  clearInterval(timerInt);
+  clearInterval(waveInt);
+  if (recognition) { try { recognition.stop(); } catch(e){} }
+  resetMicBtn();
+  for (var i=1; i<=12; i++) document.getElementById('wb'+i).style.height = '8px';
+  document.getElementById('vocal-state').textContent = 'Enregistrement terminé';
+  document.getElementById('vocal-hint').textContent = 'Vérifiez la transcription puis générez le devis';
+  state.transcription = fullTranscript.trim() || document.getElementById('transcript-text').innerText.replace('...','').trim();
+  if (state.transcription && state.transcription.length > 5) {
+    document.getElementById('gen-btn').disabled = false;
+    if (!fullTranscript) {
+      document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Transcription capturée (' + elapsed + 's). Cliquez sur "Générer" pour continuer.</span>';
+    }
+  } else {
+    document.getElementById('gen-btn').disabled = false;
+    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Exemple : "Réfection salle de bain, dépose carrelage 12m², pose carrelage 60x60, remplacement mitigeur"</span>';
+    state.transcription = 'Réfection salle de bain : dépose ancien carrelage sur 12 m², pose carrelage neuf 60x60, remplacement mitigeur douche et lavabo.';
+  }
+}
+
+function animWave() {
+  for (var i=1; i<=12; i++) {
+    document.getElementById('wb'+i).style.height = Math.round(6+Math.random()*36)+'px';
+  }
+}
+
+// ═══════════════════════════════ IA GENERATION ═══════════════════════════════
+var procSteps = ['Analyse de la transcription...','Détection des prestations...','Application de vos tarifs...','Calcul de la rentabilité...'];
+
+async function generateDevis() {
+  goTo('screen-processing');
+  var si = 0;
+  var stepInt = setInterval(function(){ si++; if(si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
+
+  var catalogueStr = state.catalogue.map(function(c){ return c.nom+' ('+c.prix+' EUR/'+c.unite+')'; }).join(', ');
+  var prompt = 'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
+    'À partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
+    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"m2 ou ml ou u ou forfait ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
+    'Transcription : "' + state.transcription + '"\n\n' +
+    'Catalogue disponible : ' + catalogueStr + '\n\n' +
+    'Règles : utilise le catalogue pour les prix si possible. Comprends l\'argot BTP. Ne génère que du JSON valide, sans markdown ni texte autour.';
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await resp.json();
+    clearInterval(stepInt);
+    var text = data.content && data.content[0] ? data.content[0].text : '';
+    var clean = text.replace(/```json|```/g,'').trim();
+    var parsed = JSON.parse(clean);
+    state.lignes = parsed.lignes || [];
+    state.descGlobale = parsed.description_globale || state.transcription.substring(0,80);
+    buildDevisScreen();
+  } catch(e) {
+    clearInterval(stepInt);
+    // Fallback avec données exemple si API non disponible
+    state.lignes = [
+      { libelle:'Dépose carrelage existant', quantite:12, unite:'m2', prix_unitaire:15, cout_achat:0 },
+      { libelle:'Pose carrelage 60×60', quantite:12, unite:'m2', prix_unitaire:45, cout_achat:18 },
+      { libelle:'Fourniture carrelage 60×60', quantite:12, unite:'m2', prix_unitaire:28, cout_achat:16 },
+      { libelle:'Remplacement mitigeur douche', quantite:1, unite:'u', prix_unitaire:180, cout_achat:75 },
+      { libelle:'Remplacement mitigeur lavabo', quantite:1, unite:'u', prix_unitaire:140, cout_achat:60 },
+    ];
+    state.descGlobale = 'Réfection complète salle de bain';
+    buildDevisScreen();
+  }
+}
+
+function buildDevisScreen() {
+  document.getElementById('devis-title').textContent = state.devisNum;
+  document.getElementById('dh-numero').textContent = state.devisNum;
+  document.getElementById('dh-client').textContent = state.client.prenom + ' ' + state.client.nom + ' — ' + state.client.adresse;
+  var ref = document.getElementById('transcrit-ref');
+  if (state.transcription) {
+    ref.style.display = 'block';
+    document.getElementById('tr-text').textContent = '"' + state.transcription.substring(0,120) + (state.transcription.length>120?'...':'"');
+  }
+  renderPrestas();
+  updateTotaux();
+  goTo('screen-devis');
+}
+
+function renderPrestas() {
+  var html = '';
+  state.lignes.forEach(function(l, i) {
+    var total = Math.round(l.quantite * l.prix_unitaire);
+    html += '<div class="presta-item">' +
+      '<div class="pi-top"><span class="pi-name">'+l.libelle+'</span><span class="pi-remove" onclick="removePresta('+i+')">×</span></div>' +
+      '<div class="pi-detail">' +
+      '<input class="pi-input" type="number" value="'+l.quantite+'" min="0.5" step="0.5" oninput="updateQte('+i+',this.value)">' +
+      '<span class="pi-unit">'+l.unite+'</span>' +
+      '<span class="pi-price-u">× '+l.prix_unitaire+' €</span>' +
+      '<span class="pi-total" id="pi-total-'+i+'">'+fmt(total)+'</span>' +
+      '</div></div>';
+  });
+  document.getElementById('presta-list').innerHTML = html;
+}
+
+function updateQte(idx, val) {
+  state.lignes[idx].quantite = parseFloat(val) || 0;
+  var total = state.lignes[idx].quantite * state.lignes[idx].prix_unitaire;
+  document.getElementById('pi-total-'+idx).textContent = fmt(total);
+  updateTotaux();
+}
+
+function removePresta(idx) {
+  state.lignes.splice(idx, 1);
+  renderPrestas();
+  updateTotaux();
+}
+
+function updateTotaux() {
+  var ht = state.lignes.reduce(function(a,l){ return a + l.quantite*l.prix_unitaire; }, 0);
+  var cout = state.lignes.reduce(function(a,l){ return a + l.quantite*(l.cout_achat||0); }, 0);
+  var tva = ht*0.1, ttc = ht+tva;
+  var marge = ht>0 ? Math.round((ht-cout)/ht*100) : 0;
+  if (marge < 0 || !cout) marge = Math.round(30+Math.random()*10);
+  document.getElementById('total-ht').textContent = fmt(ht);
+  document.getElementById('total-tva').textContent = fmt(tva);
+  document.getElementById('total-ttc').textContent = fmt(ttc);
+  var col = marge>=30?'#0F6E56':marge>=20?'#B45309':'#DC2626';
+  document.getElementById('rent-pct').textContent = marge+'%';
+  document.getElementById('rent-pct').style.color = col;
+  document.getElementById('rent-bar').style.width = Math.min(marge,100)+'%';
+  document.getElementById('rent-bar').style.background = col;
+  // Update sig screen
+  document.getElementById('sig-num').textContent = state.devisNum + ' — ' + fmt(ttc);
+  document.getElementById('sig-ht').textContent = fmt(ht);
+  document.getElementById('sig-tva').textContent = fmt(tva);
+  document.getElementById('sig-ttc').textContent = fmt(ttc);
+  state._ttc = ttc; state._ht = ht; state._tva = tva;
+}
+
+// ═══════════════════════════════ CATALOGUE ═══════════════════════════════
+function openCatalog() {
+  var html = '';
+  state.catalogue.forEach(function(c,i){
+    html += '<div class="cat-item" onclick="addFromCatalog('+i+')">' +
+      '<div><div class="cat-name">'+c.nom+'</div><div class="cat-price">'+c.prix+' €/'+c.unite+'</div></div>' +
+      '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
+      '</div>';
+  });
+  document.getElementById('catalog-items').innerHTML = html;
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('catalog-sheet').classList.add('open');
+}
+function closeCatalog() {
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('catalog-sheet').classList.remove('open');
+}
+function addFromCatalog(idx) {
+  var c = state.catalogue[idx];
+  state.lignes.push({ libelle:c.nom, quantite:1, unite:c.unite, prix_unitaire:c.prix, cout_achat:Math.round(c.prix*0.45) });
+  closeCatalog();
+  renderPrestas();
+  updateTotaux();
+  showToast(c.nom + ' ajouté');
+}
+
+// ═══════════════════════════════ EXPORT PDF ═══════════════════════════════
+function exportPDF() {
+  showToast('PDF généré — ouverture...');
+  var w = window.open('');
+  if(!w) { showToast('Autorisez les popups'); return; }
+  var lignesHTML = state.lignes.map(function(l){
+    return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">'+l.libelle+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+l.quantite+' '+l.unite+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+l.prix_unitaire+' €</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+ fmt(l.quantite*l.prix_unitaire)+'</td></tr>';
+  }).join('');
+  var ht = state._ht||0, tva=state._tva||0, ttc=state._ttc||0;
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+state.devisNum+'</title>' +
+    '<style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#1a1a1a;padding:20px;}' +
+    '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:20px;border-bottom:3px solid #1A3A2A;}' +
+    '.brand{font-size:28px;font-weight:700;color:#1A3A2A;}' +
+    '.devis-num{font-size:22px;font-weight:600;color:#0F6E56;text-align:right;}' +
+    'table{width:100%;border-collapse:collapse;margin:20px 0;}' +
+    'th{background:#1A3A2A;color:#fff;padding:10px 12px;text-align:left;}' +
+    'th:nth-child(2){text-align:center;}th:nth-child(3),th:nth-child(4){text-align:right;}' +
+    '.total-box{margin-top:20px;text-align:right;}' +
+    '.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
+    '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
+    '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
+    '</style></head><body>' +
+    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
+    '<div style="font-size:13px;color:#666;margin-top:2px;">marc.lambert@devis-btp.fr</div></div>' +
+    '<div class="devis-num"><div>'+state.devisNum+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
+    '<div style="margin-bottom:24px;"><strong>Client :</strong> '+state.client.prenom+' '+state.client.nom+'<br>' +
+    '<strong>Adresse :</strong> '+state.client.adresse+'</div>' +
+    '<p style="color:#666;margin-bottom:16px;font-style:italic;">'+state.descGlobale+'</p>' +
+    '<table><thead><tr><th>Prestation</th><th>Quantité</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>'+lignesHTML+'</tbody></table>' +
+    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>'+fmt(ht)+'</span></div>' +
+    '<div class="total-line"><span>TVA 10%</span><span>'+fmt(tva)+'</span></div>' +
+    '<div class="total-line total-ttc"><span>Total TTC</span><span>'+fmt(ttc)+'</span></div></div>' +
+    '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Signature électronique</div>' +
+    '<div style="font-size:13px;">Ce devis est valable 30 jours à compter de sa date d\'émission.</div></div>' +
+    '</body></html>');
+  w.document.close();
+  setTimeout(function(){ w.print(); }, 500);
+}
+
+// ═══════════════════════════════ SEND ═══════════════════════════════
+function selectCh(ch) {
+  ['email','sms','wa','pdf'].forEach(function(c){
+    var el = document.getElementById('ch-'+c);
+    el.style.border = '1px solid var(--border-med)';
+  });
+  document.getElementById('ch-'+ch).style.border = '1.5px solid var(--g-med)';
+  state.selectedCh = ch;
+}
+function sendDevis() {
+  var n = state.client.prenom + ' ' + state.client.nom;
+  document.getElementById('send-avatar').textContent = ((state.client.prenom[0]||'?')+(state.client.nom[0]||'')).toUpperCase();
+  document.getElementById('send-name').textContent = n;
+  document.getElementById('send-contact').textContent = state.client.email || state.client.tel || 'Non renseigné';
+  document.getElementById('sent-sub').textContent = n + ' a reçu le devis\navec un lien de signature sécurisé.';
+  document.getElementById('track-time').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+  // Update sig screen
+  document.getElementById('sig-client').textContent = n;
+  document.getElementById('sig-addr').textContent = state.client.adresse;
+  document.getElementById('sig-travaux').textContent = state.descGlobale || 'Travaux';
+  // Add to list
+  state.devisList.unshift({
+    id: Date.now(), client: n,
+    desc: state.descGlobale || 'Devis vocal',
+    montant: Math.round(state._ttc||0), marge: 32, statut:'envoye',
+    date: new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'})
+  });
+  renderHome();
+  goTo('screen-sent');
+}
+
+// ═══════════════════════════════ SIGNATURE ═══════════════════════════════
+var drawing=false, lastX=0, lastY=0;
+function toggleCgv(){
+  state.cgvChecked=!state.cgvChecked;
+  var el=document.getElementById('cgv-chk');
+  el.classList.toggle('checked',state.cgvChecked);
+  checkSignBtn();
+}
+function checkSignBtn(){
+  document.getElementById('sign-btn').disabled=!(state.cgvChecked&&state.hasSig);
+}
+function clearCanvas(){
+  var c=document.getElementById('sig-canvas');
+  var ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  state.hasSig=false; checkSignBtn();
+}
+function initCanvas(){
+  var canvas=document.getElementById('sig-canvas');
+  canvas.width=canvas.offsetWidth*window.devicePixelRatio||canvas.offsetWidth;
+  canvas.height=130*window.devicePixelRatio||130;
+  canvas.style.height='130px';
+  var ctx=canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
+  ctx.strokeStyle='#1A3A2A'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
+  function pos(e){
+    var r=canvas.getBoundingClientRect();
+    var src=e.touches?e.touches[0]:e;
+    return{x:src.clientX-r.left,y:src.clientY-r.top};
+  }
+  function start(e){e.preventDefault();drawing=true;var p=pos(e);lastX=p.x;lastY=p.y;}
+  function move(e){
+    e.preventDefault(); if(!drawing)return;
+    var p=pos(e);
+    ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.stroke();
+    lastX=p.x;lastY=p.y;state.hasSig=true;checkSignBtn();
+  }
+  function end(){drawing=false;}
+  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',move); canvas.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',move,{passive:false}); canvas.addEventListener('touchend',end);
+}
+function doSign(){
+  // Update devis statut
+  if(state.devisList[0]) state.devisList[0].statut='signe';
+  renderHome();
+  showToast('Devis signé ! ✓');
+  state.cgvChecked=false;
+  document.getElementById('cgv-chk').classList.remove('checked');
+  clearCanvas();
+  goTo('screen-home');
+}
+
+// ═══════════════════════════════ INIT ═══════════════════════════════
+document.addEventListener('DOMContentLoaded', function(){
+  renderHome();
+  initCanvas();
+  // Pre-fill client for demo
+  document.getElementById('client-prenom').value = 'Sophie';
+  document.getElementById('client-nom').value = 'Moreau';
+  document.getElementById('client-adresse').value = '8 allée des Pins, Toulouse';
+  document.getElementById('client-email').value = 's.moreau@mail.fr';
+});
+</script>
+</body>
+</html>
