@@ -283,7 +283,35 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   <div id="login-msg" style="color:#A8D9C0; margin-top:20px; 
     font-size:14px; text-align:center;"></div>
 </div>
+<script>
+async function connexion() {
+  const email = document.getElementById('login-email').value;
+  if (!email) { 
+    document.getElementById('login-msg').textContent = 'Entrez votre email';
+    return;
+  }
+  const { error } = await supabase.auth.signInWithOtp({ email });
+  if (error) {
+    document.getElementById('login-msg').textContent = 'Erreur : ' + error.message;
+  } else {
+    document.getElementById('login-msg').textContent = '✓ Lien envoyé ! Vérifiez votre email.';
+  }
+}
 
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    document.getElementById('screen-login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+});
+
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    document.getElementById('screen-login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+});
+</script>
 <div id="app">
 
 <!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
