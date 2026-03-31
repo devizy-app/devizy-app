@@ -247,37 +247,34 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .notif-icon svg { width: 14px; height: 14px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .notif-text { font-size: 12px; color: #065F46; line-height: 1.5; }
 
-/* ── CATALOGUE SCREEN ── */
+/* CATALOGUE SCREEN */
 .cat-screen-header { background: var(--g-dark); padding: 44px 18px 16px; display: flex; align-items: center; gap: 10px; }
 .cat-form { margin: 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
 .cat-form-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
 .field-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
 .field-input { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); appearance: none; }
+.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .cat-add-btn { width: 100%; padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .cat-list-section { padding: 0 16px; }
 .cat-list-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 .cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
 .cat-card { background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; }
 .cat-card-left { flex: 1; }
-.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
-.cat-card-cat { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
-.cat-card-prices { display: flex; gap: 12px; }
+.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.cat-card-prices { display: flex; gap: 12px; flex-wrap: wrap; }
 .cat-price-item { font-size: 12px; color: var(--text-muted); }
 .cat-price-item strong { color: var(--text); font-size: 13px; }
 .cat-card-right { display: flex; gap: 8px; align-items: center; }
-.cat-delete { font-size: 18px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
-.cat-edit { font-size: 13px; color: var(--g-med); cursor: pointer; padding: 4px; }
+.cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
 .cat-import-btn { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; }
-.cat-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: 500; background: var(--g-light); color: #065F46; margin-left: 6px; }
-
-/* ── PROFIL SCREEN ── */
+.cat-group-title { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
+/* PROFIL SCREEN */
 .profil-avatar-wrap { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; }
 .profil-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #9FE1CB; margin-bottom: 10px; }
 .profil-name-big { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
-.profil-metier { font-size: 13px; color: var(--text-muted); }
+.profil-metier-lbl { font-size: 13px; color: var(--text-muted); }
 .profil-section { margin: 0 16px 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
 .profil-section-title { font-size: 12px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
 .profil-field { margin-bottom: 12px; }
@@ -286,7 +283,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .profil-field input, .profil-field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .profil-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
-.profil-logout { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1px solid var(--border-med); border-radius: var(--radius-sm); font-size: 14px; color: var(--text-muted); cursor: pointer; }
 </style>
 </head>
 <body>
@@ -640,179 +636,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════ SCREEN: CATALOGUE ═══════════════════════════════ -->
-<div class="screen" id="screen-catalogue">
-  <div class="cat-screen-header">
-    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
-    <span class="topbar-title">Mon catalogue</span>
-  </div>
-  <div class="scroll-body">
-    <!-- Formulaire ajout -->
-    <div class="cat-form">
-      <div class="cat-form-title">Ajouter une prestation</div>
-      <div>
-        <label class="field-label">Nom de la prestation *</label>
-        <input id="cat-nom" class="field-input" type="text" placeholder="Ex: Pose carrelage 60x60">
-      </div>
-      <div class="field-row">
-        <div>
-          <label class="field-label">Catégorie</label>
-          <select id="cat-categorie" class="field-select">
-            <option value="Maçonnerie">Maçonnerie</option>
-            <option value="Peinture">Peinture</option>
-            <option value="Carrelage">Carrelage</option>
-            <option value="Plomberie">Plomberie</option>
-            <option value="Électricité">Électricité</option>
-            <option value="Menuiserie">Menuiserie</option>
-            <option value="Isolation">Isolation</option>
-            <option value="Façade">Façade</option>
-            <option value="Autre">Autre</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">Unité</label>
-          <select id="cat-unite" class="field-select">
-            <option value="m²">m²</option>
-            <option value="ml">ml</option>
-            <option value="u">unité</option>
-            <option value="forfait">forfait</option>
-            <option value="heure">heure</option>
-            <option value="point">point</option>
-          </select>
-        </div>
-      </div>
-      <div class="field-row">
-        <div>
-          <label class="field-label">Prix de vente HT (€) *</label>
-          <input id="cat-prix-vente" class="field-input" type="number" placeholder="85" min="0" step="0.5">
-        </div>
-        <div>
-          <label class="field-label">Coût achat HT (€)</label>
-          <input id="cat-prix-achat" class="field-input" type="number" placeholder="40" min="0" step="0.5">
-        </div>
-      </div>
-      <button class="cat-add-btn" onclick="ajouterPrestation()">
-        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Ajouter au catalogue
-      </button>
-    </div>
-
-    <!-- Import CSV -->
-    <label class="cat-import-btn" for="csv-import">
-      <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--g-med);fill:none;stroke-width:2;stroke-linecap:round;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      Importer depuis Excel / CSV
-    </label>
-    <input id="csv-import" type="file" accept=".csv,.xlsx" style="display:none;" onchange="importerCSV(this)">
-
-    <!-- Liste prestations -->
-    <div class="cat-list-section">
-      <div class="cat-list-title">Mes prestations (<span id="cat-count">0</span>)</div>
-      <div class="cat-list" id="cat-list-display"></div>
-    </div>
-  </div>
-</div>
-
-
-<!-- ═══════════════════════════════ SCREEN: PROFIL ═══════════════════════════════ -->
-<div class="screen" id="screen-profil">
-  <div class="topbar">
-    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
-    <span class="topbar-title">Mon profil</span>
-  </div>
-  <div class="scroll-body">
-    <div class="profil-avatar-wrap">
-      <div class="profil-avatar-big" id="profil-avatar-big">ML</div>
-      <div class="profil-name-big" id="profil-name-big">Marc Lambert</div>
-      <div class="profil-metier" id="profil-metier-display">Climatisation</div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Informations personnelles</div>
-      <div class="profil-2col">
-        <div class="profil-field">
-          <label>Prénom</label>
-          <input id="profil-prenom" type="text" placeholder="Marc">
-        </div>
-        <div class="profil-field">
-          <label>Nom</label>
-          <input id="profil-nom" type="text" placeholder="Lambert">
-        </div>
-      </div>
-      <div class="profil-field">
-        <label>Email</label>
-        <input id="profil-email" type="email" placeholder="marc@monentreprise.fr">
-      </div>
-      <div class="profil-field">
-        <label>Téléphone</label>
-        <input id="profil-tel" type="tel" placeholder="06 12 34 56 78">
-      </div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Mon entreprise</div>
-      <div class="profil-field">
-        <label>Nom de l'entreprise</label>
-        <input id="profil-entreprise" type="text" placeholder="DevisBTP">
-      </div>
-      <div class="profil-field">
-        <label>SIRET</label>
-        <input id="profil-siret" type="text" placeholder="123 456 789 00012">
-      </div>
-      <div class="profil-field">
-        <label>Adresse</label>
-        <input id="profil-adresse" type="text" placeholder="12 rue des Artisans, Toulouse">
-      </div>
-      <div class="profil-2col">
-        <div class="profil-field">
-          <label>Corps de métier</label>
-          <select id="profil-metier">
-            <option value="Climatisation">Climatisation</option>
-            <option value="Plomberie">Plomberie</option>
-            <option value="Électricité">Électricité</option>
-            <option value="Maçonnerie">Maçonnerie</option>
-            <option value="Peinture">Peinture</option>
-            <option value="Menuiserie">Menuiserie</option>
-            <option value="Carrelage">Carrelage</option>
-            <option value="Multi-métiers">Multi-métiers</option>
-          </select>
-        </div>
-        <div class="profil-field">
-          <label>Taux horaire (€/h)</label>
-          <input id="profil-taux" type="number" placeholder="65" min="0">
-        </div>
-      </div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Facturation</div>
-      <div class="profil-2col">
-        <div class="profil-field">
-          <label>TVA appliquée (%)</label>
-          <select id="profil-tva">
-            <option value="20">20% (standard)</option>
-            <option value="10" selected>10% (travaux)</option>
-            <option value="5.5">5,5% (rénovation éco)</option>
-            <option value="0">0% (franchise TVA)</option>
-          </select>
-        </div>
-        <div class="profil-field">
-          <label>N° assurance RC Pro</label>
-          <input id="profil-rcpro" type="text" placeholder="Numéro de police">
-        </div>
-      </div>
-      <div class="profil-field">
-        <label>Mention TVA (si franchise)</label>
-        <input id="profil-mention-tva" type="text" placeholder="TVA non applicable, art. 293B du CGI">
-      </div>
-    </div>
-
-    <button class="profil-save-btn" onclick="sauvegarderProfil()">
-      Enregistrer mon profil
-    </button>
-  </div>
-</div>
-
 <!-- ═══════════════════════════════ CATALOGUE SHEET ═══════════════════════════════ -->
 <div class="sheet-overlay" id="sheet-overlay" onclick="closeCatalog()"></div>
 <div class="catalog-sheet" id="catalog-sheet">
@@ -823,6 +646,100 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+
+<div class="screen" id="screen-catalogue">
+  <div class="cat-screen-header">
+    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Mon catalogue</span>
+  </div>
+  <div class="scroll-body">
+    <div class="cat-form">
+      <div class="cat-form-title">Ajouter une prestation</div>
+      <div><label class="field-label">Nom *</label><input id="cat-nom" class="field-input" type="text" placeholder="Ex: Pose climatiseur monosplit"></div>
+      <div class="field-row">
+        <div><label class="field-label">Categorie</label>
+          <select id="cat-categorie" class="field-select">
+            <option>Installation</option><option>Fourniture materiel</option><option>Raccordement</option>
+            <option>Mise en service</option><option>Depose</option><option>Maintenance</option>
+            <option>Maconnerie</option><option>Plomberie</option><option>Electricite</option><option>Autre</option>
+          </select>
+        </div>
+        <div><label class="field-label">Unite</label>
+          <select id="cat-unite" class="field-select">
+            <option value="forfait">forfait</option><option value="u">unite</option>
+            <option value="m2">m2</option><option value="ml">ml</option>
+            <option value="heure">heure</option><option value="point">point</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div><label class="field-label">Prix vente HT (euros) *</label><input id="cat-prix-vente" class="field-input" type="number" placeholder="950" min="0" step="0.5"></div>
+        <div><label class="field-label">Cout achat HT (euros)</label><input id="cat-prix-achat" class="field-input" type="number" placeholder="420" min="0" step="0.5"></div>
+      </div>
+      <button class="cat-add-btn" onclick="ajouterPrestation()">Ajouter au catalogue</button>
+    </div>
+    <label class="cat-import-btn" for="csv-import">Importer depuis CSV</label>
+    <input id="csv-import" type="file" accept=".csv" style="display:none;" onchange="importerCSV(this)">
+    <div class="cat-list-section">
+      <div class="cat-list-title">Mes prestations (<span id="cat-count">0</span>)</div>
+      <div id="cat-list-display"></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-profil">
+  <div class="topbar">
+    <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
+    <span class="topbar-title">Mon profil</span>
+  </div>
+  <div class="scroll-body">
+    <div class="profil-avatar-wrap">
+      <div class="profil-avatar-big" id="profil-avatar-big">ML</div>
+      <div class="profil-name-big" id="profil-name-big">Marc Lambert</div>
+      <div class="profil-metier-lbl" id="profil-metier-display">Climatisation</div>
+    </div>
+    <div class="profil-section">
+      <div class="profil-section-title">Informations personnelles</div>
+      <div class="profil-2col">
+        <div class="profil-field"><label>Prenom</label><input id="profil-prenom" type="text" placeholder="Marc"></div>
+        <div class="profil-field"><label>Nom</label><input id="profil-nom" type="text" placeholder="Lambert"></div>
+      </div>
+      <div class="profil-field"><label>Email</label><input id="profil-email" type="email" placeholder="marc@monentreprise.fr"></div>
+      <div class="profil-field"><label>Telephone</label><input id="profil-tel" type="tel" placeholder="06 12 34 56 78"></div>
+    </div>
+    <div class="profil-section">
+      <div class="profil-section-title">Mon entreprise</div>
+      <div class="profil-field"><label>Nom entreprise</label><input id="profil-entreprise" type="text" placeholder="DevisBTP"></div>
+      <div class="profil-field"><label>SIRET</label><input id="profil-siret" type="text" placeholder="123 456 789 00012"></div>
+      <div class="profil-field"><label>Adresse</label><input id="profil-adresse" type="text" placeholder="12 rue des Artisans, Toulouse"></div>
+      <div class="profil-2col">
+        <div class="profil-field"><label>Corps de metier</label>
+          <select id="profil-metier">
+            <option>Climatisation</option><option>Plomberie</option><option>Electricite</option>
+            <option>Maconnerie</option><option>Peinture</option><option>Menuiserie</option><option>Multi-metiers</option>
+          </select>
+        </div>
+        <div class="profil-field"><label>Taux horaire (euros/h)</label><input id="profil-taux" type="number" placeholder="65" min="0"></div>
+      </div>
+    </div>
+    <div class="profil-section">
+      <div class="profil-section-title">Facturation</div>
+      <div class="profil-2col">
+        <div class="profil-field"><label>TVA (%)</label>
+          <select id="profil-tva">
+            <option value="20">20% standard</option>
+            <option value="10" selected>10% travaux</option>
+            <option value="5.5">5,5% renovation</option>
+            <option value="0">0% franchise</option>
+          </select>
+        </div>
+        <div class="profil-field"><label>N RC Pro</label><input id="profil-rcpro" type="text" placeholder="N police"></div>
+      </div>
+    </div>
+    <button class="profil-save-btn" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
+  </div>
+</div>
 
 </div><!-- #app -->
 
@@ -838,19 +755,6 @@ var state = {
   selectedCh: 'email',
   cgvChecked: false,
   hasSig: false,
-  profil: {
-    prenom: 'Marc',
-    nom: 'Lambert',
-    entreprise: 'DevisBTP',
-    siret: '',
-    email: 'marc@devizy.fr',
-    telephone: '',
-    metier: 'Climatisation',
-    taux_horaire: 65,
-    adresse: '',
-    tva: '10',
-    mention_tva: ''
-  },
   devisList: [
     { id:1, client:'Famille Bertrand', desc:'Rénovation salle de bain', montant:4200, marge:38, statut:'signe', date:'24 mars' },
     { id:2, client:'SCI Les Oliviers', desc:'Extension terrasse 18 m²', montant:6850, marge:22, statut:'envoye', date:'22 mars' },
@@ -858,31 +762,35 @@ var state = {
     { id:4, client:'Résidence du Parc', desc:'Ravalement façade', montant:11800, marge:14, statut:'refuse', date:'15 mars' },
   ],
   catalogue: [
-    { nom:'Climatiseur monosplit - Pose complète', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur bisplit - Pose complète', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur trisplit - Pose complète', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur quadrisplit - Pose complète', prix:2900, cout_achat:1250, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur gainable - Pose complète', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
-    { nom:'Unité intérieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture matériel' },
-    { nom:'Unité extérieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture matériel' },
-    { nom:'Climatiseur réversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture matériel' },
-    { nom:'Climatiseur réversible multisplit 3 pièces - Fourniture + pose', prix:4600, cout_achat:1950, unite:'forfait', categorie:'Fourniture matériel' },
+    { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur trisplit - Pose complete', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur gainable - Pose complete', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
+    { nom:'Unite interieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Unite exterieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Clim reversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Clim reversible multisplit 3 pieces - Fourniture + pose', prix:4600, cout_achat:1950, unite:'forfait', categorie:'Fourniture materiel' },
     { nom:'Liaison frigorifique cuivre', prix:28, cout_achat:12, unite:'ml', categorie:'Raccordement' },
-    { nom:'Goulotte PVC passage de câble', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
-    { nom:'Raccordement électrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Perçage mur béton (passage gaine)', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
-    { nom:'Support mural unité extérieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
-    { nom:'Mise en service + vérification étanchéité', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
+    { nom:'Goulotte PVC passage cable', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
+    { nom:'Raccordement electrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Percage mur beton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
+    { nom:'Support mural unite exterieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
+    { nom:'Mise en service + verification etancheite', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
     { nom:'Mise sous vide circuit frigorifique', prix:95, cout_achat:15, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Charge fluide frigorigène R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
-    { nom:'Dépose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Dépose' },
-    { nom:'Récupération fluide frigorigène (réglementation F-Gaz)', prix:95, cout_achat:25, unite:'forfait', categorie:'Dépose' },
+    { nom:'Charge fluide frigorigene R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
+    { nom:'Depose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
+    { nom:'Recuperation fluide frigorigene F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
     { nom:'Contrat entretien annuel monosplit', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
     { nom:'Contrat entretien annuel multisplit', prix:220, cout_achat:60, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Nettoyage filtres + vérification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Déplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Étude' },
-  ]
+    { nom:'Nettoyage filtres + verification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Deplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' },
+  ],
+  profil: {
+    prenom: 'Marc', nom: 'Lambert', entreprise: 'DevisBTP', siret: '',
+    email: 'marc@devizy.fr', telephone: '', metier: 'Climatisation',
+    taux_horaire: 65, adresse: '', tva: '10', rcpro: ''
+  }
 };
 
 // ═══════════════════════════════ NAVIGATION ═══════════════════════════════
@@ -1210,37 +1118,35 @@ function exportPDF() {
     '.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
-/* ── CATALOGUE SCREEN ── */
+    '
+/* CATALOGUE SCREEN */
 .cat-screen-header { background: var(--g-dark); padding: 44px 18px 16px; display: flex; align-items: center; gap: 10px; }
 .cat-form { margin: 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
 .cat-form-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
 .field-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
 .field-input { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); appearance: none; }
+.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .cat-add-btn { width: 100%; padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .cat-list-section { padding: 0 16px; }
 .cat-list-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
 .cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
 .cat-card { background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; }
 .cat-card-left { flex: 1; }
-.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
-.cat-card-cat { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
-.cat-card-prices { display: flex; gap: 12px; }
+.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.cat-card-prices { display: flex; gap: 12px; flex-wrap: wrap; }
 .cat-price-item { font-size: 12px; color: var(--text-muted); }
 .cat-price-item strong { color: var(--text); font-size: 13px; }
 .cat-card-right { display: flex; gap: 8px; align-items: center; }
-.cat-delete { font-size: 18px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
-.cat-edit { font-size: 13px; color: var(--g-med); cursor: pointer; padding: 4px; }
+.cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
 .cat-import-btn { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; }
-.cat-badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 6px; font-weight: 500; background: var(--g-light); color: #065F46; margin-left: 6px; }
-
-/* ── PROFIL SCREEN ── */
+.cat-group-title { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
+/* PROFIL SCREEN */
 .profil-avatar-wrap { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; }
 .profil-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #9FE1CB; margin-bottom: 10px; }
 .profil-name-big { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
-.profil-metier { font-size: 13px; color: var(--text-muted); }
+.profil-metier-lbl { font-size: 13px; color: var(--text-muted); }
 .profil-section { margin: 0 16px 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
 .profil-section-title { font-size: 12px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
 .profil-field { margin-bottom: 12px; }
@@ -1249,7 +1155,6 @@ function exportPDF() {
 .profil-field input, .profil-field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
 .profil-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
-.profil-logout { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1px solid var(--border-med); border-radius: var(--radius-sm); font-size: 14px; color: var(--text-muted); cursor: pointer; }
 </style></head><body>' +
     '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
     '<div style="font-size:13px;color:#666;margin-top:2px;">marc.lambert@devis-btp.fr</div></div>' +
@@ -1354,7 +1259,6 @@ function doSign(){
 
 // ═══════════════════════════════ INIT ═══════════════════════════════
 document.addEventListener('DOMContentLoaded', function(){
-  // Charger données sauvegardées
   chargerDonnees();
   renderHome();
   initCanvas();
@@ -1365,58 +1269,36 @@ document.addEventListener('DOMContentLoaded', function(){
   document.getElementById('client-email').value = 's.moreau@mail.fr';
 });
 
-function sauvegarderDonnees() {
-  try {
-    localStorage.setItem('devizy_devis', JSON.stringify(state.devisList));
-    localStorage.setItem('devizy_catalogue', JSON.stringify(state.catalogue));
-    localStorage.setItem('devizy_profil', JSON.stringify(state.profil));
-  } catch(e) { console.log('Sauvegarde impossible:', e); }
-}
-
-function chargerDonnees() {
-  try {
-    var devis = localStorage.getItem('devizy_devis');
-    if (devis) state.devisList = JSON.parse(devis);
-    var cat = localStorage.getItem('devizy_catalogue');
-    if (cat) state.catalogue = JSON.parse(cat);
-    var profil = localStorage.getItem('devizy_profil');
-    if (profil) state.profil = JSON.parse(profil);
-  } catch(e) { console.log('Chargement impossible:', e); }
-}
-
-// ═══════════════════════════════ CATALOGUE SCREEN ═══════════════════════════════
-
+// CATALOGUE
 function renderCatalogueScreen() {
   var list = state.catalogue;
   document.getElementById('cat-count').textContent = list.length;
   if (list.length === 0) {
-    document.getElementById('cat-list-display').innerHTML = '<div class="cat-empty">Aucune prestation. Ajoutez votre premiere prestation ci-dessus.</div>';
+    document.getElementById('cat-list-display').innerHTML = '<div class="cat-empty">Aucune prestation.</div>';
     return;
   }
-  // Grouper par catégorie
   var groups = {};
   list.forEach(function(c, i) {
     var cat = c.categorie || 'Autre';
     if (!groups[cat]) groups[cat] = [];
-    groups[cat].push({item: c, idx: i});
+    groups[cat].push({item:c, idx:i});
   });
   var html = '';
   Object.keys(groups).sort().forEach(function(cat) {
-    html += '<div style="font-size:11px;font-weight:600;color:var(--g-med);text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 6px;">' + cat + '</div>';
+    html += '<div class="cat-group-title">' + cat + '</div>';
     groups[cat].forEach(function(entry) {
       var c = entry.item, i = entry.idx;
       var marge = c.cout_achat > 0 ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
+      var mc = marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626';
       html += '<div class="cat-card">' +
         '<div class="cat-card-left">' +
         '<div class="cat-card-name">' + c.nom + '</div>' +
         '<div class="cat-card-prices">' +
-        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' €/' + c.unite + '</strong></div>' +
-        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' €</strong></div>' : '') +
-        (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + (marge>=30?'#0F6E56':marge>=20?'#B45309':'#DC2626') + '">' + marge + '%</strong></div>' : '') +
+        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' e/' + c.unite + '</strong></div>' +
+        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' e</strong></div>' : '') +
+        (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + mc + '">' + marge + '%</strong></div>' : '') +
         '</div></div>' +
-        '<div class="cat-card-right">' +
-        '<span class="cat-delete" onclick="supprimerPrestation(' + i + ')" title="Supprimer">×</span>' +
-        '</div></div>';
+        '<div class="cat-card-right"><span class="cat-delete" onclick="supprimerPrestation(' + i + ')">x</span></div></div>';
     });
   });
   document.getElementById('cat-list-display').innerHTML = html;
@@ -1428,22 +1310,23 @@ function ajouterPrestation() {
   var achat = parseFloat(document.getElementById('cat-prix-achat').value) || 0;
   var unite = document.getElementById('cat-unite').value;
   var categorie = document.getElementById('cat-categorie').value;
-  if (!nom) { showToast("Entrez un nom de prestation"); return; }
-  if (!prix || prix <= 0) { showToast("Entrez un prix de vente valide"); return; }
-  state.catalogue.push({ nom: nom, prix: prix, cout_achat: achat, unite: unite, categorie: categorie });
-  // Reset formulaire
+  if (!nom) { showToast('Entrez un nom'); return; }
+  if (!prix || prix <= 0) { showToast('Entrez un prix valide'); return; }
+  state.catalogue.push({ nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie });
   document.getElementById('cat-nom').value = '';
   document.getElementById('cat-prix-vente').value = '';
   document.getElementById('cat-prix-achat').value = '';
+  sauvegarderDonnees();
   renderCatalogueScreen();
-  showToast(nom + " ajouté au catalogue ✓");
+  showToast(nom + ' ajoute');
 }
 
 function supprimerPrestation(idx) {
   var nom = state.catalogue[idx].nom;
   state.catalogue.splice(idx, 1);
+  sauvegarderDonnees();
   renderCatalogueScreen();
-  showToast(nom + " supprimé");
+  showToast(nom + ' supprime');
 }
 
 function importerCSV(input) {
@@ -1454,29 +1337,25 @@ function importerCSV(input) {
     var lines = e.target.result.split('\n');
     var added = 0;
     lines.forEach(function(line, i) {
-      if (i === 0) return; // Skip header
+      if (i === 0) return;
       var cols = line.split(/[;,]/);
       if (cols.length < 2) return;
       var nom = (cols[0]||'').trim().replace(/"/g,'');
       var prix = parseFloat((cols[1]||'0').replace(',','.'));
       var achat = parseFloat((cols[2]||'0').replace(',','.')) || 0;
-      var unite = (cols[3]||'m²').trim().replace(/"/g,'') || 'm²';
+      var unite = (cols[3]||'forfait').trim().replace(/"/g,'') || 'forfait';
       var categorie = (cols[4]||'Autre').trim().replace(/"/g,'') || 'Autre';
-      if (nom && prix > 0) {
-        state.catalogue.push({ nom: nom, prix: prix, cout_achat: achat, unite: unite, categorie: categorie });
-        added++;
-      }
+      if (nom && prix > 0) { state.catalogue.push({nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie}); added++; }
     });
+    sauvegarderDonnees();
     renderCatalogueScreen();
-    showToast(added + " prestation(s) importée(s) ✓");
+    showToast(added + ' prestation(s) importee(s)');
     input.value = '';
   };
   reader.readAsText(file, 'UTF-8');
 }
 
-
-// ═══════════════════════════════ PROFIL ═══════════════════════════════
-
+// PROFIL
 function ouvrirProfil() {
   var p = state.profil;
   document.getElementById('profil-prenom').value = p.prenom || '';
@@ -1487,17 +1366,15 @@ function ouvrirProfil() {
   document.getElementById('profil-siret').value = p.siret || '';
   document.getElementById('profil-adresse').value = p.adresse || '';
   document.getElementById('profil-taux').value = p.taux_horaire || '';
-  document.getElementById('profil-mention-tva').value = p.mention_tva || '';
-  // Sélect métier
-  var metierSel = document.getElementById('profil-metier');
-  for(var i=0; i<metierSel.options.length; i++) {
-    if(metierSel.options[i].value === p.metier) { metierSel.selectedIndex = i; break; }
-  }
-  // Sélect TVA
-  var tvaSel = document.getElementById('profil-tva');
-  for(var i=0; i<tvaSel.options.length; i++) {
-    if(tvaSel.options[i].value === String(p.tva)) { tvaSel.selectedIndex = i; break; }
-  }
+  document.getElementById('profil-rcpro').value = p.rcpro || '';
+  var ms = document.getElementById('profil-metier');
+  for (var i=0; i<ms.options.length; i++) { if (ms.options[i].value === p.metier) { ms.selectedIndex = i; break; } }
+  var ts = document.getElementById('profil-tva');
+  for (var i=0; i<ts.options.length; i++) { if (ts.options[i].value === String(p.tva)) { ts.selectedIndex = i; break; } }
+  var ini = ((p.prenom||'')[0]||'') + ((p.nom||'')[0]||'');
+  document.getElementById('profil-avatar-big').textContent = ini.toUpperCase() || 'ML';
+  document.getElementById('profil-name-big').textContent = (p.prenom||'') + ' ' + (p.nom||'');
+  document.getElementById('profil-metier-display').textContent = p.metier || '';
 }
 
 function sauvegarderProfil() {
@@ -1511,19 +1388,34 @@ function sauvegarderProfil() {
   state.profil.taux_horaire = parseFloat(document.getElementById('profil-taux').value) || 65;
   state.profil.metier = document.getElementById('profil-metier').value;
   state.profil.tva = document.getElementById('profil-tva').value;
-  state.profil.mention_tva = document.getElementById('profil-mention-tva').value.trim();
-  // Mettre à jour l'affichage
-  var initiales = (state.profil.prenom[0]||'') + (state.profil.nom[0]||'');
-  document.getElementById('profil-avatar-big').textContent = initiales.toUpperCase() || 'ML';
-  document.getElementById('profil-name-big').textContent = state.profil.prenom + ' ' + state.profil.nom;
-  document.getElementById('profil-metier-display').textContent = state.profil.metier;
-  // Mettre à jour header home
+  state.profil.rcpro = document.getElementById('profil-rcpro').value.trim();
+  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
   document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
-  document.querySelector('.greeting').textContent = 'Bonjour, ' + state.profil.prenom + ' 👋';
-  document.querySelector('.avatar').textContent = initiales.toUpperCase() || 'ML';
+  document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom||'Marc') + ' !';
+  document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
   sauvegarderDonnees();
-  showToast('Profil enregistré ✓');
+  showToast('Profil enregistre');
   goTo('screen-home');
+}
+
+// SAUVEGARDE
+function sauvegarderDonnees() {
+  try {
+    localStorage.setItem('devizy_devis', JSON.stringify(state.devisList));
+    localStorage.setItem('devizy_catalogue', JSON.stringify(state.catalogue));
+    localStorage.setItem('devizy_profil', JSON.stringify(state.profil));
+  } catch(e) {}
+}
+
+function chargerDonnees() {
+  try {
+    var devis = localStorage.getItem('devizy_devis');
+    if (devis) { var d = JSON.parse(devis); if (d.length > 0) state.devisList = d; }
+    var cat = localStorage.getItem('devizy_catalogue');
+    if (cat) { var c = JSON.parse(cat); if (c.length > 0) state.catalogue = c; }
+    var profil = localStorage.getItem('devizy_profil');
+    if (profil) state.profil = JSON.parse(profil);
+  } catch(e) {}
 }
 
 </script>
