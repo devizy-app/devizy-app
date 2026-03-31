@@ -962,13 +962,21 @@ async function generateDevis() {
   var si = 0;
   var stepInt = setInterval(function(){ si++; if(si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
 
-  var catalogueStr = state.catalogue.map(function(c){ return c.nom+' ('+c.prix+' EUR/'+c.unite+')'; }).join(', ');
-  var prompt = 'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
-    'À partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
-    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"m2 ou ml ou u ou forfait ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
-    'Transcription : "' + state.transcription + '"\n\n' +
-    'Catalogue disponible : ' + catalogueStr + '\n\n' +
-    'Règles : utilise le catalogue pour les prix si possible. Comprends l\'argot BTP. Ne génère que du JSON valide, sans markdown ni texte autour.';
+  var catalogueStr = state.catalogue.map(function(c){ 
+  return c.nom+' | prix:'+c.prix+' EUR/'+c.unite+(c.cout_achat?' | achat:'+c.cout_achat+' EUR':'')+(c.categorie?' | cat:'+c.categorie:'');
+}).join('\n');
+
+var prompt = 'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
+  'A partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
+  '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"forfait ou u ou m2 ou ml ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
+  'Transcription : "' + state.transcription + '"\n\n' +
+  'Catalogue de l\'artisan :\n' + catalogueStr + '\n\n' +
+  'Regles IMPORTANTES :\n' +
+  '1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent\n' +
+  '2. Reprends exactement le nom, le prix et l\'unite du catalogue\n' +
+  '3. Si une prestation n\'est pas dans le catalogue, cree-la avec un prix coherent\n' +
+  '4. monosplit, clim, climatiseur = cherche dans le catalogue\n' +
+  '5. Ne genere que du JSON valide, sans markdown ni texte autour.';
 
   try {
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
