@@ -1118,45 +1118,8 @@ function exportPDF() {
     '.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
-    '
-/* CATALOGUE SCREEN */
-.cat-screen-header { background: var(--g-dark); padding: 44px 18px 16px; display: flex; align-items: center; gap: 10px; }
-.cat-form { margin: 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
-.cat-form-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.field-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
-.field-input { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.cat-add-btn { width: 100%; padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.cat-list-section { padding: 0 16px; }
-.cat-list-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-.cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.cat-card { background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; }
-.cat-card-left { flex: 1; }
-.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-.cat-card-prices { display: flex; gap: 12px; flex-wrap: wrap; }
-.cat-price-item { font-size: 12px; color: var(--text-muted); }
-.cat-price-item strong { color: var(--text); font-size: 13px; }
-.cat-card-right { display: flex; gap: 8px; align-items: center; }
-.cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
-.cat-import-btn { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; }
-.cat-group-title { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
-/* PROFIL SCREEN */
-.profil-avatar-wrap { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; }
-.profil-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #9FE1CB; margin-bottom: 10px; }
-.profil-name-big { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
-.profil-metier-lbl { font-size: 13px; color: var(--text-muted); }
-.profil-section { margin: 0 16px 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
-.profil-section-title { font-size: 12px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-.profil-field { margin-bottom: 12px; }
-.profil-field:last-child { margin-bottom: 0; }
-.profil-field label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-.profil-field input, .profil-field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.profil-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
-</style></head><body>' +
-    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
+
+    '</style></head><body>' +    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
     '<div style="font-size:13px;color:#666;margin-top:2px;">marc.lambert@devis-btp.fr</div></div>' +
     '<div class="devis-num"><div>'+state.devisNum+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
     '<div style="margin-bottom:24px;"><strong>Client :</strong> '+state.client.prenom+' '+state.client.nom+'<br>' +
