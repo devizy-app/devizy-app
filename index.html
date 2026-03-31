@@ -296,7 +296,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   // Test simple
   const test = async () => {
     const { data, error } = await supabase
-      .from('test')
+      .from('artisans')
       .select('*')
 
     console.log("DATA:", data)
