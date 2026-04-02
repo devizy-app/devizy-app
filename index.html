@@ -6,17 +6,40 @@
 <title>DevisBTP</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* LOGIN SCREEN */
-.login-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:#0D3D25; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; padding:40px; box-sizing:border-box; }
-.login-logo { font-family:Georgia,serif; font-size:36px; color:#A8D9C0; letter-spacing:8px; margin-bottom:6px; }
-.login-sub { font-size:14px; color:#5BB88A; margin-bottom:40px; }
-.login-tabs { display:flex; background:rgba(255,255,255,0.1); border-radius:10px; padding:4px; margin-bottom:24px; width:100%; max-width:320px; }
-.login-tab { flex:1; padding:9px; text-align:center; font-size:14px; color:#A8D9C0; cursor:pointer; border-radius:8px; transition:all 0.2s; }
-.login-tab.active { background:#186040; color:#fff; }
-.login-input { width:100%; max-width:320px; padding:14px 16px; border-radius:10px; border:none; font-size:15px; margin-bottom:10px; box-sizing:border-box; }
-.login-btn { width:100%; max-width:320px; padding:14px; background:#186040; color:#fff; border:none; border-radius:10px; font-size:15px; cursor:pointer; font-weight:500; }
-.login-msg { color:#A8D9C0; margin-top:16px; font-size:13px; text-align:center; min-height:20px; }
-.login-divider { color:#5BB88A; font-size:12px; margin:16px 0; text-align:center; }
+/* CATALOGUE SCREEN */
+.cat-screen-header { background: var(--g-dark); padding: 44px 18px 16px; display: flex; align-items: center; gap: 10px; }
+.cat-form { margin: 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
+.cat-form-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+.field-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
+.field-input { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
+.cat-add-btn { width: 100%; padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.cat-list-section { padding: 0 16px; }
+.cat-list-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+.cat-card { background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.cat-card-left { flex: 1; }
+.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.cat-card-prices { display: flex; gap: 12px; flex-wrap: wrap; }
+.cat-price-item { font-size: 12px; color: var(--text-muted); }
+.cat-price-item strong { color: var(--text); font-size: 13px; }
+.cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
+.cat-import-btn { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; }
+.cat-group-title { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
+/* PROFIL SCREEN */
+.profil-avatar-wrap { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; }
+.profil-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #9FE1CB; margin-bottom: 10px; }
+.profil-name-big { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
+.profil-metier-lbl { font-size: 13px; color: var(--text-muted); }
+.profil-section { margin: 0 16px 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.profil-section-title { font-size: 12px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+.profil-field { margin-bottom: 12px; }
+.profil-field:last-child { margin-bottom: 0; }
+.profil-field label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.profil-field input, .profil-field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
+.profil-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
 
 :root {
   --g-dark: #1A3A2A;
@@ -258,69 +281,9 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .notif-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .notif-icon svg { width: 14px; height: 14px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .notif-text { font-size: 12px; color: #065F46; line-height: 1.5; }
-
-/* CATALOGUE SCREEN */
-.cat-screen-header { background: var(--g-dark); padding: 44px 18px 16px; display: flex; align-items: center; gap: 10px; }
-.cat-form { margin: 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
-.cat-form-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-.field-label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 5px; }
-.field-input { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field-select { width: 100%; padding: 11px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.cat-add-btn { width: 100%; padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.cat-list-section { padding: 0 16px; }
-.cat-list-title { font-size: 13px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-.cat-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.cat-card { background: var(--card); border-radius: var(--radius-sm); padding: 13px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: flex-start; }
-.cat-card-left { flex: 1; }
-.cat-card-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-.cat-card-prices { display: flex; gap: 12px; flex-wrap: wrap; }
-.cat-price-item { font-size: 12px; color: var(--text-muted); }
-.cat-price-item strong { color: var(--text); font-size: 13px; }
-.cat-card-right { display: flex; gap: 8px; align-items: center; }
-.cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
-.cat-import-btn { margin: 0 16px 16px; width: calc(100% - 32px); padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; }
-.cat-group-title { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 12px 0 6px; }
-/* PROFIL SCREEN */
-.profil-avatar-wrap { display: flex; flex-direction: column; align-items: center; padding: 24px 16px 16px; }
-.profil-avatar-big { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #9FE1CB; margin-bottom: 10px; }
-.profil-name-big { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
-.profil-metier-lbl { font-size: 13px; color: var(--text-muted); }
-.profil-section { margin: 0 16px 16px; background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
-.profil-section-title { font-size: 12px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-.profil-field { margin-bottom: 12px; }
-.profil-field:last-child { margin-bottom: 0; }
-.profil-field label { font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-.profil-field input, .profil-field select { width: 100%; padding: 10px 12px; border: 1px solid var(--border-med); border-radius: 10px; font-size: 14px; background: var(--card); color: var(--text); }
-.profil-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
 </style>
 </head>
 <body>
-<div id="login-screen" class="login-screen">
-  <div class="login-logo">DEVIZY</div>
-  <div class="login-sub">Devis vocal BTP</div>
-  <div class="login-tabs">
-    <div class="login-tab active" id="tab-connexion" onclick="switchTab('connexion')">Connexion</div>
-    <div class="login-tab" id="tab-inscription" onclick="switchTab('inscription')">Inscription</div>
-  </div>
-  <div id="form-connexion">
-    <input id="login-email" class="login-input" type="email" placeholder="Votre email">
-    <input id="login-password" class="login-input" type="password" placeholder="Mot de passe">
-    <button class="login-btn" onclick="seConnecter()">Se connecter</button>
-    <div class="login-divider">ou</div>
-    <button class="login-btn" style="background:transparent;border:1px solid #5BB88A;color:#A8D9C0;margin-top:0;" onclick="lienMagique()">Lien magique par email</button>
-  </div>
-  <div id="form-inscription" style="display:none;">
-    <input id="reg-prenom" class="login-input" type="text" placeholder="Prenom">
-    <input id="reg-nom" class="login-input" type="text" placeholder="Nom">
-    <input id="reg-email" class="login-input" type="email" placeholder="Email professionnel">
-    <input id="reg-password" class="login-input" type="password" placeholder="Mot de passe (min. 6 caracteres)">
-    <button class="login-btn" onclick="sInscrire()">Creer mon compte</button>
-  </div>
-  <div class="login-msg" id="login-msg"></div>
-</div>
 <div id="app">
 
 <!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
@@ -775,7 +738,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <button class="profil-save-btn" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
   </div>
 </div>
-
 </div><!-- #app -->
 
 <script>
@@ -997,23 +959,24 @@ async function generateDevis() {
   var si = 0;
   var stepInt = setInterval(function(){ si++; if(si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
 
-  var catalogueStr = state.catalogue.map(function(c){ return c.nom+' ('+c.prix+' EUR/'+c.unite+')'; }).join(', ');
-  var prompt = 'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
-    'À partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
-    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"m2 ou ml ou u ou forfait ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
+  var catalogueStr = state.catalogue.map(function(c){
+    return c.nom+' | prix:'+c.prix+' EUR/'+c.unite+(c.cout_achat?' | achat:'+c.cout_achat+' EUR':'')+(c.categorie?' | cat:'+c.categorie:'');
+  }).join('\n');
+  var prompt = 'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
+    'A partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
+    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"forfait ou u ou m2 ou ml ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
     'Transcription : "' + state.transcription + '"\n\n' +
-    'Catalogue disponible : ' + catalogueStr + '\n\n' +
-    'Règles : utilise le catalogue pour les prix si possible. Comprends l\'argot BTP. Ne génère que du JSON valide, sans markdown ni texte autour.';
+    'Catalogue de l\'artisan :\n' + catalogueStr + '\n\n' +
+    'Regles IMPORTANTES :\n' +
+    '1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent\n' +
+    '2. Reprends exactement le nom, le prix et l\'unite du catalogue\n' +
+    '3. Si une prestation n\'est pas dans le catalogue, cree-la avec un prix coherent\n' +
+    '4. Ne genere que du JSON valide, sans markdown ni texte autour.';
 
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    var resp = await fetch('/api/generate', {
       method: 'POST',
-      headers: {
-  'Content-Type': 'application/json',
-  'x-api-key': 'VOTRE_CLE_API_ANTHROPIC',
-  'anthropic-version': '2023-06-01',
-  'anthropic-dangerous-direct-browser-access': 'true'
-},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -1032,13 +995,11 @@ async function generateDevis() {
     clearInterval(stepInt);
     // Fallback avec données exemple si API non disponible
     state.lignes = [
-      { libelle:'Dépose carrelage existant', quantite:12, unite:'m2', prix_unitaire:15, cout_achat:0 },
-      { libelle:'Pose carrelage 60×60', quantite:12, unite:'m2', prix_unitaire:45, cout_achat:18 },
-      { libelle:'Fourniture carrelage 60×60', quantite:12, unite:'m2', prix_unitaire:28, cout_achat:16 },
-      { libelle:'Remplacement mitigeur douche', quantite:1, unite:'u', prix_unitaire:180, cout_achat:75 },
-      { libelle:'Remplacement mitigeur lavabo', quantite:1, unite:'u', prix_unitaire:140, cout_achat:60 },
+      { libelle:'Climatiseur monosplit - Pose complete', quantite:1, unite:'forfait', prix_unitaire:950, cout_achat:420 },
+      { libelle:'Mise en service + verification etancheite', quantite:1, unite:'forfait', prix_unitaire:220, cout_achat:30 },
+      { libelle:'Liaison frigorifique cuivre', quantite:5, unite:'ml', prix_unitaire:28, cout_achat:12 },
     ];
-    state.descGlobale = 'Réfection complète salle de bain';
+    state.descGlobale = 'Installation climatisation';
     buildDevisScreen();
   }
 }
@@ -1158,8 +1119,8 @@ function exportPDF() {
     '.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
-
-    '</style></head><body>' +    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
+    '</style></head><body>' +
+    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
     '<div style="font-size:13px;color:#666;margin-top:2px;">marc.lambert@devis-btp.fr</div></div>' +
     '<div class="devis-num"><div>'+state.devisNum+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
     '<div style="margin-bottom:24px;"><strong>Client :</strong> '+state.client.prenom+' '+state.client.nom+'<br>' +
@@ -1292,7 +1253,7 @@ function renderCatalogueScreen() {
     groups[cat].forEach(function(entry) {
       var c = entry.item, i = entry.idx;
       var marge = c.cout_achat > 0 ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
-      var mc = marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626';
+      var mc = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
       html += '<div class="cat-card">' +
         '<div class="cat-card-left">' +
         '<div class="cat-card-name">' + c.nom + '</div>' +
@@ -1420,75 +1381,6 @@ function chargerDonnees() {
     if (profil) state.profil = JSON.parse(profil);
   } catch(e) {}
 }
-
-
-// AUTH SUPABASE
-var currentUser = null;
-
-function switchTab(tab) {
-  document.getElementById('tab-connexion').classList.toggle('active', tab === 'connexion');
-  document.getElementById('tab-inscription').classList.toggle('active', tab === 'inscription');
-  document.getElementById('form-connexion').style.display = tab === 'connexion' ? 'block' : 'none';
-  document.getElementById('form-inscription').style.display = tab === 'inscription' ? 'block' : 'none';
-  document.getElementById('login-msg').textContent = '';
-}
-
-async function seConnecter() {
-  var email = document.getElementById('login-email').value.trim();
-  var password = document.getElementById('login-password').value;
-  var msg = document.getElementById('login-msg');
-  if (!email || !password) { msg.textContent = 'Entrez email et mot de passe'; return; }
-  msg.textContent = 'Connexion...';
-  var result = await _sb.auth.signInWithPassword({ email: email, password: password });
-  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
-  else { ouvrirApp(result.data.user); }
-}
-
-async function lienMagique() {
-  var email = document.getElementById('login-email').value.trim();
-  var msg = document.getElementById('login-msg');
-  if (!email) { msg.textContent = 'Entrez votre email'; return; }
-  msg.textContent = 'Envoi...';
-  var result = await _sb.auth.signInWithOtp({ email: email });
-  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
-  else { msg.textContent = 'Lien envoye ! Verifiez votre email.'; }
-}
-
-async function sInscrire() {
-  var prenom = document.getElementById('reg-prenom').value.trim();
-  var nom = document.getElementById('reg-nom').value.trim();
-  var email = document.getElementById('reg-email').value.trim();
-  var password = document.getElementById('reg-password').value;
-  var msg = document.getElementById('login-msg');
-  if (!prenom || !email || !password) { msg.textContent = 'Remplissez tous les champs'; return; }
-  if (password.length < 6) { msg.textContent = 'Mot de passe min. 6 caracteres'; return; }
-  msg.textContent = 'Creation du compte...';
-  var result = await _sb.auth.signUp({ email: email, password: password, options: { data: { prenom: prenom, nom: nom } } });
-  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
-  else {
-    msg.textContent = 'Compte cree ! Verifiez votre email pour confirmer.';
-    state.profil.prenom = prenom;
-    state.profil.nom = nom;
-    state.profil.email = email;
-  }
-}
-
-function ouvrirApp(user) {
-  currentUser = user;
-  document.getElementById('login-screen').style.display = 'none';
-  if (user.user_metadata) {
-    if (user.user_metadata.prenom) state.profil.prenom = user.user_metadata.prenom;
-    if (user.user_metadata.nom) state.profil.nom = user.user_metadata.nom;
-  }
-  if (user.email) state.profil.email = user.email;
-  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
-  document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
-  document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom || user.email.split('@')[0]) + ' !';
-  document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
-}
-
-// auth géré dans initSupabase()
-
 </script>
 </body>
 </html>
