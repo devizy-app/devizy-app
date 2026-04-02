@@ -6,6 +6,18 @@
 <title>DevisBTP</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* LOGIN SCREEN */
+.login-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:#0D3D25; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:99999; padding:40px; box-sizing:border-box; }
+.login-logo { font-family:Georgia,serif; font-size:36px; color:#A8D9C0; letter-spacing:8px; margin-bottom:6px; }
+.login-sub { font-size:14px; color:#5BB88A; margin-bottom:40px; }
+.login-tabs { display:flex; background:rgba(255,255,255,0.1); border-radius:10px; padding:4px; margin-bottom:24px; width:100%; max-width:320px; }
+.login-tab { flex:1; padding:9px; text-align:center; font-size:14px; color:#A8D9C0; cursor:pointer; border-radius:8px; transition:all 0.2s; }
+.login-tab.active { background:#186040; color:#fff; }
+.login-input { width:100%; max-width:320px; padding:14px 16px; border-radius:10px; border:none; font-size:15px; margin-bottom:10px; box-sizing:border-box; }
+.login-btn { width:100%; max-width:320px; padding:14px; background:#186040; color:#fff; border:none; border-radius:10px; font-size:15px; cursor:pointer; font-weight:500; }
+.login-msg { color:#A8D9C0; margin-top:16px; font-size:13px; text-align:center; min-height:20px; }
+.login-divider { color:#5BB88A; font-size:12px; margin:16px 0; text-align:center; }
+
 :root {
   --g-dark: #1A3A2A;
   --g-med: #0F6E56;
@@ -285,27 +297,30 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .profil-save-btn { margin: 0 16px 24px; width: calc(100% - 32px); padding: 14px; background: var(--g-dark); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer; }
 </style>
 </head>
-  <script type="module">
-  import { createClient } from 'https://esm.sh/@supabase/supabase-js'
-
-  const supabaseUrl = 'https://pvcghstklmmmlxavrmhy.supabase.co'
-  const supabaseKey = 'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF'
-
-  const supabase = createClient(supabaseUrl, supabaseKey)
-
-  // Test simple
-  const test = async () => {
-    const { data, error } = await supabase
-      .from('artisans')
-      .select('*')
-
-    console.log("DATA:", data)
-    console.log("ERROR:", error)
-  }
-
-  test()
-</script>
 <body>
+<div id="login-screen" class="login-screen">
+  <div class="login-logo">DEVIZY</div>
+  <div class="login-sub">Devis vocal BTP</div>
+  <div class="login-tabs">
+    <div class="login-tab active" id="tab-connexion" onclick="switchTab('connexion')">Connexion</div>
+    <div class="login-tab" id="tab-inscription" onclick="switchTab('inscription')">Inscription</div>
+  </div>
+  <div id="form-connexion">
+    <input id="login-email" class="login-input" type="email" placeholder="Votre email">
+    <input id="login-password" class="login-input" type="password" placeholder="Mot de passe">
+    <button class="login-btn" onclick="seConnecter()">Se connecter</button>
+    <div class="login-divider">ou</div>
+    <button class="login-btn" style="background:transparent;border:1px solid #5BB88A;color:#A8D9C0;margin-top:0;" onclick="lienMagique()">Lien magique par email</button>
+  </div>
+  <div id="form-inscription" style="display:none;">
+    <input id="reg-prenom" class="login-input" type="text" placeholder="Prenom">
+    <input id="reg-nom" class="login-input" type="text" placeholder="Nom">
+    <input id="reg-email" class="login-input" type="email" placeholder="Email professionnel">
+    <input id="reg-password" class="login-input" type="password" placeholder="Mot de passe (min. 6 caracteres)">
+    <button class="login-btn" onclick="sInscrire()">Creer mon compte</button>
+  </div>
+  <div class="login-msg" id="login-msg"></div>
+</div>
 <div id="app">
 
 <!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
@@ -982,21 +997,13 @@ async function generateDevis() {
   var si = 0;
   var stepInt = setInterval(function(){ si++; if(si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
 
-  var catalogueStr = state.catalogue.map(function(c){ 
-  return c.nom+' | prix:'+c.prix+' EUR/'+c.unite+(c.cout_achat?' | achat:'+c.cout_achat+' EUR':'')+(c.categorie?' | cat:'+c.categorie:'');
-}).join('\n');
-
-var prompt = 'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
-  'A partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
-  '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"forfait ou u ou m2 ou ml ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
-  'Transcription : "' + state.transcription + '"\n\n' +
-  'Catalogue de l\'artisan :\n' + catalogueStr + '\n\n' +
-  'Regles IMPORTANTES :\n' +
-  '1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent\n' +
-  '2. Reprends exactement le nom, le prix et l\'unite du catalogue\n' +
-  '3. Si une prestation n\'est pas dans le catalogue, cree-la avec un prix coherent\n' +
-  '4. monosplit, clim, climatiseur = cherche dans le catalogue\n' +
-  '5. Ne genere que du JSON valide, sans markdown ni texte autour.';
+  var catalogueStr = state.catalogue.map(function(c){ return c.nom+' ('+c.prix+' EUR/'+c.unite+')'; }).join(', ');
+  var prompt = 'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
+    'À partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
+    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"m2 ou ml ou u ou forfait ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
+    'Transcription : "' + state.transcription + '"\n\n' +
+    'Catalogue disponible : ' + catalogueStr + '\n\n' +
+    'Règles : utilise le catalogue pour les prix si possible. Comprends l\'argot BTP. Ne génère que du JSON valide, sans markdown ni texte autour.';
 
   try {
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1408,6 +1415,74 @@ function chargerDonnees() {
     if (profil) state.profil = JSON.parse(profil);
   } catch(e) {}
 }
+
+
+// AUTH SUPABASE
+var currentUser = null;
+
+function switchTab(tab) {
+  document.getElementById('tab-connexion').classList.toggle('active', tab === 'connexion');
+  document.getElementById('tab-inscription').classList.toggle('active', tab === 'inscription');
+  document.getElementById('form-connexion').style.display = tab === 'connexion' ? 'block' : 'none';
+  document.getElementById('form-inscription').style.display = tab === 'inscription' ? 'block' : 'none';
+  document.getElementById('login-msg').textContent = '';
+}
+
+async function seConnecter() {
+  var email = document.getElementById('login-email').value.trim();
+  var password = document.getElementById('login-password').value;
+  var msg = document.getElementById('login-msg');
+  if (!email || !password) { msg.textContent = 'Entrez email et mot de passe'; return; }
+  msg.textContent = 'Connexion...';
+  var result = await _sb.auth.signInWithPassword({ email: email, password: password });
+  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
+  else { ouvrirApp(result.data.user); }
+}
+
+async function lienMagique() {
+  var email = document.getElementById('login-email').value.trim();
+  var msg = document.getElementById('login-msg');
+  if (!email) { msg.textContent = 'Entrez votre email'; return; }
+  msg.textContent = 'Envoi...';
+  var result = await _sb.auth.signInWithOtp({ email: email });
+  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
+  else { msg.textContent = 'Lien envoye ! Verifiez votre email.'; }
+}
+
+async function sInscrire() {
+  var prenom = document.getElementById('reg-prenom').value.trim();
+  var nom = document.getElementById('reg-nom').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var password = document.getElementById('reg-password').value;
+  var msg = document.getElementById('login-msg');
+  if (!prenom || !email || !password) { msg.textContent = 'Remplissez tous les champs'; return; }
+  if (password.length < 6) { msg.textContent = 'Mot de passe min. 6 caracteres'; return; }
+  msg.textContent = 'Creation du compte...';
+  var result = await _sb.auth.signUp({ email: email, password: password, options: { data: { prenom: prenom, nom: nom } } });
+  if (result.error) { msg.textContent = 'Erreur : ' + result.error.message; }
+  else {
+    msg.textContent = 'Compte cree ! Verifiez votre email pour confirmer.';
+    state.profil.prenom = prenom;
+    state.profil.nom = nom;
+    state.profil.email = email;
+  }
+}
+
+function ouvrirApp(user) {
+  currentUser = user;
+  document.getElementById('login-screen').style.display = 'none';
+  if (user.user_metadata) {
+    if (user.user_metadata.prenom) state.profil.prenom = user.user_metadata.prenom;
+    if (user.user_metadata.nom) state.profil.nom = user.user_metadata.nom;
+  }
+  if (user.email) state.profil.email = user.email;
+  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
+  document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
+  document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom || user.email.split('@')[0]) + ' !';
+  document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
+}
+
+// auth géré dans initSupabase()
 
 </script>
 </body>
