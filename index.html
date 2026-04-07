@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -145,15 +146,36 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .vocal-state { font-size: 13px; color: var(--text-muted); text-align: center; }
 .waveform { display: flex; align-items: center; justify-content: center; gap: 3px; height: 50px; }
 .wbar { width: 4px; border-radius: 2px; background: var(--g-med); transition: height 0.1s; }
+.wbar.paused { background: var(--border-med); }
+
+/* ── MIC + PAUSE CONTROLS ── */
+.mic-controls { display: flex; align-items: center; gap: 16px; }
 .mic-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
 .mic-btn:active { transform: scale(0.95); }
 .mic-btn.recording { background: #DC2626; }
+.mic-btn.paused-state { background: #B45309; }
 .mic-btn svg { width: 32px; height: 32px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
+.pause-btn { width: 52px; height: 52px; border-radius: 50%; background: var(--card); border: 2px solid var(--border-med); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; opacity: 0; pointer-events: none; }
+.pause-btn.visible { opacity: 1; pointer-events: auto; }
+.pause-btn:active { transform: scale(0.95); }
+.pause-btn svg { width: 20px; height: 20px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; }
+.pause-badge { font-size: 11px; font-weight: 600; color: #B45309; background: var(--amber-bg); padding: 3px 10px; border-radius: 20px; display: none; }
+.pause-badge.visible { display: inline-block; }
+
 .timer { font-size: 26px; font-weight: 500; font-family: 'DM Mono', monospace; color: var(--text); }
 .vocal-hint { font-size: 12px; color: var(--text-light); text-align: center; line-height: 1.5; }
 .transcript-box { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); }
 .transcript-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .transcript-text { font-size: 13px; color: var(--text); line-height: 1.6; min-height: 40px; }
+
+/* Compteur de mots détectés */
+.cat-match-banner { margin: 8px 16px 0; background: var(--g-light); border: 1px solid var(--g-border); border-radius: var(--radius-sm); padding: 9px 13px; display: none; align-items: center; gap: 8px; }
+.cat-match-banner.visible { display: flex; }
+.cat-match-icon { width: 22px; height: 22px; border-radius: 6px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cat-match-icon svg { width: 12px; height: 12px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.cat-match-text { font-size: 12px; color: #065F46; }
+.cat-match-text strong { font-weight: 600; }
+
 .cursor { display: inline-block; width: 2px; height: 13px; background: var(--g-med); margin-left: 2px; vertical-align: middle; animation: blink 0.8s step-end infinite; }
 @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
 .gen-btn { margin: 12px 16px 0; width: calc(100% - 32px); padding: 16px; background: var(--g-dark); color: #fff; font-size: 15px; font-weight: 500; border: none; border-radius: var(--radius); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
@@ -185,6 +207,8 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .pi-unit { font-size: 12px; color: var(--text-muted); }
 .pi-price-u { font-size: 12px; color: var(--text-muted); }
 .pi-total { font-size: 13px; font-weight: 600; margin-left: auto; }
+.pi-source { font-size: 10px; color: var(--g-med); margin-top: 3px; display: flex; align-items: center; gap: 3px; }
+.pi-source svg { width: 9px; height: 9px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .add-btn { margin: 6px 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); cursor: pointer; color: var(--g-med); font-size: 13px; background: transparent; width: calc(100% - 32px); }
 .add-btn svg { width: 16px; height: 16px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .totaux { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
@@ -415,12 +439,34 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
         <div class="wbar" style="height:10px" id="wb9"></div><div class="wbar" style="height:22px" id="wb10"></div>
         <div class="wbar" style="height:8px" id="wb11"></div><div class="wbar" style="height:14px" id="wb12"></div>
       </div>
-      <button class="mic-btn" id="mic-btn" onclick="toggleRec()">
-        <svg id="mic-icon" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
-      </button>
-      <div class="timer" id="timer">0:00</div>
+
+      <!-- Contrôles : pause à gauche, micro au centre -->
+      <div class="mic-controls">
+        <button class="pause-btn" id="pause-btn" onclick="togglePause()">
+          <svg id="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+        </button>
+        <button class="mic-btn" id="mic-btn" onclick="toggleRec()">
+          <svg id="mic-icon" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+        </button>
+        <!-- Espace miroir pour centrage -->
+        <div style="width:52px;"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="timer" id="timer">0:00</div>
+        <span class="pause-badge" id="pause-badge">⏸ En pause</span>
+      </div>
       <div class="vocal-hint" id="vocal-hint">Décrivez les travaux, les matériaux<br>et les quantités à voix haute</div>
     </div>
+
+    <!-- Bannière correspondances catalogue -->
+    <div class="cat-match-banner" id="cat-match-banner">
+      <div class="cat-match-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+      </div>
+      <div class="cat-match-text" id="cat-match-text">Prestations catalogue détectées</div>
+    </div>
+
     <div class="transcript-box">
       <div class="transcript-label">Transcription en direct</div>
       <div class="transcript-text" id="transcript-text"><span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span></div>
@@ -471,7 +517,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     </button>
     <div class="totaux">
       <div class="total-row"><span class="lbl">Sous-total HT</span><span id="total-ht">0 €</span></div>
-      <div class="total-row"><span class="lbl">TVA 10%</span><span id="total-tva">0 €</span></div>
+      <div class="total-row"><span class="lbl">TVA <span id="tva-label">10</span>%</span><span id="total-tva">0 €</span></div>
       <hr class="total-div">
       <div class="total-main"><span>Total TTC</span><span id="total-ttc">0 €</span></div>
       <div class="rent-wrap">
@@ -605,7 +651,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="sig-row"><span class="lbl">Travaux</span><span id="sig-travaux" style="font-weight:500;">–</span></div>
       <hr class="sig-div">
       <div class="sig-row"><span class="lbl">Sous-total HT</span><span id="sig-ht">–</span></div>
-      <div class="sig-row"><span class="lbl">TVA 10%</span><span id="sig-tva">–</span></div>
+      <div class="sig-row"><span class="lbl">TVA</span><span id="sig-tva">–</span></div>
       <div class="sig-row" style="font-size:15px;font-weight:600;"><span>Total TTC</span><span id="sig-ttc">–</span></div>
     </div>
     <div class="cgv-box" onclick="toggleCgv()">
@@ -850,10 +896,16 @@ function filterDevis(f, el) {
 }
 function viewDevis(id) { goTo('screen-devis'); }
 
-// ═══════════════════════════════ VOCAL ═══════════════════════════════
-var isRec = false, timerInt = null, elapsed = 0, waveInt = null;
+// ═══════════════════════════════ VOCAL — ÉTAT ÉTENDU ═══════════════════════════════
+var isRec = false;
+var isPaused = false;
+var timerInt = null;
+var elapsed = 0;
+var waveInt = null;
 var recognition = null;
 var fullTranscript = '';
+// Compteur de correspondances catalogue détectées à la volée
+var liveCatMatches = 0;
 
 function goToVocal() {
   state.client.prenom = document.getElementById('client-prenom').value || 'Client';
@@ -867,31 +919,116 @@ function goToVocal() {
   document.getElementById('v-addr').textContent = state.client.adresse;
   fullTranscript = '';
   elapsed = 0;
+  isPaused = false;
+  liveCatMatches = 0;
   document.getElementById('timer').textContent = '0:00';
   document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span>';
   document.getElementById('gen-btn').disabled = true;
   document.getElementById('vocal-state').textContent = 'Appuyez pour dicter votre devis';
+  document.getElementById('cat-match-banner').classList.remove('visible');
+  document.getElementById('pause-badge').classList.remove('visible');
+  document.getElementById('pause-btn').classList.remove('visible');
   resetMicBtn();
   goTo('screen-vocal');
 }
 
 function resetMicBtn() {
   var btn = document.getElementById('mic-btn');
-  btn.classList.remove('recording');
-  btn.innerHTML = '<svg id="mic-icon" viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
+  btn.classList.remove('recording', 'paused-state');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
 }
 
 function toggleRec() {
-  if (!isRec) startRec(); else stopRec();
+  if (!isRec) {
+    startRec();
+  } else {
+    stopRec();
+  }
+}
+
+// ── PAUSE / REPRISE ──
+function togglePause() {
+  if (!isRec) return;
+  if (!isPaused) {
+    pauseRec();
+  } else {
+    resumeRec();
+  }
+}
+
+function pauseRec() {
+  isPaused = true;
+
+  // Stopper la reconnaissance vocale (conserve fullTranscript)
+  if (recognition) { try { recognition.stop(); } catch(e){} }
+
+  // Figer le timer
+  clearInterval(timerInt);
+  clearInterval(waveInt);
+
+  // UI : waveform figée en gris
+  for (var i=1; i<=12; i++) {
+    var bar = document.getElementById('wb'+i);
+    bar.style.height = '8px';
+    bar.classList.add('paused');
+  }
+
+  // Bouton pause → icône play
+  document.getElementById('pause-icon').innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+
+  // Bouton micro → orange pause
+  var btn = document.getElementById('mic-btn');
+  btn.classList.remove('recording');
+  btn.classList.add('paused-state');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+
+  document.getElementById('vocal-state').textContent = 'Enregistrement en pause';
+  document.getElementById('vocal-hint').textContent = 'Appuyez sur ▶ pour reprendre, ou sur stop pour terminer';
+  document.getElementById('pause-badge').classList.add('visible');
+}
+
+function resumeRec() {
+  isPaused = false;
+
+  // Relancer le timer là où il s'était arrêté
+  timerInt = setInterval(function(){
+    elapsed++;
+    var m = Math.floor(elapsed/60), s = elapsed%60;
+    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
+
+  // Relancer l'animation waveform
+  waveInt = setInterval(animWave, 130);
+  for (var i=1; i<=12; i++) {
+    document.getElementById('wb'+i).classList.remove('paused');
+  }
+
+  // Bouton pause → icône pause à nouveau
+  document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+
+  // Bouton micro → rouge stop
+  var btn = document.getElementById('mic-btn');
+  btn.classList.remove('paused-state');
+  btn.classList.add('recording');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
+  document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
+  document.getElementById('vocal-hint').textContent = 'Appuyez sur ⏸ pour marquer une pause';
+  document.getElementById('pause-badge').classList.remove('visible');
+
+  // Relancer la reconnaissance vocale — reprend APRÈS la transcription déjà accumulée
+  startRecognition();
 }
 
 function startRec() {
   isRec = true;
+  isPaused = false;
   var btn = document.getElementById('mic-btn');
   btn.classList.add('recording');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
   document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
-  document.getElementById('vocal-hint').textContent = 'Appuyez de nouveau pour arrêter';
+  document.getElementById('vocal-hint').textContent = 'Appuyez sur ⏸ pour marquer une pause';
+  document.getElementById('pause-btn').classList.add('visible');
   elapsed = 0;
   timerInt = setInterval(function(){
     elapsed++;
@@ -899,8 +1036,11 @@ function startRec() {
     document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
   }, 1000);
   waveInt = setInterval(animWave, 130);
+  startRecognition();
+}
 
-  // Web Speech API
+// Factorisation : démarre uniquement la partie reconnaissance vocale
+function startRecognition() {
   if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognition = new SR();
@@ -910,38 +1050,85 @@ function startRec() {
     recognition.onresult = function(e) {
       var interim = '';
       for (var i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) fullTranscript += e.results[i][0].transcript + ' ';
-        else interim = e.results[i][0].transcript;
+        if (e.results[i].isFinal) {
+          fullTranscript += e.results[i][0].transcript + ' ';
+          // Détection catalogue en temps réel après chaque segment final
+          detectCatalogMatches(fullTranscript);
+        } else {
+          interim = e.results[i][0].transcript;
+        }
       }
-      document.getElementById('transcript-text').innerHTML = fullTranscript + '<span style="color:var(--text-light);">' + interim + '</span><span class="cursor"></span>';
+      document.getElementById('transcript-text').innerHTML =
+        fullTranscript +
+        '<span style="color:var(--text-light);">' + interim + '</span>' +
+        (isRec && !isPaused ? '<span class="cursor"></span>' : '');
     };
-    recognition.onerror = function(){ };
+    recognition.onerror = function(ev) {
+      // Sur iOS, "not-allowed" = micro refusé
+      if (ev.error === 'not-allowed') {
+        showToast('Accès microphone refusé');
+        stopRec();
+      }
+    };
+    // Si la reconnaissance s'arrête seule (timeout mobile), on la relance si on est toujours en train d'enregistrer
+    recognition.onend = function() {
+      if (isRec && !isPaused) {
+        try { recognition.start(); } catch(e){}
+      }
+    };
     recognition.start();
   } else {
-    // Fallback si Web Speech non disponible
     document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);">Microphone actif — parlez maintenant...<span class="cursor"></span></span>';
+  }
+}
+
+// ── Détection catalogue en live ──
+function detectCatalogMatches(text) {
+  var textLower = text.toLowerCase();
+  var matches = 0;
+  state.catalogue.forEach(function(c) {
+    // Cherche des mots-clés du nom de la prestation dans la transcription
+    var words = c.nom.toLowerCase().split(/[\s\-+,]+/).filter(function(w){ return w.length > 4; });
+    var found = words.some(function(w){ return textLower.includes(w); });
+    if (found) matches++;
+  });
+  if (matches !== liveCatMatches) {
+    liveCatMatches = matches;
+    var banner = document.getElementById('cat-match-banner');
+    var txt = document.getElementById('cat-match-text');
+    if (matches > 0) {
+      banner.classList.add('visible');
+      txt.innerHTML = '<strong>' + matches + ' prestation' + (matches > 1 ? 's' : '') + '</strong> du catalogue détectée' + (matches > 1 ? 's' : '') + ' dans votre dictée';
+    } else {
+      banner.classList.remove('visible');
+    }
   }
 }
 
 function stopRec() {
   isRec = false;
+  isPaused = false;
   clearInterval(timerInt);
   clearInterval(waveInt);
   if (recognition) { try { recognition.stop(); } catch(e){} }
   resetMicBtn();
-  for (var i=1; i<=12; i++) document.getElementById('wb'+i).style.height = '8px';
+  document.getElementById('pause-btn').classList.remove('visible');
+  document.getElementById('pause-badge').classList.remove('visible');
+  for (var i=1; i<=12; i++) {
+    var bar = document.getElementById('wb'+i);
+    bar.style.height = '8px';
+    bar.classList.remove('paused');
+  }
   document.getElementById('vocal-state').textContent = 'Enregistrement terminé';
   document.getElementById('vocal-hint').textContent = 'Vérifiez la transcription puis générez le devis';
-  state.transcription = fullTranscript.trim() || document.getElementById('transcript-text').innerText.replace('...','').trim();
+  state.transcription = fullTranscript.trim();
   if (state.transcription && state.transcription.length > 5) {
     document.getElementById('gen-btn').disabled = false;
-    if (!fullTranscript) {
-      document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Transcription capturée (' + elapsed + 's). Cliquez sur "Générer" pour continuer.</span>';
-    }
   } else {
+    // Fallback démo
     document.getElementById('gen-btn').disabled = false;
-    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Exemple : "Réfection salle de bain, dépose carrelage 12m², pose carrelage 60x60, remplacement mitigeur"</span>';
-    state.transcription = 'Réfection salle de bain : dépose ancien carrelage sur 12 m², pose carrelage neuf 60x60, remplacement mitigeur douche et lavabo.';
+    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Exemple : "Pose climatiseur monosplit avec mise en service et 5 mètres de liaison frigorifique"</span>';
+    state.transcription = 'Pose climatiseur monosplit avec mise en service et 5 mètres de liaison frigorifique cuivre. Aussi un raccordement électrique au tableau.';
   }
 }
 
@@ -951,56 +1138,125 @@ function animWave() {
   }
 }
 
-// ═══════════════════════════════ IA GENERATION ═══════════════════════════════
-var procSteps = ['Analyse de la transcription...','Détection des prestations...','Application de vos tarifs...','Calcul de la rentabilité...'];
+// ═══════════════════════════════ IA GENERATION — CATALOGUE STRICT ═══════════════════════════════
+var procSteps = [
+  'Analyse de la transcription...',
+  'Recherche dans votre catalogue...',
+  'Application de vos tarifs...',
+  'Calcul de la rentabilité...'
+];
 
 async function generateDevis() {
+  // Verrouiller le bouton pour éviter les doubles appels
+  document.getElementById('gen-btn').disabled = true;
   goTo('screen-processing');
   var si = 0;
-  var stepInt = setInterval(function(){ si++; if(si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
+  var stepInt = setInterval(function(){
+    si++;
+    if (si < procSteps.length) document.getElementById('proc-label').textContent = procSteps[si];
+  }, 800);
 
-  var catalogueStr = state.catalogue.map(function(c){
-    return c.nom+' | prix:'+c.prix+' EUR/'+c.unite+(c.cout_achat?' | achat:'+c.cout_achat+' EUR':'')+(c.categorie?' | cat:'+c.categorie:'');
+  // ── Construire le catalogue avec IDs pour que l'IA référence exactement ──
+  var catalogueIndexed = state.catalogue.map(function(c, i) {
+    return {
+      id: i,
+      nom: c.nom,
+      prix: c.prix,
+      cout_achat: c.cout_achat,
+      unite: c.unite,
+      categorie: c.categorie
+    };
+  });
+
+  var catalogueStr = catalogueIndexed.map(function(c) {
+    return '[ID:' + c.id + '] ' + c.nom +
+      ' | prix_vente:' + c.prix + ' EUR/' + c.unite +
+      (c.cout_achat ? ' | cout_achat:' + c.cout_achat + ' EUR' : '') +
+      ' | cat:' + c.categorie;
   }).join('\n');
-  var prompt = 'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
-    'A partir de la transcription vocale suivante, extrais les prestations et retourne UNIQUEMENT un objet JSON valide :\n' +
-    '{"description_globale":"...","lignes":[{"libelle":"...","quantite":N,"unite":"forfait ou u ou m2 ou ml ou heure","prix_unitaire":N,"cout_achat":N}]}\n\n' +
-    'Transcription : "' + state.transcription + '"\n\n' +
-    'Catalogue de l\'artisan :\n' + catalogueStr + '\n\n' +
-    'Regles IMPORTANTES :\n' +
-    '1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent\n' +
-    '2. Reprends exactement le nom, le prix et l\'unite du catalogue\n' +
-    '3. Si une prestation n\'est pas dans le catalogue, cree-la avec un prix coherent\n' +
-    '4. Ne genere que du JSON valide, sans markdown ni texte autour.';
+
+  var prompt =
+    'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
+    'Artisan : ' + state.profil.prenom + ' ' + state.profil.nom +
+    ' | Métier : ' + state.profil.metier +
+    ' | Taux horaire : ' + state.profil.taux_horaire + ' EUR/h' +
+    ' | TVA : ' + state.profil.tva + '%\n\n' +
+    'RÈGLE ABSOLUE : Tu dois OBLIGATOIREMENT utiliser les prestations du catalogue ci-dessous chaque fois qu\'elles correspondent à ce que décrit l\'artisan. ' +
+    'Quand tu utilises une prestation du catalogue, reprends EXACTEMENT son nom, son prix et son unité, et fournis son catalogue_id.\n\n' +
+    'CATALOGUE DE L\'ARTISAN :\n' + catalogueStr + '\n\n' +
+    'TRANSCRIPTION VOCALE :\n"' + state.transcription + '"\n\n' +
+    'Retourne UNIQUEMENT un objet JSON valide, sans markdown ni texte autour :\n' +
+    '{\n' +
+    '  "description_globale": "résumé en 1 phrase des travaux",\n' +
+    '  "lignes": [\n' +
+    '    {\n' +
+    '      "catalogue_id": <ID si prestation du catalogue, sinon null>,\n' +
+    '      "libelle": "nom exact du catalogue OU nouveau libellé si hors catalogue",\n' +
+    '      "quantite": <nombre>,\n' +
+    '      "unite": "unité exacte du catalogue ou forfait/u/m2/ml/heure",\n' +
+    '      "prix_unitaire": <prix exact du catalogue ou estimation cohérente>,\n' +
+    '      "cout_achat": <cout du catalogue ou estimation>,\n' +
+    '      "depuis_catalogue": <true si ID catalogue utilisé, false sinon>\n' +
+    '    }\n' +
+    '  ]\n' +
+    '}';
 
   try {
     var resp = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-opus-4-6',
         max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
+
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var data = await resp.json();
+    if (data.error) throw new Error(data.error.message || 'Erreur API');
+
     clearInterval(stepInt);
-    var text = data.content && data.content[0] ? data.content[0].text : '';
-    var clean = text.replace(/```json|```/g,'').trim();
+    var text = (data.content && data.content[0]) ? data.content[0].text : '';
+    var clean = text.replace(/```json|```/g, '').trim();
     var parsed = JSON.parse(clean);
-    state.lignes = parsed.lignes || [];
-    state.descGlobale = parsed.description_globale || state.transcription.substring(0,80);
+
+    // ── Résolution catalogue : si catalogue_id fourni, on écrase avec les données exactes ──
+    var lignes = (parsed.lignes || []).map(function(l) {
+      if (l.catalogue_id !== null && l.catalogue_id !== undefined) {
+        var idx = parseInt(l.catalogue_id);
+        var catEntry = state.catalogue[idx];
+        if (catEntry) {
+          return {
+            libelle: catEntry.nom,
+            quantite: l.quantite || 1,
+            unite: catEntry.unite,
+            prix_unitaire: catEntry.prix,
+            cout_achat: catEntry.cout_achat,
+            depuis_catalogue: true
+          };
+        }
+      }
+      return {
+        libelle: l.libelle,
+        quantite: l.quantite || 1,
+        unite: l.unite || 'forfait',
+        prix_unitaire: l.prix_unitaire || 0,
+        cout_achat: l.cout_achat || 0,
+        depuis_catalogue: false
+      };
+    });
+
+    state.lignes = lignes;
+    state.descGlobale = parsed.description_globale || state.transcription.substring(0, 80);
     buildDevisScreen();
+
   } catch(e) {
     clearInterval(stepInt);
-    // Fallback avec données exemple si API non disponible
-    state.lignes = [
-      { libelle:'Climatiseur monosplit - Pose complete', quantite:1, unite:'forfait', prix_unitaire:950, cout_achat:420 },
-      { libelle:'Mise en service + verification etancheite', quantite:1, unite:'forfait', prix_unitaire:220, cout_achat:30 },
-      { libelle:'Liaison frigorifique cuivre', quantite:5, unite:'ml', prix_unitaire:28, cout_achat:12 },
-    ];
-    state.descGlobale = 'Installation climatisation';
-    buildDevisScreen();
+    // Erreur : on revient à l'écran vocal avec un message clair
+    goTo('screen-vocal');
+    document.getElementById('gen-btn').disabled = false;
+    showToast('Erreur de génération — réessayez');
   }
 }
 
@@ -1011,7 +1267,7 @@ function buildDevisScreen() {
   var ref = document.getElementById('transcrit-ref');
   if (state.transcription) {
     ref.style.display = 'block';
-    document.getElementById('tr-text').textContent = '"' + state.transcription.substring(0,120) + (state.transcription.length>120?'...':'"');
+    document.getElementById('tr-text').textContent = '"' + state.transcription.substring(0, 120) + (state.transcription.length > 120 ? '...' : '"');
   }
   renderPrestas();
   updateTotaux();
@@ -1022,14 +1278,20 @@ function renderPrestas() {
   var html = '';
   state.lignes.forEach(function(l, i) {
     var total = Math.round(l.quantite * l.prix_unitaire);
+    var sourceTag = l.depuis_catalogue
+      ? '<div class="pi-source"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg> Depuis votre catalogue</div>'
+      : '';
     html += '<div class="presta-item">' +
-      '<div class="pi-top"><span class="pi-name">'+l.libelle+'</span><span class="pi-remove" onclick="removePresta('+i+')">×</span></div>' +
+      '<div class="pi-top"><span class="pi-name">' + l.libelle + '</span>' +
+      '<span class="pi-remove" onclick="removePresta(' + i + ')">×</span></div>' +
       '<div class="pi-detail">' +
-      '<input class="pi-input" type="number" value="'+l.quantite+'" min="0.5" step="0.5" oninput="updateQte('+i+',this.value)">' +
-      '<span class="pi-unit">'+l.unite+'</span>' +
-      '<span class="pi-price-u">× '+l.prix_unitaire+' €</span>' +
-      '<span class="pi-total" id="pi-total-'+i+'">'+fmt(total)+'</span>' +
-      '</div></div>';
+      '<input class="pi-input" type="number" value="' + l.quantite + '" min="0.5" step="0.5" oninput="updateQte(' + i + ',this.value)">' +
+      '<span class="pi-unit">' + l.unite + '</span>' +
+      '<span class="pi-price-u">× ' + l.prix_unitaire + ' €</span>' +
+      '<span class="pi-total" id="pi-total-' + i + '">' + fmt(total) + '</span>' +
+      '</div>' +
+      sourceTag +
+      '</div>';
   });
   document.getElementById('presta-list').innerHTML = html;
 }
@@ -1037,7 +1299,7 @@ function renderPrestas() {
 function updateQte(idx, val) {
   state.lignes[idx].quantite = parseFloat(val) || 0;
   var total = state.lignes[idx].quantite * state.lignes[idx].prix_unitaire;
-  document.getElementById('pi-total-'+idx).textContent = fmt(total);
+  document.getElementById('pi-total-' + idx).textContent = fmt(total);
   updateTotaux();
 }
 
@@ -1048,20 +1310,31 @@ function removePresta(idx) {
 }
 
 function updateTotaux() {
-  var ht = state.lignes.reduce(function(a,l){ return a + l.quantite*l.prix_unitaire; }, 0);
-  var cout = state.lignes.reduce(function(a,l){ return a + l.quantite*(l.cout_achat||0); }, 0);
-  var tva = ht*0.1, ttc = ht+tva;
-  var marge = ht>0 ? Math.round((ht-cout)/ht*100) : 0;
-  if (marge < 0 || !cout) marge = Math.round(30+Math.random()*10);
+  var ht = state.lignes.reduce(function(a,l){ return a + l.quantite * l.prix_unitaire; }, 0);
+  var cout = state.lignes.reduce(function(a,l){ return a + l.quantite * (l.cout_achat || 0); }, 0);
+
+  // ── TVA depuis le profil (bug corrigé) ──
+  var tvaRate = parseFloat(state.profil.tva || 10) / 100;
+  var tva = ht * tvaRate;
+  var ttc = ht + tva;
+
+  // ── Marge sans fallback aléatoire ──
+  var marge = (ht > 0 && cout > 0) ? Math.round((ht - cout) / ht * 100) : null;
+  var margeDisplay = marge !== null ? marge + '%' : '—';
+  var col = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
+
   document.getElementById('total-ht').textContent = fmt(ht);
   document.getElementById('total-tva').textContent = fmt(tva);
+  document.getElementById('tva-label').textContent = state.profil.tva || '10';
   document.getElementById('total-ttc').textContent = fmt(ttc);
-  var col = marge>=30?'#0F6E56':marge>=20?'#B45309':'#DC2626';
-  document.getElementById('rent-pct').textContent = marge+'%';
+  document.getElementById('rent-pct').textContent = margeDisplay;
   document.getElementById('rent-pct').style.color = col;
-  document.getElementById('rent-bar').style.width = Math.min(marge,100)+'%';
-  document.getElementById('rent-bar').style.background = col;
-  // Update sig screen
+  if (marge !== null) {
+    document.getElementById('rent-bar').style.width = Math.min(marge, 100) + '%';
+    document.getElementById('rent-bar').style.background = col;
+  }
+
+  // Mise à jour écran signature
   document.getElementById('sig-num').textContent = state.devisNum + ' — ' + fmt(ttc);
   document.getElementById('sig-ht').textContent = fmt(ht);
   document.getElementById('sig-tva').textContent = fmt(tva);
@@ -1072,9 +1345,9 @@ function updateTotaux() {
 // ═══════════════════════════════ CATALOGUE ═══════════════════════════════
 function openCatalog() {
   var html = '';
-  state.catalogue.forEach(function(c,i){
-    html += '<div class="cat-item" onclick="addFromCatalog('+i+')">' +
-      '<div><div class="cat-name">'+c.nom+'</div><div class="cat-price">'+c.prix+' €/'+c.unite+'</div></div>' +
+  state.catalogue.forEach(function(c, i) {
+    html += '<div class="cat-item" onclick="addFromCatalog(' + i + ')">' +
+      '<div><div class="cat-name">' + c.nom + '</div><div class="cat-price">' + c.prix + ' €/' + c.unite + '</div></div>' +
       '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
       '</div>';
   });
@@ -1088,7 +1361,7 @@ function closeCatalog() {
 }
 function addFromCatalog(idx) {
   var c = state.catalogue[idx];
-  state.lignes.push({ libelle:c.nom, quantite:1, unite:c.unite, prix_unitaire:c.prix, cout_achat:Math.round(c.prix*0.45) });
+  state.lignes.push({ libelle:c.nom, quantite:1, unite:c.unite, prix_unitaire:c.prix, cout_achat:c.cout_achat, depuis_catalogue:true });
   closeCatalog();
   renderPrestas();
   updateTotaux();
@@ -1099,15 +1372,16 @@ function addFromCatalog(idx) {
 function exportPDF() {
   showToast('PDF généré — ouverture...');
   var w = window.open('');
-  if(!w) { showToast('Autorisez les popups'); return; }
-  var lignesHTML = state.lignes.map(function(l){
-    return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">'+l.libelle+'</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+l.quantite+' '+l.unite+'</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+l.prix_unitaire+' €</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+ fmt(l.quantite*l.prix_unitaire)+'</td></tr>';
+  if (!w) { showToast('Autorisez les popups'); return; }
+  var lignesHTML = state.lignes.map(function(l) {
+    return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">' + l.libelle + '</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">' + l.quantite + ' ' + l.unite + '</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">' + l.prix_unitaire + ' €</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">' + fmt(l.quantite * l.prix_unitaire) + '</td></tr>';
   }).join('');
-  var ht = state._ht||0, tva=state._tva||0, ttc=state._ttc||0;
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+state.devisNum+'</title>' +
+  var ht = state._ht || 0, tva = state._tva || 0, ttc = state._ttc || 0;
+  var tvaRate = state.profil.tva || '10';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + state.devisNum + '</title>' +
     '<style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#1a1a1a;padding:20px;}' +
     '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:20px;border-bottom:3px solid #1A3A2A;}' +
     '.brand{font-size:28px;font-weight:700;color:#1A3A2A;}' +
@@ -1120,16 +1394,17 @@ function exportPDF() {
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
     '</style></head><body>' +
-    '<div class="header"><div><div class="brand">DevisBTP</div><div style="font-size:14px;color:#666;margin-top:4px;">Marc Lambert · Artisan</div>' +
-    '<div style="font-size:13px;color:#666;margin-top:2px;">marc.lambert@devis-btp.fr</div></div>' +
-    '<div class="devis-num"><div>'+state.devisNum+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
-    '<div style="margin-bottom:24px;"><strong>Client :</strong> '+state.client.prenom+' '+state.client.nom+'<br>' +
-    '<strong>Adresse :</strong> '+state.client.adresse+'</div>' +
-    '<p style="color:#666;margin-bottom:16px;font-style:italic;">'+state.descGlobale+'</p>' +
-    '<table><thead><tr><th>Prestation</th><th>Quantité</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>'+lignesHTML+'</tbody></table>' +
-    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>'+fmt(ht)+'</span></div>' +
-    '<div class="total-line"><span>TVA 10%</span><span>'+fmt(tva)+'</span></div>' +
-    '<div class="total-line total-ttc"><span>Total TTC</span><span>'+fmt(ttc)+'</span></div></div>' +
+    '<div class="header"><div><div class="brand">' + (state.profil.entreprise || 'DevisBTP') + '</div>' +
+    '<div style="font-size:14px;color:#666;margin-top:4px;">' + state.profil.prenom + ' ' + state.profil.nom + '</div>' +
+    '<div style="font-size:13px;color:#666;margin-top:2px;">' + (state.profil.email || '') + '</div></div>' +
+    '<div class="devis-num"><div>' + state.devisNum + '</div><div style="font-size:14px;color:#666;margin-top:4px;">' + new Date().toLocaleDateString('fr-FR') + '</div></div></div>' +
+    '<div style="margin-bottom:24px;"><strong>Client :</strong> ' + state.client.prenom + ' ' + state.client.nom + '<br>' +
+    '<strong>Adresse :</strong> ' + state.client.adresse + '</div>' +
+    '<p style="color:#666;margin-bottom:16px;font-style:italic;">' + (state.descGlobale || '') + '</p>' +
+    '<table><thead><tr><th>Prestation</th><th>Quantité</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>' + lignesHTML + '</tbody></table>' +
+    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>' + fmt(ht) + '</span></div>' +
+    '<div class="total-line"><span>TVA ' + tvaRate + '%</span><span>' + fmt(tva) + '</span></div>' +
+    '<div class="total-line total-ttc"><span>Total TTC</span><span>' + fmt(ttc) + '</span></div></div>' +
     '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Signature électronique</div>' +
     '<div style="font-size:13px;">Ce devis est valable 30 jours à compter de sa date d\'émission.</div></div>' +
     '</body></html>');
@@ -1139,30 +1414,27 @@ function exportPDF() {
 
 // ═══════════════════════════════ SEND ═══════════════════════════════
 function selectCh(ch) {
-  ['email','sms','wa','pdf'].forEach(function(c){
-    var el = document.getElementById('ch-'+c);
-    el.style.border = '1px solid var(--border-med)';
+  ['email','sms','wa','pdf'].forEach(function(c) {
+    document.getElementById('ch-' + c).style.border = '1px solid var(--border-med)';
   });
-  document.getElementById('ch-'+ch).style.border = '1.5px solid var(--g-med)';
+  document.getElementById('ch-' + ch).style.border = '1.5px solid var(--g-med)';
   state.selectedCh = ch;
 }
 function sendDevis() {
   var n = state.client.prenom + ' ' + state.client.nom;
-  document.getElementById('send-avatar').textContent = ((state.client.prenom[0]||'?')+(state.client.nom[0]||'')).toUpperCase();
+  document.getElementById('send-avatar').textContent = ((state.client.prenom[0]||'?') + (state.client.nom[0]||'')).toUpperCase();
   document.getElementById('send-name').textContent = n;
   document.getElementById('send-contact').textContent = state.client.email || state.client.tel || 'Non renseigné';
   document.getElementById('sent-sub').textContent = n + ' a reçu le devis\navec un lien de signature sécurisé.';
-  document.getElementById('track-time').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
-  // Update sig screen
+  document.getElementById('track-time').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
   document.getElementById('sig-client').textContent = n;
   document.getElementById('sig-addr').textContent = state.client.adresse;
   document.getElementById('sig-travaux').textContent = state.descGlobale || 'Travaux';
-  // Add to list
   state.devisList.unshift({
     id: Date.now(), client: n,
     desc: state.descGlobale || 'Devis vocal',
-    montant: Math.round(state._ttc||0), marge: 32, statut:'envoye',
-    date: new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'})
+    montant: Math.round(state._ttc || 0), marge: 32, statut: 'envoye',
+    date: new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'})
   });
   sauvegarderDonnees();
   renderHome();
@@ -1170,70 +1442,73 @@ function sendDevis() {
 }
 
 // ═══════════════════════════════ SIGNATURE ═══════════════════════════════
-var drawing=false, lastX=0, lastY=0;
-function toggleCgv(){
-  state.cgvChecked=!state.cgvChecked;
-  var el=document.getElementById('cgv-chk');
-  el.classList.toggle('checked',state.cgvChecked);
+var drawing = false, lastX = 0, lastY = 0;
+function toggleCgv() {
+  state.cgvChecked = !state.cgvChecked;
+  var el = document.getElementById('cgv-chk');
+  el.classList.toggle('checked', state.cgvChecked);
   checkSignBtn();
 }
-function checkSignBtn(){
-  document.getElementById('sign-btn').disabled=!(state.cgvChecked&&state.hasSig);
+function checkSignBtn() {
+  document.getElementById('sign-btn').disabled = !(state.cgvChecked && state.hasSig);
 }
-function clearCanvas(){
-  var c=document.getElementById('sig-canvas');
-  var ctx=c.getContext('2d');
-  ctx.clearRect(0,0,c.width,c.height);
-  state.hasSig=false; checkSignBtn();
+function clearCanvas() {
+  var c = document.getElementById('sig-canvas');
+  var ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  state.hasSig = false; checkSignBtn();
 }
-function initCanvas(){
-  var canvas=document.getElementById('sig-canvas');
-  canvas.width=canvas.offsetWidth*window.devicePixelRatio||canvas.offsetWidth;
-  canvas.height=130*window.devicePixelRatio||130;
-  canvas.style.height='130px';
-  var ctx=canvas.getContext('2d');
-  ctx.scale(window.devicePixelRatio||1,window.devicePixelRatio||1);
-  ctx.strokeStyle='#1A3A2A'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
-  function pos(e){
-    var r=canvas.getBoundingClientRect();
-    var src=e.touches?e.touches[0]:e;
-    return{x:src.clientX-r.left,y:src.clientY-r.top};
+function initCanvas() {
+  var canvas = document.getElementById('sig-canvas');
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio || canvas.offsetWidth;
+  canvas.height = 130 * window.devicePixelRatio || 130;
+  canvas.style.height = '130px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  ctx.strokeStyle = '#1A3A2A'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    var src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
   }
-  function start(e){e.preventDefault();drawing=true;var p=pos(e);lastX=p.x;lastY=p.y;}
-  function move(e){
-    e.preventDefault(); if(!drawing)return;
-    var p=pos(e);
-    ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p.x,p.y);ctx.stroke();
-    lastX=p.x;lastY=p.y;state.hasSig=true;checkSignBtn();
+  function start(e) { e.preventDefault(); drawing = true; var p = pos(e); lastX = p.x; lastY = p.y; }
+  function move(e) {
+    e.preventDefault(); if (!drawing) return;
+    var p = pos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y; state.hasSig = true; checkSignBtn();
   }
-  function end(){drawing=false;}
-  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',move); canvas.addEventListener('mouseup',end);
-  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',move,{passive:false}); canvas.addEventListener('touchend',end);
+  function end() { drawing = false; }
+  canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false}); canvas.addEventListener('touchmove', move, {passive:false}); canvas.addEventListener('touchend', end);
 }
-function doSign(){
-  // Update devis statut
-  if(state.devisList[0]) state.devisList[0].statut='signe';
+function doSign() {
+  if (state.devisList[0]) state.devisList[0].statut = 'signe';
   renderHome();
   showToast('Devis signé ! ✓');
-  state.cgvChecked=false;
+  state.cgvChecked = false;
   document.getElementById('cgv-chk').classList.remove('checked');
   clearCanvas();
   goTo('screen-home');
 }
 
 // ═══════════════════════════════ INIT ═══════════════════════════════
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function() {
   chargerDonnees();
   renderHome();
   initCanvas();
-  // Pre-fill client for demo
+  // Enregistrement du Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  }
+  // Pré-remplissage démo
   document.getElementById('client-prenom').value = 'Sophie';
   document.getElementById('client-nom').value = 'Moreau';
   document.getElementById('client-adresse').value = '8 allée des Pins, Toulouse';
   document.getElementById('client-email').value = 's.moreau@mail.fr';
 });
 
-// CATALOGUE
+// ═══════════════════════════════ CATALOGUE SCREEN ═══════════════════════════════
 function renderCatalogueScreen() {
   var list = state.catalogue;
   document.getElementById('cat-count').textContent = list.length;
@@ -1252,17 +1527,17 @@ function renderCatalogueScreen() {
     html += '<div class="cat-group-title">' + cat + '</div>';
     groups[cat].forEach(function(entry) {
       var c = entry.item, i = entry.idx;
-      var marge = c.cout_achat > 0 ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
+      var marge = (c.cout_achat > 0) ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
       var mc = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
       html += '<div class="cat-card">' +
         '<div class="cat-card-left">' +
         '<div class="cat-card-name">' + c.nom + '</div>' +
         '<div class="cat-card-prices">' +
-        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' e/' + c.unite + '</strong></div>' +
-        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' e</strong></div>' : '') +
+        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' €/' + c.unite + '</strong></div>' +
+        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' €</strong></div>' : '') +
         (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + mc + '">' + marge + '%</strong></div>' : '') +
         '</div></div>' +
-        '<div class="cat-card-right"><span class="cat-delete" onclick="supprimerPrestation(' + i + ')">x</span></div></div>';
+        '<div class="cat-card-right"><span class="cat-delete" onclick="supprimerPrestation(' + i + ')">×</span></div></div>';
     });
   });
   document.getElementById('cat-list-display').innerHTML = html;
@@ -1282,7 +1557,7 @@ function ajouterPrestation() {
   document.getElementById('cat-prix-achat').value = '';
   sauvegarderDonnees();
   renderCatalogueScreen();
-  showToast(nom + ' ajoute');
+  showToast(nom + ' ajouté');
 }
 
 function supprimerPrestation(idx) {
@@ -1290,7 +1565,7 @@ function supprimerPrestation(idx) {
   state.catalogue.splice(idx, 1);
   sauvegarderDonnees();
   renderCatalogueScreen();
-  showToast(nom + ' supprime');
+  showToast(nom + ' supprimé');
 }
 
 function importerCSV(input) {
@@ -1313,13 +1588,13 @@ function importerCSV(input) {
     });
     sauvegarderDonnees();
     renderCatalogueScreen();
-    showToast(added + ' prestation(s) importee(s)');
+    showToast(added + ' prestation(s) importée(s)');
     input.value = '';
   };
   reader.readAsText(file, 'UTF-8');
 }
 
-// PROFIL
+// ═══════════════════════════════ PROFIL ═══════════════════════════════
 function ouvrirProfil() {
   var p = state.profil;
   document.getElementById('profil-prenom').value = p.prenom || '';
@@ -1332,9 +1607,9 @@ function ouvrirProfil() {
   document.getElementById('profil-taux').value = p.taux_horaire || '';
   document.getElementById('profil-rcpro').value = p.rcpro || '';
   var ms = document.getElementById('profil-metier');
-  for (var i=0; i<ms.options.length; i++) { if (ms.options[i].value === p.metier) { ms.selectedIndex = i; break; } }
+  for (var i = 0; i < ms.options.length; i++) { if (ms.options[i].value === p.metier) { ms.selectedIndex = i; break; } }
   var ts = document.getElementById('profil-tva');
-  for (var i=0; i<ts.options.length; i++) { if (ts.options[i].value === String(p.tva)) { ts.selectedIndex = i; break; } }
+  for (var i = 0; i < ts.options.length; i++) { if (ts.options[i].value === String(p.tva)) { ts.selectedIndex = i; break; } }
   var ini = ((p.prenom||'')[0]||'') + ((p.nom||'')[0]||'');
   document.getElementById('profil-avatar-big').textContent = ini.toUpperCase() || 'ML';
   document.getElementById('profil-name-big').textContent = (p.prenom||'') + ' ' + (p.nom||'');
@@ -1354,15 +1629,15 @@ function sauvegarderProfil() {
   state.profil.tva = document.getElementById('profil-tva').value;
   state.profil.rcpro = document.getElementById('profil-rcpro').value.trim();
   var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
-  document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
+  document.querySelector('.brand').textContent = state.profil.entreprise || 'DevisBTP';
   document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom||'Marc') + ' !';
   document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
   sauvegarderDonnees();
-  showToast('Profil enregistre');
+  showToast('Profil enregistré');
   goTo('screen-home');
 }
 
-// SAUVEGARDE
+// ═══════════════════════════════ PERSISTANCE ═══════════════════════════════
 function sauvegarderDonnees() {
   try {
     localStorage.setItem('devizy_devis', JSON.stringify(state.devisList));
