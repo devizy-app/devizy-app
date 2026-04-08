@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>DevisBTP</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // ── Supabase config ──
+  // Remplacez ces deux valeurs par celles de votre projet Supabase
+  // Dashboard → Settings → API
+  var SUPABASE_URL = 'https://pvcghstklmmmlxavrmhy.supabase.co';
+  var SUPABASE_ANON_KEY = 'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF';
+  var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* CATALOGUE SCREEN */
@@ -304,13 +313,89 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .notif-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .notif-icon svg { width: 14px; height: 14px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .notif-text { font-size: 12px; color: #065F46; line-height: 1.5; }
+.ob-progress { display:flex; gap:4px; margin-bottom:20px; }
+.ob-prog-bar { height:3px; flex:1; border-radius:2px; background:rgba(255,255,255,0.15); transition:background 0.3s; }
+.ob-prog-bar.done { background:#9FE1CB; }
+.ob-prog-bar.active { background:rgba(159,225,203,0.6); }
+
+/* Welcome card premier devis */
+.welcome-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin-bottom:16px; }
+.wc-title { font-size:17px; font-weight:600; color:#fff; margin-bottom:6px; }
+.wc-sub { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5; }
+.wc-steps { margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+.wc-step { display:flex; align-items:center; gap:10px; }
+.wc-num { width:24px; height:24px; border-radius:50%; background:#9FE1CB; color:#0A2618; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.wc-text { font-size:13px; color:rgba(255,255,255,0.7); }
+
+/* ── LOGIN ── */
+.login-screen { position:fixed; inset:0; z-index:200; background:var(--g-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; }
+.login-logo { font-size:32px; font-weight:700; color:#fff; letter-spacing:-1px; margin-bottom:6px; }
+.login-logo span { color:#9FE1CB; }
+.login-tagline { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:40px; }
+.login-card { width:100%; max-width:360px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:28px 24px; }
+.login-card-title { font-size:18px; font-weight:600; color:#fff; margin-bottom:4px; }
+.login-card-sub { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:24px; }
+.login-label { font-size:11px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.6px; display:block; margin-bottom:6px; }
+.login-input { width:100%; padding:14px 16px; background:rgba(255,255,255,0.08); border:1.5px solid rgba(255,255,255,0.12); border-radius:12px; font-size:15px; color:#fff; outline:none; margin-bottom:14px; transition:border-color 0.2s; font-family:inherit; }
+.login-input:focus { border-color:#9FE1CB; background:rgba(159,225,203,0.07); }
+.login-input::placeholder { color:rgba(255,255,255,0.22); }
+.login-btn { width:100%; padding:16px; background:#9FE1CB; color:#0A2618; font-size:15px; font-weight:700; border:none; border-radius:12px; cursor:pointer; margin-top:4px; letter-spacing:-0.2px; transition:opacity 0.15s; font-family:inherit; }
+.login-btn:active { opacity:0.85; }
+.login-error { font-size:13px; color:#FCA5A5; margin-top:10px; text-align:center; min-height:18px; }
+.login-switch { margin-top:18px; text-align:center; font-size:13px; color:rgba(255,255,255,0.4); }
+.login-switch span { color:#9FE1CB; cursor:pointer; text-decoration:underline; }
+.login-mode-title { display:none; }
+
 </style>
 </head>
 <body>
 <div id="app">
 
 <!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
-<div class="screen active" id="screen-home">
+
+
+<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
+
+<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
+
+<!-- ═══════════════════════════════ SCREEN: LOGIN ═══════════════════════════════ -->
+<div class="login-screen" id="screen-login">
+  <div style="width:64px;height:64px;border-radius:18px;background:rgba(159,225,203,0.12);border:1.5px solid rgba(159,225,203,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9FE1CB" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+  </div>
+  <div class="login-logo">Devi<span>zy</span></div>
+  <div class="login-tagline">Devis BTP par la voix</div>
+
+  <div class="login-card">
+    <!-- Titre dynamique selon le mode -->
+    <div class="login-card-title" id="login-title">Connexion</div>
+    <div class="login-card-sub" id="login-sub">Accédez à votre espace artisan.</div>
+
+    <label class="login-label" for="login-email">Email</label>
+    <input class="login-input" id="login-email" type="email" placeholder="marc@monentreprise.fr" autocomplete="email" inputmode="email">
+
+    <label class="login-label" for="login-password">Mot de passe</label>
+    <input class="login-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" id="login-pwd">
+
+    <!-- Champ confirm mdp — uniquement en mode inscription -->
+    <div id="login-confirm-wrap" style="display:none;">
+      <label class="login-label" for="login-confirm">Confirmer le mot de passe</label>
+      <input class="login-input" id="login-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
+    </div>
+
+    <button class="login-btn" id="login-btn" onclick="loginSubmit()">Se connecter</button>
+    <div class="login-error" id="login-error"></div>
+
+    <div class="login-switch" id="login-switch">
+      Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-home">
   <div class="topbar-home">
     <div class="topbar-home-row">
       <div class="brand">DevisBTP</div>
@@ -781,6 +866,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       </div>
     </div>
     <button class="profil-save-btn" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
+    <button onclick="loginLogout()" style="margin:8px 16px 24px;width:calc(100% - 32px);display:block;padding:13px;background:transparent;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:14px;color:var(--text-muted);cursor:pointer;font-family:inherit;">Se déconnecter</button>
   </div>
 </div>
 </div><!-- #app -->
@@ -788,7 +874,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <script>
 // ═══════════════════════════════ STATE ═══════════════════════════════
 var state = {
-  currentScreen: 'screen-home',
+  currentScreen: 'screen-login',
   history: [],
   client: { prenom:'', nom:'', adresse:'', email:'', tel:'' },
   transcription: '',
@@ -835,6 +921,127 @@ var state = {
   }
 };
 
+
+
+// ═══════════════════════════════ AUTH — SUPABASE ═══════════════════════════════
+var loginMode = 'login';
+
+// ── Affichage loading sur le bouton ──
+function loginSetLoading(on) {
+  var btn = document.getElementById('login-btn');
+  if (btn) btn.textContent = on
+    ? 'Chargement...'
+    : (loginMode === 'register' ? 'Créer mon compte' : 'Se connecter');
+  if (btn) btn.disabled = on;
+}
+
+// ── Bascule login ↔ inscription ──
+function loginToggleMode() {
+  loginMode = loginMode === 'login' ? 'register' : 'login';
+  var isReg = loginMode === 'register';
+  document.getElementById('login-title').textContent = isReg ? 'Créer mon compte' : 'Connexion';
+  document.getElementById('login-sub').textContent = isReg
+    ? 'Créez votre espace artisan gratuitement.'
+    : 'Accédez à votre espace artisan.';
+  document.getElementById('login-btn').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
+  document.getElementById('login-confirm-wrap').style.display = isReg ? 'block' : 'none';
+  document.getElementById('login-switch').innerHTML = isReg
+    ? 'Déjà un compte ? <span onclick="loginToggleMode()">Se connecter</span>'
+    : 'Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-confirm').value = '';
+}
+
+// ── Soumission ──
+async function loginSubmit() {
+  var email    = document.getElementById('login-email').value.trim().toLowerCase();
+  var password = document.getElementById('login-password').value;
+  var errEl    = document.getElementById('login-error');
+  errEl.textContent = '';
+
+  if (!email || !email.includes('@')) { errEl.textContent = 'Adresse email invalide.'; return; }
+  if (password.length < 6)            { errEl.textContent = 'Mot de passe : 6 caractères minimum.'; return; }
+
+  loginSetLoading(true);
+
+  try {
+    if (loginMode === 'register') {
+      var confirm = document.getElementById('login-confirm').value;
+      if (password !== confirm) {
+        errEl.textContent = 'Les mots de passe ne correspondent pas.';
+        loginSetLoading(false); return;
+      }
+      var res = await sb.auth.signUp({ email: email, password: password });
+      if (res.error) throw res.error;
+      // Attendre la session (signUp connecte automatiquement sur Supabase)
+      await loginAfterAuth(true);
+    } else {
+      var res = await sb.auth.signInWithPassword({ email: email, password: password });
+      if (res.error) throw res.error;
+      await loginAfterAuth(false);
+    }
+  } catch(e) {
+    loginSetLoading(false);
+    var msg = e.message || String(e);
+    if (msg.includes('Invalid login'))      errEl.textContent = 'Email ou mot de passe incorrect.';
+    else if (msg.includes('already registered')) errEl.textContent = 'Un compte existe déjà avec cet email.';
+    else if (msg.includes('Email not confirmed')) errEl.textContent = 'Vérifiez votre email pour confirmer votre compte.';
+    else errEl.textContent = msg;
+  }
+}
+
+// ── Après connexion réussie : charger profil + données ──
+async function loginAfterAuth(isNew) {
+  var user = (await sb.auth.getUser()).data.user;
+  if (!user) { showScreen('screen-login'); return; }
+
+  await chargerDonneesSupabase(user.id);
+
+  state.profil.email = user.email;
+
+  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
+  var brand = document.querySelector('.brand');
+  var greeting = document.querySelector('.greeting');
+  var avatar = document.querySelector('.avatar');
+  if (brand) brand.textContent = state.profil.entreprise || 'Devizy';
+  if (greeting) greeting.textContent = 'Bonjour' + (state.profil.prenom ? ', ' + state.profil.prenom : '') + ' 👋';
+  if (avatar) avatar.textContent = ini.toUpperCase() || '?';
+
+  if (isNew || !state.profil.prenom) {
+    showScreen('screen-profil');
+    showToast('Bienvenue ! Complétez votre profil.');
+  } else {
+    showScreen('screen-home');
+    renderHome();
+  }
+}
+
+// ── Déconnexion ──
+async function loginLogout() {
+  await sb.auth.signOut();
+  state.devisList = [];
+  state.catalogue = defaultCatalogue();
+  state.profil = defaultProfil();
+  showScreen('screen-login');
+  loginMode = 'login';
+  document.getElementById('login-title').textContent = 'Connexion';
+  document.getElementById('login-sub').textContent = 'Accédez à votre espace artisan.';
+  document.getElementById('login-btn').textContent = 'Se connecter';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-confirm-wrap').style.display = 'none';
+  document.getElementById('login-switch').innerHTML = 'Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
+// ── Valeurs par défaut ──
+function defaultProfil() {
+  return { prenom:'', nom:'', entreprise:'', siret:'', email:'', telephone:'',
+           metier:'Climatisation', taux_horaire:65, adresse:'', tva:'10', rcpro:'' };
+}
+
 // ═══════════════════════════════ NAVIGATION ═══════════════════════════════
 function goTo(id) {
   document.getElementById(state.currentScreen).classList.remove('active');
@@ -844,6 +1051,25 @@ function goTo(id) {
   window.scrollTo(0,0);
   if (id === 'screen-catalogue') renderCatalogueScreen();
   if (id === 'screen-profil') ouvrirProfil();
+}
+
+function showScreen(id) {
+  var loginEl = document.getElementById('screen-login');
+  if (id === 'screen-login') {
+    if (loginEl) loginEl.style.display = 'flex';
+    return;
+  }
+  if (loginEl) loginEl.style.display = 'none';
+  // Désactiver tous les screens normaux
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  var target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+    state.currentScreen = id;
+    state.history = [];
+  }
+  if (id === 'screen-profil') ouvrirProfil();
+  if (id === 'screen-catalogue') renderCatalogueScreen();
 }
 function goBack() {
   if (state.history.length === 0) return;
@@ -931,14 +1157,49 @@ function goToVocal() {
   goTo('screen-vocal');
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   VOCAL ENGINE — Safari iOS + Chrome + Firefox fallback
+   ═══════════════════════════════════════════════════════════════ */
+
+// ── Helpers UI ──
 function resetMicBtn() {
   var btn = document.getElementById('mic-btn');
   btn.classList.remove('recording', 'paused-state');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
 }
 
+function setVocalState(msg, hint) {
+  document.getElementById('vocal-state').textContent = msg;
+  if (hint) document.getElementById('vocal-hint').textContent = hint;
+}
+
+function setMicRecording() {
+  var btn = document.getElementById('mic-btn');
+  btn.classList.remove('paused-state');
+  btn.classList.add('recording');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+}
+
+function setMicPaused() {
+  var btn = document.getElementById('mic-btn');
+  btn.classList.remove('recording');
+  btn.classList.add('paused-state');
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+}
+
+// ── Détection navigateur ──
+function detectBrowser() {
+  var ua = navigator.userAgent;
+  return {
+    isSafari: /^((?!chrome|android).)*safari/i.test(ua),
+    isIOS: /iphone|ipad|ipod/i.test(ua),
+    isChrome: /chrome/i.test(ua) && !/edge|opr\//i.test(ua),
+    hasWebSpeech: ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)
+  };
+}
+
+// ── Kill propre de toute instance recognition ──
 function killRecognition() {
-  // Tuer proprement toute instance recognition existante avant d'en créer une nouvelle
   if (recognition) {
     recognition.onstart = null;
     recognition.onresult = null;
@@ -949,6 +1210,38 @@ function killRecognition() {
   }
 }
 
+// ── Mise à jour transcript dans le DOM ──
+function updateTranscriptDOM(interim) {
+  var full = fullTranscript;
+  var combined = full + interim;
+  detectCatalogMatches(combined);
+  if (combined.trim().length > 3) {
+    document.getElementById('gen-btn').disabled = false;
+  }
+  var cursor = (isRec && !isPaused) ? '<span class="cursor"></span>' : '';
+  document.getElementById('transcript-text').innerHTML =
+    (full ? '<span>' + escHtml(full) + '</span>' : '') +
+    (interim ? '<span style="color:var(--text-light);">' + escHtml(interim) + '</span>' : '') +
+    cursor;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Timer ──
+function startTimer() {
+  timerInt = setInterval(function() {
+    elapsed++;
+    var m = Math.floor(elapsed / 60), s = elapsed % 60;
+    document.getElementById('timer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerInt); }
+
+// ════════════════════════════════════════════
+//  ENTRÉE PRINCIPALE : toggleRec
+// ════════════════════════════════════════════
 function toggleRec() {
   if (!isRec) {
     startRec();
@@ -957,127 +1250,124 @@ function toggleRec() {
   }
 }
 
-// ── PAUSE / REPRISE ──
 function togglePause() {
   if (!isRec) return;
-  if (!isPaused) {
-    pauseRec();
-  } else {
-    resumeRec();
-  }
+  if (!isPaused) pauseRec(); else resumeRec();
 }
 
-function pauseRec() {
-  isPaused = true;
+// ── START ──
+function startRec() {
+  var browser = detectBrowser();
 
-  // Stopper la reconnaissance vocale (conserve fullTranscript)
-  killRecognition();
-
-  // Figer le timer
-  clearInterval(timerInt);
-  clearInterval(waveInt);
-
-  // UI : waveform figée en gris
-  for (var i=1; i<=12; i++) {
-    var bar = document.getElementById('wb'+i);
-    bar.style.height = '8px';
-    bar.classList.add('paused');
+  // Fallback manuel si Web Speech totalement absent (Firefox, anciens navigateurs)
+  if (!browser.hasWebSpeech) {
+    showManualFallback();
+    return;
   }
 
-  // Bouton pause → icône play
+  isRec = true;
+  isPaused = false;
+  fullTranscript = '';
+  elapsed = 0;
+  liveCatMatches = 0;
+
+  setMicRecording();
+  document.getElementById('pause-btn').classList.add('visible');
+  document.getElementById('cat-match-banner').classList.remove('visible');
+  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour marquer une pause');
+  startTimer();
+  waveInt = setInterval(animWave, 130);
+  startSpeechEngine(browser);
+}
+
+// ── PAUSE ──
+function pauseRec() {
+  isPaused = true;
+  killRecognition();
+  stopTimer();
+  clearInterval(waveInt);
+  // Figer les barres
+  for (var i = 1; i <= 12; i++) {
+    var b = document.getElementById('wb' + i);
+    b.style.height = '8px';
+    b.classList.add('paused');
+  }
+  setMicPaused();
   document.getElementById('pause-icon').innerHTML = '<polygon points="5,3 19,12 5,21"/>';
-
-  // Bouton micro → orange pause
-  var btn = document.getElementById('mic-btn');
-  btn.classList.remove('recording');
-  btn.classList.add('paused-state');
-  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
-
-  document.getElementById('vocal-state').textContent = 'Enregistrement en pause';
-  document.getElementById('vocal-hint').textContent = 'Appuyez sur ▶ pour reprendre, ou sur stop pour terminer';
+  setVocalState('En pause', 'Appuyez ▶ pour reprendre · Stop pour terminer');
   document.getElementById('pause-badge').classList.add('visible');
 }
 
+// ── RESUME ──
 function resumeRec() {
   isPaused = false;
-
-  // Relancer le timer là où il s'était arrêté
-  timerInt = setInterval(function(){
-    elapsed++;
-    var m = Math.floor(elapsed/60), s = elapsed%60;
-    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
-  }, 1000);
-
-  // Relancer l'animation waveform
-  waveInt = setInterval(animWave, 130);
-  for (var i=1; i<=12; i++) {
-    document.getElementById('wb'+i).classList.remove('paused');
+  for (var i = 1; i <= 12; i++) {
+    document.getElementById('wb' + i).classList.remove('paused');
   }
-
-  // Bouton pause → icône pause à nouveau
   document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
-
-  // Bouton micro → rouge stop
-  var btn = document.getElementById('mic-btn');
-  btn.classList.remove('paused-state');
-  btn.classList.add('recording');
-  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
-
-  document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
-  document.getElementById('vocal-hint').textContent = 'Appuyez sur ⏸ pour marquer une pause';
+  setMicRecording();
+  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour marquer une pause');
   document.getElementById('pause-badge').classList.remove('visible');
-
-  // Relancer la reconnaissance vocale — reprend APRÈS la transcription déjà accumulée
-  startRecognition();
-}
-
-function startRec() {
-  isRec = true;
-  isPaused = false;
-  var btn = document.getElementById('mic-btn');
-  btn.classList.add('recording');
-  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
-  document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
-  document.getElementById('vocal-hint').textContent = 'Appuyez sur ⏸ pour marquer une pause';
-  document.getElementById('pause-btn').classList.add('visible');
-  elapsed = 0;
-  timerInt = setInterval(function(){
-    elapsed++;
-    var m = Math.floor(elapsed/60), s = elapsed%60;
-    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
-  }, 1000);
+  startTimer();
   waveInt = setInterval(animWave, 130);
-  startRecognition();
+  startSpeechEngine(detectBrowser());
 }
 
-// Factorisation : démarre uniquement la partie reconnaissance vocale
-function startRecognition() {
-  killRecognition(); // Toujours tuer l'instance précédente avant d'en créer une nouvelle
-  // Détection navigateur
-  var hasSpeech = ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window);
-
-  if (!hasSpeech) {
-    // Fallback textarea manuel si pas de Web Speech API
-    document.getElementById('transcript-text').innerHTML =
-      '<textarea id="manual-transcript" style="width:100%;border:none;background:transparent;font-size:13px;color:var(--text);resize:none;min-height:60px;outline:none;" placeholder="Saisissez votre description ici..." oninput="onManualInput(this.value)"></textarea>';
-    document.getElementById('vocal-state').textContent = 'Dictée vocale non disponible';
-    document.getElementById('vocal-hint').textContent = 'Saisissez le descriptif manuellement ci-dessous';
-    document.getElementById('gen-btn').disabled = false;
-    return;
+// ── STOP ──
+function stopRec() {
+  isRec = false;
+  isPaused = false;
+  killRecognition();
+  stopTimer();
+  clearInterval(waveInt);
+  resetMicBtn();
+  document.getElementById('pause-btn').classList.remove('visible');
+  document.getElementById('pause-badge').classList.remove('visible');
+  for (var i = 1; i <= 12; i++) {
+    var b = document.getElementById('wb' + i);
+    b.style.height = '8px';
+    b.classList.remove('paused');
   }
+
+  // Récupérer la transcription : fullTranscript d'abord, puis DOM (Safari tarde parfois)
+  state.transcription = fullTranscript.trim();
+  if (!state.transcription) {
+    var domRaw = document.getElementById('transcript-text').innerText || '';
+    var cleaned = domRaw
+      .replace('La transcription apparaîtra ici...', '')
+      .replace('Micro actif — parlez...', '')
+      .trim();
+    if (cleaned.length > 3) state.transcription = cleaned;
+  }
+
+  if (state.transcription && state.transcription.length > 5) {
+    setVocalState('Enregistrement terminé ✓', 'Vérifiez la transcription puis générez le devis');
+    document.getElementById('gen-btn').disabled = false;
+    detectCatalogMatches(state.transcription);
+  } else {
+    // Aucun texte capturé — afficher le fallback manuel
+    showManualFallback();
+  }
+}
+
+// ════════════════════════════════════════════
+//  MOTEUR DE RECONNAISSANCE VOCALE
+// ════════════════════════════════════════════
+function startSpeechEngine(browser) {
+  killRecognition(); // toujours tuer l'instance précédente
 
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SR();
   recognition.lang = 'fr-FR';
   recognition.interimResults = true;
 
-  // Safari iOS ne supporte pas continuous=true correctement — on détecte et adapte
-  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  recognition.continuous = !isSafari;
+  // Safari iOS ne supporte pas continuous=true — on gère la relance manuellement
+  recognition.continuous = !(browser.isSafari || browser.isIOS);
 
   recognition.onstart = function() {
-    // Confirmation visuelle que le micro est actif
-    document.getElementById('vocal-state').textContent = 'Micro actif — parlez...';
+    if (isRec && !isPaused) {
+      setVocalState('Micro actif — parlez...', 'Appuyez sur ⏸ pour marquer une pause');
+    }
   };
 
   recognition.onresult = function(e) {
@@ -1089,114 +1379,77 @@ function startRecognition() {
         interim = e.results[i][0].transcript;
       }
     }
-    detectCatalogMatches(fullTranscript + interim);
-    document.getElementById('transcript-text').innerHTML =
-      fullTranscript +
-      '<span style="color:var(--text-light);">' + interim + '</span>' +
-      (isRec && !isPaused ? '<span class="cursor"></span>' : '');
-    // Activer le bouton dès qu'on a du texte
-    if ((fullTranscript + interim).trim().length > 3) {
-      document.getElementById('gen-btn').disabled = false;
-    }
+    updateTranscriptDOM(interim);
   };
 
   recognition.onerror = function(ev) {
-    console.warn('[Devizy] speech error:', ev.error);
+    console.warn('[Devizy vocal]', ev.error);
     if (ev.error === 'not-allowed' || ev.error === 'denied') {
-      showToast('Accès microphone refusé — vérifiez les permissions');
+      showToast('Micro refusé — autorisez dans les réglages');
       stopRec();
-    } else if (ev.error === 'no-speech') {
-      // Pas grave, on ignore
+      showManualFallback();
     } else if (ev.error === 'network') {
-      showToast('Erreur réseau microphone');
+      showToast('Erreur réseau micro');
     }
+    // 'no-speech', 'aborted' : on ignore, la relance gère ça
   };
 
   recognition.onend = function() {
+    // Relance automatique si toujours en cours (nécessaire sur Safari/iOS)
     if (isRec && !isPaused) {
-      // Relance automatique (nécessaire sur Safari iOS et Chrome après timeout)
       setTimeout(function() {
-        if (isRec && !isPaused) {
-          try { recognition.start(); } catch(e2){}
+        if (isRec && !isPaused && recognition === null) {
+          startSpeechEngine(browser);
         }
-      }, 150);
+      }, 200);
     }
   };
 
   try {
     recognition.start();
-  } catch(startErr) {
-    console.error('[Devizy] recognition.start() failed:', startErr);
-    showToast('Impossible de démarrer le micro');
-    stopRec();
+  } catch(e) {
+    console.error('[Devizy vocal] start failed:', e);
+    // Souvent "already started" sur Chrome — attendre 300ms et réessayer
+    setTimeout(function() {
+      try {
+        killRecognition();
+        startSpeechEngine(browser);
+      } catch(e2) {
+        showToast('Micro indisponible');
+        showManualFallback();
+      }
+    }, 300);
   }
 }
 
-// Saisie manuelle (fallback si pas de Web Speech)
+// ════════════════════════════════════════════
+//  FALLBACK MANUEL
+// ════════════════════════════════════════════
+function showManualFallback() {
+  isRec = false;
+  killRecognition();
+  stopTimer();
+  clearInterval(waveInt);
+  resetMicBtn();
+  document.getElementById('pause-btn').classList.remove('visible');
+
+  setVocalState('Saisissez votre description', 'Le micro n\'est pas disponible sur ce navigateur');
+
+  document.getElementById('transcript-text').innerHTML =
+    '<textarea id="manual-transcript" ' +
+    'style="width:100%;border:1px solid var(--border-med);border-radius:8px;background:var(--bg);' +
+    'font-size:13px;color:var(--text);resize:none;min-height:80px;padding:10px;font-family:inherit;" ' +
+    'placeholder="Ex: Pose climatiseur monosplit, liaison frigorifique 5m, mise en service..." ' +
+    'oninput="onManualInput(this.value)"></textarea>';
+
+  document.getElementById('gen-btn').disabled = true;
+}
+
 function onManualInput(val) {
   fullTranscript = val;
   state.transcription = val;
   detectCatalogMatches(val);
   document.getElementById('gen-btn').disabled = val.trim().length < 5;
-}
-
-// ── Détection catalogue en live ──
-function detectCatalogMatches(text) {
-  var textLower = text.toLowerCase();
-  var matches = 0;
-  state.catalogue.forEach(function(c) {
-    // Cherche des mots-clés du nom de la prestation dans la transcription
-    var words = c.nom.toLowerCase().split(/[\s\-+,]+/).filter(function(w){ return w.length > 4; });
-    var found = words.some(function(w){ return textLower.includes(w); });
-    if (found) matches++;
-  });
-  if (matches !== liveCatMatches) {
-    liveCatMatches = matches;
-    var banner = document.getElementById('cat-match-banner');
-    var txt = document.getElementById('cat-match-text');
-    if (matches > 0) {
-      banner.classList.add('visible');
-      txt.innerHTML = '<strong>' + matches + ' prestation' + (matches > 1 ? 's' : '') + '</strong> du catalogue détectée' + (matches > 1 ? 's' : '') + ' dans votre dictée';
-    } else {
-      banner.classList.remove('visible');
-    }
-  }
-}
-
-function stopRec() {
-  isRec = false;
-  isPaused = false;
-  clearInterval(timerInt);
-  clearInterval(waveInt);
-  killRecognition();
-  resetMicBtn();
-  document.getElementById('pause-btn').classList.remove('visible');
-  document.getElementById('pause-badge').classList.remove('visible');
-  for (var i=1; i<=12; i++) {
-    var bar = document.getElementById('wb'+i);
-    bar.style.height = '8px';
-    bar.classList.remove('paused');
-  }
-  document.getElementById('vocal-state').textContent = 'Enregistrement terminé';
-  document.getElementById('vocal-hint').textContent = 'Vérifiez la transcription puis générez le devis';
-  // Récupérer la transcription : fullTranscript d'abord, sinon contenu DOM (Safari tardif)
-  state.transcription = fullTranscript.trim();
-  if (!state.transcription) {
-    var domContent = document.getElementById('transcript-text').innerText || '';
-    domContent = domContent.replace('La transcription apparaîtra ici...', '').trim();
-    if (domContent.length > 3) state.transcription = domContent;
-  }
-
-  if (state.transcription && state.transcription.length > 5) {
-    document.getElementById('gen-btn').disabled = false;
-    detectCatalogMatches(state.transcription);
-  } else {
-    // Fallback démo (mode test sans micro)
-    document.getElementById('gen-btn').disabled = false;
-    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Mode démo — micro non détecté. Cliquez Générer pour tester.</span>';
-    state.transcription = 'Pose climatiseur monosplit avec mise en service et 5 mètres de liaison frigorifique cuivre. Aussi un raccordement électrique au tableau.';
-    detectCatalogMatches(state.transcription);
-  }
 }
 
 function animWave() {
@@ -1508,14 +1761,21 @@ function sendDevis() {
   document.getElementById('sig-client').textContent = n;
   document.getElementById('sig-addr').textContent = state.client.adresse;
   document.getElementById('sig-travaux').textContent = state.descGlobale || 'Travaux';
-  state.devisList.unshift({
-    id: Date.now(), client: n,
-    desc: state.descGlobale || 'Devis vocal',
-    montant: Math.round(state._ttc || 0), marge: 32, statut: 'envoye',
-    date: new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'})
+  // Sauvegarder le devis dans Supabase
+  saveDevis({ statut: 'envoye' }).then(function(saved) {
+    var devisEntry = {
+      id: saved ? saved.id : Date.now(),
+      client: n,
+      desc: state.descGlobale || 'Devis vocal',
+      montant: Math.round(state._ttc || 0),
+      marge: null,
+      statut: 'envoye',
+      date: new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'})
+    };
+    state.devisList.unshift(devisEntry);
+    state._lastDevisId = saved ? saved.id : null;
+    renderHome();
   });
-  sauvegarderDonnees();
-  renderHome();
   goTo('screen-sent');
 }
 
@@ -1561,7 +1821,12 @@ function initCanvas() {
   canvas.addEventListener('touchstart', start, {passive:false}); canvas.addEventListener('touchmove', move, {passive:false}); canvas.addEventListener('touchend', end);
 }
 function doSign() {
-  if (state.devisList[0]) state.devisList[0].statut = 'signe';
+  if (state.devisList[0]) {
+    state.devisList[0].statut = 'signe';
+    if (state._lastDevisId) {
+      updateDevisStatut(state._lastDevisId, 'signe');
+    }
+  }
   renderHome();
   showToast('Devis signé ! ✓');
   state.cgvChecked = false;
@@ -1571,19 +1836,28 @@ function doSign() {
 }
 
 // ═══════════════════════════════ INIT ═══════════════════════════════
-document.addEventListener('DOMContentLoaded', function() {
-  chargerDonnees();
-  renderHome();
+
+document.addEventListener('DOMContentLoaded', async function() {
   initCanvas();
-  // Enregistrement du Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(function(){});
   }
-  // Pré-remplissage démo
-  document.getElementById('client-prenom').value = 'Sophie';
-  document.getElementById('client-nom').value = 'Moreau';
-  document.getElementById('client-adresse').value = '8 allée des Pins, Toulouse';
-  document.getElementById('client-email').value = 's.moreau@mail.fr';
+  // Initialiser le catalogue par défaut si vide
+  if (!state.catalogue || state.catalogue.length === 0) {
+    state.catalogue = defaultCatalogue();
+  }
+  // Vérifier session Supabase existante
+  try {
+    var { data: { session } } = await sb.auth.getSession();
+    if (session && session.user) {
+      await loginAfterAuth(false);
+    } else {
+      showScreen('screen-login');
+    }
+  } catch(e) {
+    console.error('[Devizy] getSession:', e);
+    showScreen('screen-login');
+  }
 });
 
 // ═══════════════════════════════ CATALOGUE SCREEN ═══════════════════════════════
@@ -1633,7 +1907,9 @@ function ajouterPrestation() {
   document.getElementById('cat-nom').value = '';
   document.getElementById('cat-prix-vente').value = '';
   document.getElementById('cat-prix-achat').value = '';
-  sauvegarderDonnees();
+  sb.auth.getUser().then(function(r) {
+    if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
+  });
   renderCatalogueScreen();
   showToast(nom + ' ajouté');
 }
@@ -1641,7 +1917,9 @@ function ajouterPrestation() {
 function supprimerPrestation(idx) {
   var nom = state.catalogue[idx].nom;
   state.catalogue.splice(idx, 1);
-  sauvegarderDonnees();
+  sb.auth.getUser().then(function(r) {
+    if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
+  });
   renderCatalogueScreen();
   showToast(nom + ' supprimé');
 }
@@ -1710,29 +1988,190 @@ function sauvegarderProfil() {
   document.querySelector('.brand').textContent = state.profil.entreprise || 'DevisBTP';
   document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom||'Marc') + ' !';
   document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
-  sauvegarderDonnees();
-  showToast('Profil enregistré');
-  goTo('screen-home');
+  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
+  var brand = document.querySelector('.brand');
+  var greeting = document.querySelector('.greeting');
+  var avatar = document.querySelector('.avatar');
+  if (brand) brand.textContent = state.profil.entreprise || 'Devizy';
+  if (greeting) greeting.textContent = 'Bonjour, ' + (state.profil.prenom || '') + ' 👋';
+  if (avatar) avatar.textContent = ini.toUpperCase() || '?';
+  // Sauvegarder dans Supabase
+  sb.auth.getUser().then(function(r) {
+    if (r.data && r.data.user) sauvegarderProfilSupabase(r.data.user.id);
+  });
+  showToast('Profil enregistré ✓');
+  showScreen('screen-home');
+  renderHome();
 }
 
 // ═══════════════════════════════ PERSISTANCE ═══════════════════════════════
-function sauvegarderDonnees() {
-  try {
-    localStorage.setItem('devizy_devis', JSON.stringify(state.devisList));
-    localStorage.setItem('devizy_catalogue', JSON.stringify(state.catalogue));
-    localStorage.setItem('devizy_profil', JSON.stringify(state.profil));
-  } catch(e) {}
+// ═══════════════════════════════ PERSISTANCE — SUPABASE ═══════════════════════════════
+
+async function sauvegarderDonnees() {
+  var user = (await sb.auth.getUser()).data.user;
+  if (!user) return;
+  await sauvegarderProfilSupabase(user.id);
+  await sauvegarderCatalogueSupabase(user.id);
+  // Les devis sont sauvegardés individuellement dans saveDevis()
 }
 
-function chargerDonnees() {
+async function chargerDonnees() {
+  // Appelé uniquement si session active — voir DOMContentLoaded
+  var user = (await sb.auth.getUser()).data.user;
+  if (!user) return;
+  await chargerDonneesSupabase(user.id);
+}
+
+async function chargerDonneesSupabase(userId) {
   try {
-    var devis = localStorage.getItem('devizy_devis');
-    if (devis) { var d = JSON.parse(devis); if (d.length > 0) state.devisList = d; }
-    var cat = localStorage.getItem('devizy_catalogue');
-    if (cat) { var c = JSON.parse(cat); if (c.length > 0) state.catalogue = c; }
-    var profil = localStorage.getItem('devizy_profil');
-    if (profil) state.profil = JSON.parse(profil);
-  } catch(e) {}
+    // Profil
+    var { data: profil } = await sb
+      .from('profiles').select('*').eq('id', userId).single();
+    if (profil && profil.prenom) {
+      state.profil = {
+        prenom: profil.prenom || '', nom: profil.nom || '',
+        entreprise: profil.entreprise || '', siret: profil.siret || '',
+        email: profil.email || '', telephone: profil.telephone || '',
+        metier: profil.metier || 'Climatisation',
+        taux_horaire: profil.taux_horaire || 65,
+        adresse: profil.adresse || '', tva: profil.tva || '10',
+        rcpro: profil.rcpro || ''
+      };
+    }
+
+    // Catalogue
+    var { data: catItems } = await sb
+      .from('catalogue_items').select('*').eq('user_id', userId).order('created_at');
+    if (catItems && catItems.length > 0) {
+      state.catalogue = catItems.map(function(c) {
+        return { nom:c.nom, prix:c.prix, cout_achat:c.cout_achat||0,
+                 unite:c.unite, categorie:c.categorie, _id:c.id };
+      });
+    }
+
+    // Devis (50 derniers)
+    var { data: quotes } = await sb
+      .from('quotes').select('*').eq('user_id', userId)
+      .order('created_at', { ascending: false }).limit(50);
+    if (quotes && quotes.length > 0) {
+      state.devisList = quotes.map(function(q) {
+        return {
+          id: q.id,
+          client: (q.client_prenom || '') + ' ' + (q.client_nom || ''),
+          desc: q.description || '',
+          montant: Math.round(q.montant_ttc || 0),
+          marge: Math.round(q.marge_pct || 0),
+          statut: q.statut || 'brouillon',
+          date: new Date(q.created_at).toLocaleDateString('fr-FR', {day:'numeric', month:'long'}),
+          _raw: q
+        };
+      });
+    }
+  } catch(e) {
+    console.error('[Devizy] chargerDonneesSupabase:', e);
+  }
+}
+
+async function sauvegarderProfilSupabase(userId) {
+  try {
+    await sb.from('profiles').upsert({
+      id: userId,
+      prenom: state.profil.prenom,
+      nom: state.profil.nom,
+      entreprise: state.profil.entreprise,
+      siret: state.profil.siret,
+      email: state.profil.email,
+      telephone: state.profil.telephone,
+      metier: state.profil.metier,
+      taux_horaire: state.profil.taux_horaire,
+      adresse: state.profil.adresse,
+      tva: state.profil.tva,
+      rcpro: state.profil.rcpro,
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) { console.error('[Devizy] sauvegarderProfil:', e); }
+}
+
+async function sauvegarderCatalogueSupabase(userId) {
+  try {
+    // Supprimer tout puis réinsérer (catalogue complet)
+    await sb.from('catalogue_items').delete().eq('user_id', userId);
+    var items = state.catalogue.map(function(c) {
+      return { user_id: userId, nom: c.nom, prix: c.prix,
+               cout_achat: c.cout_achat || 0, unite: c.unite,
+               categorie: c.categorie || 'Autre' };
+    });
+    if (items.length > 0) {
+      await sb.from('catalogue_items').insert(items);
+    }
+  } catch(e) { console.error('[Devizy] sauvegarderCatalogue:', e); }
+}
+
+async function saveDevis(devisData) {
+  var user = (await sb.auth.getUser()).data.user;
+  if (!user) return null;
+  try {
+    var ht = state._ht || 0, ttc = state._ttc || 0, tva = state._tva || 0;
+    var cout = state.lignes.reduce(function(a,l){ return a + l.quantite*(l.cout_achat||0); }, 0);
+    var marge = (ht > 0 && cout > 0) ? Math.round((ht - cout) / ht * 100) : null;
+    var payload = {
+      user_id: user.id,
+      numero: state.devisNum,
+      client_prenom: state.client.prenom,
+      client_nom: state.client.nom,
+      client_adresse: state.client.adresse,
+      client_email: state.client.email,
+      client_tel: state.client.tel,
+      description: state.descGlobale || '',
+      transcription: state.transcription || '',
+      statut: devisData.statut || 'brouillon',
+      montant_ht: ht,
+      montant_ttc: ttc,
+      tva_taux: parseFloat(state.profil.tva || 10),
+      marge_pct: marge,
+      lignes: state.lignes,
+      updated_at: new Date().toISOString()
+    };
+    var { data, error } = await sb.from('quotes').insert(payload).select().single();
+    if (error) throw error;
+    return data;
+  } catch(e) {
+    console.error('[Devizy] saveDevis:', e);
+    return null;
+  }
+}
+
+async function updateDevisStatut(devisId, statut) {
+  try {
+    await sb.from('quotes').update({ statut: statut, updated_at: new Date().toISOString() })
+      .eq('id', devisId);
+  } catch(e) { console.error('[Devizy] updateStatut:', e); }
+}
+
+function defaultCatalogue() {
+  return [
+    { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur trisplit - Pose complete', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur gainable - Pose complete', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
+    { nom:'Unite interieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Unite exterieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Clim reversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Liaison frigorifique cuivre', prix:28, cout_achat:12, unite:'ml', categorie:'Raccordement' },
+    { nom:'Goulotte PVC passage cable', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
+    { nom:'Raccordement electrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Percage mur beton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
+    { nom:'Support mural unite exterieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
+    { nom:'Mise en service + verification etancheite', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
+    { nom:'Mise sous vide circuit frigorifique', prix:95, cout_achat:15, unite:'forfait', categorie:'Mise en service' },
+    { nom:'Charge fluide frigorigene R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
+    { nom:'Depose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
+    { nom:'Recuperation fluide frigorigene F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
+    { nom:'Contrat entretien annuel monosplit', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Nettoyage filtres + verification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Deplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' },
+  ];
 }
 </script>
 </body>
