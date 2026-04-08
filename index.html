@@ -937,6 +937,18 @@ function resetMicBtn() {
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
 }
 
+function killRecognition() {
+  // Tuer proprement toute instance recognition existante avant d'en créer une nouvelle
+  if (recognition) {
+    recognition.onstart = null;
+    recognition.onresult = null;
+    recognition.onerror = null;
+    recognition.onend = null;
+    try { recognition.abort(); } catch(e) {}
+    recognition = null;
+  }
+}
+
 function toggleRec() {
   if (!isRec) {
     startRec();
@@ -959,7 +971,7 @@ function pauseRec() {
   isPaused = true;
 
   // Stopper la reconnaissance vocale (conserve fullTranscript)
-  if (recognition) { try { recognition.stop(); } catch(e){} }
+  killRecognition();
 
   // Figer le timer
   clearInterval(timerInt);
@@ -1040,45 +1052,92 @@ function startRec() {
 
 // Factorisation : démarre uniquement la partie reconnaissance vocale
 function startRecognition() {
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = 'fr-FR';
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.onresult = function(e) {
-      var interim = '';
-      for (var i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) {
-          fullTranscript += e.results[i][0].transcript + ' ';
-          // Détection catalogue en temps réel après chaque segment final
-          detectCatalogMatches(fullTranscript);
-        } else {
-          interim = e.results[i][0].transcript;
-        }
-      }
-      document.getElementById('transcript-text').innerHTML =
-        fullTranscript +
-        '<span style="color:var(--text-light);">' + interim + '</span>' +
-        (isRec && !isPaused ? '<span class="cursor"></span>' : '');
-    };
-    recognition.onerror = function(ev) {
-      // Sur iOS, "not-allowed" = micro refusé
-      if (ev.error === 'not-allowed') {
-        showToast('Accès microphone refusé');
-        stopRec();
-      }
-    };
-    // Si la reconnaissance s'arrête seule (timeout mobile), on la relance si on est toujours en train d'enregistrer
-    recognition.onend = function() {
-      if (isRec && !isPaused) {
-        try { recognition.start(); } catch(e){}
-      }
-    };
-    recognition.start();
-  } else {
-    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);">Microphone actif — parlez maintenant...<span class="cursor"></span></span>';
+  killRecognition(); // Toujours tuer l'instance précédente avant d'en créer une nouvelle
+  // Détection navigateur
+  var hasSpeech = ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window);
+
+  if (!hasSpeech) {
+    // Fallback textarea manuel si pas de Web Speech API
+    document.getElementById('transcript-text').innerHTML =
+      '<textarea id="manual-transcript" style="width:100%;border:none;background:transparent;font-size:13px;color:var(--text);resize:none;min-height:60px;outline:none;" placeholder="Saisissez votre description ici..." oninput="onManualInput(this.value)"></textarea>';
+    document.getElementById('vocal-state').textContent = 'Dictée vocale non disponible';
+    document.getElementById('vocal-hint').textContent = 'Saisissez le descriptif manuellement ci-dessous';
+    document.getElementById('gen-btn').disabled = false;
+    return;
   }
+
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'fr-FR';
+  recognition.interimResults = true;
+
+  // Safari iOS ne supporte pas continuous=true correctement — on détecte et adapte
+  var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  recognition.continuous = !isSafari;
+
+  recognition.onstart = function() {
+    // Confirmation visuelle que le micro est actif
+    document.getElementById('vocal-state').textContent = 'Micro actif — parlez...';
+  };
+
+  recognition.onresult = function(e) {
+    var interim = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) {
+        fullTranscript += e.results[i][0].transcript + ' ';
+      } else {
+        interim = e.results[i][0].transcript;
+      }
+    }
+    detectCatalogMatches(fullTranscript + interim);
+    document.getElementById('transcript-text').innerHTML =
+      fullTranscript +
+      '<span style="color:var(--text-light);">' + interim + '</span>' +
+      (isRec && !isPaused ? '<span class="cursor"></span>' : '');
+    // Activer le bouton dès qu'on a du texte
+    if ((fullTranscript + interim).trim().length > 3) {
+      document.getElementById('gen-btn').disabled = false;
+    }
+  };
+
+  recognition.onerror = function(ev) {
+    console.warn('[Devizy] speech error:', ev.error);
+    if (ev.error === 'not-allowed' || ev.error === 'denied') {
+      showToast('Accès microphone refusé — vérifiez les permissions');
+      stopRec();
+    } else if (ev.error === 'no-speech') {
+      // Pas grave, on ignore
+    } else if (ev.error === 'network') {
+      showToast('Erreur réseau microphone');
+    }
+  };
+
+  recognition.onend = function() {
+    if (isRec && !isPaused) {
+      // Relance automatique (nécessaire sur Safari iOS et Chrome après timeout)
+      setTimeout(function() {
+        if (isRec && !isPaused) {
+          try { recognition.start(); } catch(e2){}
+        }
+      }, 150);
+    }
+  };
+
+  try {
+    recognition.start();
+  } catch(startErr) {
+    console.error('[Devizy] recognition.start() failed:', startErr);
+    showToast('Impossible de démarrer le micro');
+    stopRec();
+  }
+}
+
+// Saisie manuelle (fallback si pas de Web Speech)
+function onManualInput(val) {
+  fullTranscript = val;
+  state.transcription = val;
+  detectCatalogMatches(val);
+  document.getElementById('gen-btn').disabled = val.trim().length < 5;
 }
 
 // ── Détection catalogue en live ──
@@ -1109,7 +1168,7 @@ function stopRec() {
   isPaused = false;
   clearInterval(timerInt);
   clearInterval(waveInt);
-  if (recognition) { try { recognition.stop(); } catch(e){} }
+  killRecognition();
   resetMicBtn();
   document.getElementById('pause-btn').classList.remove('visible');
   document.getElementById('pause-badge').classList.remove('visible');
@@ -1120,14 +1179,23 @@ function stopRec() {
   }
   document.getElementById('vocal-state').textContent = 'Enregistrement terminé';
   document.getElementById('vocal-hint').textContent = 'Vérifiez la transcription puis générez le devis';
+  // Récupérer la transcription : fullTranscript d'abord, sinon contenu DOM (Safari tardif)
   state.transcription = fullTranscript.trim();
+  if (!state.transcription) {
+    var domContent = document.getElementById('transcript-text').innerText || '';
+    domContent = domContent.replace('La transcription apparaîtra ici...', '').trim();
+    if (domContent.length > 3) state.transcription = domContent;
+  }
+
   if (state.transcription && state.transcription.length > 5) {
     document.getElementById('gen-btn').disabled = false;
+    detectCatalogMatches(state.transcription);
   } else {
-    // Fallback démo
+    // Fallback démo (mode test sans micro)
     document.getElementById('gen-btn').disabled = false;
-    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Exemple : "Pose climatiseur monosplit avec mise en service et 5 mètres de liaison frigorifique"</span>';
+    document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Mode démo — micro non détecté. Cliquez Générer pour tester.</span>';
     state.transcription = 'Pose climatiseur monosplit avec mise en service et 5 mètres de liaison frigorifique cuivre. Aussi un raccordement électrique au tableau.';
+    detectCatalogMatches(state.transcription);
   }
 }
 
@@ -1146,7 +1214,19 @@ var procSteps = [
 ];
 
 async function generateDevis() {
-  // Verrouiller le bouton pour éviter les doubles appels
+  // Garde : s'assurer qu'on a bien une transcription
+  if (!state.transcription || state.transcription.trim().length < 3) {
+    // Tenter de récupérer ce qui est dans le DOM (cas Safari où onresult est tardif)
+    var domText = document.getElementById('transcript-text').innerText || '';
+    domText = domText.replace('La transcription apparaîtra ici...', '').trim();
+    if (domText.length > 3) {
+      state.transcription = domText;
+    } else {
+      showToast('Dictée vide — enregistrez d\'abord');
+      return;
+    }
+  }
+
   document.getElementById('gen-btn').disabled = true;
   goTo('screen-processing');
   var si = 0;
@@ -1155,96 +1235,93 @@ async function generateDevis() {
     if (si < procSteps.length) document.getElementById('proc-label').textContent = procSteps[si];
   }, 800);
 
-  // ── Construire le catalogue avec IDs pour que l'IA référence exactement ──
-  var catalogueIndexed = state.catalogue.map(function(c, i) {
-    return {
-      id: i,
-      nom: c.nom,
-      prix: c.prix,
-      cout_achat: c.cout_achat,
-      unite: c.unite,
-      categorie: c.categorie
-    };
-  });
-
-  var catalogueStr = catalogueIndexed.map(function(c) {
-    return '[ID:' + c.id + '] ' + c.nom +
+  var catalogueStr = state.catalogue.map(function(c, i) {
+    return '[ID:' + i + '] ' + c.nom +
       ' | prix_vente:' + c.prix + ' EUR/' + c.unite +
       (c.cout_achat ? ' | cout_achat:' + c.cout_achat + ' EUR' : '') +
-      ' | cat:' + c.categorie;
+      ' | cat:' + (c.categorie || 'Autre');
   }).join('\n');
 
   var prompt =
-    'Tu es un assistant spécialisé dans la création de devis pour artisans BTP en France.\n' +
-    'Artisan : ' + state.profil.prenom + ' ' + state.profil.nom +
-    ' | Métier : ' + state.profil.metier +
-    ' | Taux horaire : ' + state.profil.taux_horaire + ' EUR/h' +
-    ' | TVA : ' + state.profil.tva + '%\n\n' +
-    'RÈGLE ABSOLUE : Tu dois OBLIGATOIREMENT utiliser les prestations du catalogue ci-dessous chaque fois qu\'elles correspondent à ce que décrit l\'artisan. ' +
-    'Quand tu utilises une prestation du catalogue, reprends EXACTEMENT son nom, son prix et son unité, et fournis son catalogue_id.\n\n' +
-    'CATALOGUE DE L\'ARTISAN :\n' + catalogueStr + '\n\n' +
-    'TRANSCRIPTION VOCALE :\n"' + state.transcription + '"\n\n' +
-    'Retourne UNIQUEMENT un objet JSON valide, sans markdown ni texte autour :\n' +
-    '{\n' +
-    '  "description_globale": "résumé en 1 phrase des travaux",\n' +
-    '  "lignes": [\n' +
-    '    {\n' +
-    '      "catalogue_id": <ID si prestation du catalogue, sinon null>,\n' +
-    '      "libelle": "nom exact du catalogue OU nouveau libellé si hors catalogue",\n' +
-    '      "quantite": <nombre>,\n' +
-    '      "unite": "unité exacte du catalogue ou forfait/u/m2/ml/heure",\n' +
-    '      "prix_unitaire": <prix exact du catalogue ou estimation cohérente>,\n' +
-    '      "cout_achat": <cout du catalogue ou estimation>,\n' +
-    '      "depuis_catalogue": <true si ID catalogue utilisé, false sinon>\n' +
-    '    }\n' +
-    '  ]\n' +
-    '}';
+    'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
+    'Artisan : ' + (state.profil.prenom || '') + ' ' + (state.profil.nom || '') +
+    ' | Metier : ' + (state.profil.metier || 'BTP') +
+    ' | TVA : ' + (state.profil.tva || '10') + '%\n\n' +
+    'REGLE ABSOLUE : Utilise OBLIGATOIREMENT les prestations du catalogue ci-dessous quand elles correspondent. Retourne leur catalogue_id exact.\n\n' +
+    'CATALOGUE :\n' + catalogueStr + '\n\n' +
+    'TRANSCRIPTION : "' + state.transcription + '"\n\n' +
+    'Reponds UNIQUEMENT avec du JSON valide, aucun texte avant ou apres, aucun markdown :\n' +
+    '{"description_globale":"...","lignes":[{"catalogue_id":0,"libelle":"...","quantite":1,"unite":"forfait","prix_unitaire":950,"cout_achat":420,"depuis_catalogue":true}]}';
 
   try {
     var resp = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }]
       })
     });
 
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    if (!resp.ok) {
+      var errText = '';
+      try { errText = await resp.text(); } catch(e2){}
+      throw new Error('HTTP ' + resp.status + ' ' + errText.substring(0, 80));
+    }
+
     var data = await resp.json();
-    if (data.error) throw new Error(data.error.message || 'Erreur API');
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+
+    var text = '';
+    if (data.content && Array.isArray(data.content)) {
+      data.content.forEach(function(block) {
+        if (block.type === 'text') text += block.text;
+      });
+    }
+    text = text.trim();
+    if (!text) throw new Error('Reponse vide du modele');
+
+    // Nettoyer les éventuels blocs markdown et trouver le JSON
+    var clean = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+    var jsonStart = clean.indexOf('{');
+    var jsonEnd = clean.lastIndexOf('}');
+    if (jsonStart < 0 || jsonEnd < 0) throw new Error('Pas de JSON dans la reponse : ' + clean.substring(0, 80));
+    clean = clean.substring(jsonStart, jsonEnd + 1);
+
+    var parsed;
+    try { parsed = JSON.parse(clean); }
+    catch(pe) { throw new Error('JSON invalide : ' + pe.message); }
 
     clearInterval(stepInt);
-    var text = (data.content && data.content[0]) ? data.content[0].text : '';
-    var clean = text.replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(clean);
 
-    // ── Résolution catalogue : si catalogue_id fourni, on écrase avec les données exactes ──
     var lignes = (parsed.lignes || []).map(function(l) {
-      if (l.catalogue_id !== null && l.catalogue_id !== undefined) {
-        var idx = parseInt(l.catalogue_id);
-        var catEntry = state.catalogue[idx];
-        if (catEntry) {
+      var cid = l.catalogue_id;
+      if (cid !== null && cid !== undefined && cid !== '') {
+        var idx = parseInt(cid, 10);
+        if (!isNaN(idx) && state.catalogue[idx]) {
+          var cat = state.catalogue[idx];
           return {
-            libelle: catEntry.nom,
-            quantite: l.quantite || 1,
-            unite: catEntry.unite,
-            prix_unitaire: catEntry.prix,
-            cout_achat: catEntry.cout_achat,
+            libelle: cat.nom,
+            quantite: parseFloat(l.quantite) || 1,
+            unite: cat.unite,
+            prix_unitaire: cat.prix,
+            cout_achat: cat.cout_achat || 0,
             depuis_catalogue: true
           };
         }
       }
       return {
-        libelle: l.libelle,
-        quantite: l.quantite || 1,
+        libelle: l.libelle || 'Prestation',
+        quantite: parseFloat(l.quantite) || 1,
         unite: l.unite || 'forfait',
-        prix_unitaire: l.prix_unitaire || 0,
-        cout_achat: l.cout_achat || 0,
+        prix_unitaire: parseFloat(l.prix_unitaire) || 0,
+        cout_achat: parseFloat(l.cout_achat) || 0,
         depuis_catalogue: false
       };
     });
+
+    if (lignes.length === 0) throw new Error('Aucune ligne generee');
 
     state.lignes = lignes;
     state.descGlobale = parsed.description_globale || state.transcription.substring(0, 80);
@@ -1252,12 +1329,14 @@ async function generateDevis() {
 
   } catch(e) {
     clearInterval(stepInt);
-    // Erreur : on revient à l'écran vocal avec un message clair
     goTo('screen-vocal');
     document.getElementById('gen-btn').disabled = false;
-    showToast('Erreur de génération — réessayez');
+    var msg = (e.message || String(e)).substring(0, 55);
+    showToast(msg);
+    console.error('[Devizy]', e);
   }
 }
+
 
 function buildDevisScreen() {
   document.getElementById('devis-title').textContent = state.devisNum;
