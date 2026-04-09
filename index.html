@@ -10,7 +10,7 @@
   // Remplacez ces deux valeurs par celles de votre projet Supabase
   // Dashboard → Settings → API
   var SUPABASE_URL = 'https://pvcghstklmmmlxavrmhy.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF';
+  var SUPABASE_ANON_KEY = 'VOTRE_ANON_KEY_ICI';
   var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1424,7 +1424,7 @@ async function processAudio() {
     }
 
     // Sinon → Whisper via l'API (nécessite OPENAI_API_KEY sur Vercel)
-    setVocalState('Transcription...', 'L'IA analyse votre dictée...');
+    setVocalState('Transcription...', "L'IA analyse votre dictée...");
     var blob = new Blob(audioChunks, { type: audioChunks[0].type || 'audio/webm' });
     var base64 = await blobToBase64(blob);
 
