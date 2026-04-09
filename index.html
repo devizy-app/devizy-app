@@ -1150,8 +1150,18 @@ function goToVocal() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   VOCAL ENGINE — Safari iOS + Chrome + Firefox fallback
+   VOCAL ENGINE v3 — MediaRecorder universel (Chrome + Safari iOS)
    ═══════════════════════════════════════════════════════════════ */
+
+var mediaRecorder = null;
+var audioChunks = [];
+var isRec = false;
+var isPaused = false;
+var timerInt = null;
+var elapsed = 0;
+var waveInt = null;
+var fullTranscript = '';
+var liveCatMatches = 0;
 
 // ── Helpers UI ──
 function resetMicBtn() {
@@ -1159,314 +1169,328 @@ function resetMicBtn() {
   btn.classList.remove('recording', 'paused-state');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>';
 }
-
-function setVocalState(msg, hint) {
-  document.getElementById('vocal-state').textContent = msg;
-  if (hint) document.getElementById('vocal-hint').textContent = hint;
-}
-
 function setMicRecording() {
   var btn = document.getElementById('mic-btn');
-  btn.classList.remove('paused-state');
-  btn.classList.add('recording');
+  btn.classList.remove('paused-state'); btn.classList.add('recording');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
 }
-
 function setMicPaused() {
   var btn = document.getElementById('mic-btn');
-  btn.classList.remove('recording');
-  btn.classList.add('paused-state');
+  btn.classList.remove('recording'); btn.classList.add('paused-state');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
 }
-
-// ── Détection navigateur ──
-function detectBrowser() {
-  var ua = navigator.userAgent;
-  return {
-    isSafari: /^((?!chrome|android).)*safari/i.test(ua),
-    isIOS: /iphone|ipad|ipod/i.test(ua),
-    isChrome: /chrome/i.test(ua) && !/edge|opr\//i.test(ua),
-    hasWebSpeech: ('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)
-  };
+function setVocalState(msg, hint) {
+  var s = document.getElementById('vocal-state');
+  var h = document.getElementById('vocal-hint');
+  if (s) s.textContent = msg;
+  if (h && hint) h.textContent = hint;
 }
-
-// ── Kill propre de toute instance recognition ──
-function killRecognition() {
-  if (recognition) {
-    recognition.onstart = null;
-    recognition.onresult = null;
-    recognition.onerror = null;
-    recognition.onend = null;
-    try { recognition.abort(); } catch(e) {}
-    recognition = null;
-  }
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function startTimer() {
+  timerInt = setInterval(function() {
+    elapsed++;
+    var m = Math.floor(elapsed/60), s = elapsed%60;
+    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerInt); }
 
-// ── Détection catalogue en live pendant la dictée ──
+// ── Détection catalogue en live ──
 function detectCatalogMatches(text) {
-  if (!text || !state.catalogue) return;
-  var textLower = text.toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g, ''); // enlever accents
+  if (!text || !state.catalogue || state.catalogue.length === 0) return;
+  var textNorm = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var stopWords = ['avec','pour','dans','plus','mise','sur','les','des','une','par','pose','et'];
   var matches = 0;
   state.catalogue.forEach(function(c) {
-    var nomLower = c.nom.toLowerCase()
-      .normalize('NFD').replace(/[̀-ͯ]/g, '');
-    // Découper en mots significatifs (> 3 lettres, pas les mots vides)
-    var stopWords = ['avec','pour','dans','plus','mise','sur','les','des','une','par'];
-    var words = nomLower.split(/[\s\-+,\/]+/).filter(function(w) {
+    var nomNorm = c.nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    var words = nomNorm.split(/[\s\-+,\/]+/).filter(function(w) {
       return w.length > 3 && stopWords.indexOf(w) === -1;
     });
-    var found = words.some(function(w) { return textLower.includes(w); });
-    if (found) matches++;
+    if (words.some(function(w){ return textNorm.includes(w); })) matches++;
   });
   var banner = document.getElementById('cat-match-banner');
   var txt = document.getElementById('cat-match-text');
   if (!banner || !txt) return;
   if (matches > 0) {
     banner.classList.add('visible');
-    txt.innerHTML = '<strong>' + matches + ' prestation' + (matches > 1 ? 's' : '') +
-      '</strong> du catalogue détectée' + (matches > 1 ? 's' : '');
+    txt.innerHTML = '<strong>'+matches+' prestation'+(matches>1?'s':'')+
+      '</strong> du catalogue détectée'+(matches>1?'s':'');
   } else {
     banner.classList.remove('visible');
   }
 }
 
-// ── Mise à jour transcript dans le DOM ──
-function updateTranscriptDOM(interim) {
-  var full = fullTranscript;
-  var combined = full + interim;
-  detectCatalogMatches(combined);
-  if (combined.trim().length > 3) {
+// ── Transcription via Claude ──
+async function transcribeWithClaude(text) {
+  // Claude reçoit le texte brut et l'améliore/corrige
+  // (dans le futur : audio → base64 → Whisper)
+  return text;
+}
+
+// ── Afficher la transcription dans le DOM ──
+function showTranscript(text, interim) {
+  interim = interim || '';
+  detectCatalogMatches(text + interim);
+  if ((text + interim).trim().length > 3) {
     document.getElementById('gen-btn').disabled = false;
   }
-  var cursor = (isRec && !isPaused) ? '<span class="cursor"></span>' : '';
   document.getElementById('transcript-text').innerHTML =
-    (full ? '<span>' + escHtml(full) + '</span>' : '') +
-    (interim ? '<span style="color:var(--text-light);">' + escHtml(interim) + '</span>' : '') +
-    cursor;
+    (text ? '<span>'+escHtml(text)+'</span>' : '') +
+    (interim ? '<span style="color:var(--text-light);">'+escHtml(interim)+'</span>' : '') +
+    (isRec && !isPaused ? '<span class="cursor"></span>' : '');
 }
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// ════════════════════════════════════
+//  CONTRÔLES PRINCIPAUX
+// ════════════════════════════════════
+function toggleRec() { if (!isRec) startRec(); else stopRec(); }
+function togglePause() { if (!isRec) return; if (!isPaused) pauseRec(); else resumeRec(); }
+
+function startRec() {
+  isRec = true; isPaused = false;
+  fullTranscript = ''; elapsed = 0; liveCatMatches = 0; audioChunks = [];
+  setMicRecording();
+  document.getElementById('pause-btn').classList.add('visible');
+  document.getElementById('cat-match-banner').classList.remove('visible');
+  document.getElementById('gen-btn').disabled = true;
+  document.getElementById('transcript-text').innerHTML =
+    '<span style="color:var(--text-light);font-style:italic;">Micro actif — parlez...</span><span class="cursor"></span>';
+  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour une pause');
+  startTimer();
+  waveInt = setInterval(animWave, 130);
+  startMediaRecorder();
 }
 
-// ── Timer ──
-function startTimer() {
-  timerInt = setInterval(function() {
-    elapsed++;
-    var m = Math.floor(elapsed / 60), s = elapsed % 60;
-    document.getElementById('timer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
-  }, 1000);
+function pauseRec() {
+  isPaused = true;
+  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.pause();
+  stopTimer(); clearInterval(waveInt);
+  for (var i=1;i<=12;i++) { var b=document.getElementById('wb'+i); b.style.height='8px'; b.classList.add('paused'); }
+  setMicPaused();
+  document.getElementById('pause-icon').innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+  setVocalState('En pause','Appuyez ▶ pour reprendre');
+  document.getElementById('pause-badge').classList.add('visible');
 }
-function stopTimer() { clearInterval(timerInt); }
 
-// ════════════════════════════════════════════
-//  ENTRÉE PRINCIPALE : toggleRec
-// ════════════════════════════════════════════
-function toggleRec() {
-  if (!isRec) {
-    startRec();
-  } else {
-    stopRec();
+function resumeRec() {
+  isPaused = false;
+  if (mediaRecorder && mediaRecorder.state === 'paused') mediaRecorder.resume();
+  for (var i=1;i<=12;i++) { document.getElementById('wb'+i).classList.remove('paused'); }
+  document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+  setMicRecording();
+  setVocalState('Enregistrement en cours...','Appuyez sur ⏸ pour une pause');
+  document.getElementById('pause-badge').classList.remove('visible');
+  startTimer(); waveInt = setInterval(animWave, 130);
+}
+
+function stopRec() {
+  isRec = false; isPaused = false;
+  stopLiveRecognition();
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop(); // déclenche ondataavailable + onstop
+  }
+  stopTimer(); clearInterval(waveInt);
+  resetMicBtn();
+  document.getElementById('pause-btn').classList.remove('visible');
+  document.getElementById('pause-badge').classList.remove('visible');
+  for (var i=1;i<=12;i++) { var b=document.getElementById('wb'+i); b.style.height='8px'; b.classList.remove('paused'); }
+  setVocalState('Traitement...', 'Transcription en cours...');
+}
+
+// ════════════════════════════════════
+//  MEDIARECORDER — fonctionne partout
+// ════════════════════════════════════
+function getBestMimeType() {
+  var types = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/ogg;codecs=opus',
+    'audio/mp4',
+    'audio/aac',
+    ''
+  ];
+  for (var i=0; i<types.length; i++) {
+    if (!types[i] || MediaRecorder.isTypeSupported(types[i])) return types[i];
+  }
+  return '';
+}
+
+// Reconnaissance vocale en direct (affichage temps réel si disponible)
+var liveRecognition = null;
+
+function startLiveRecognition() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  liveRecognition = new SR();
+  liveRecognition.lang = 'fr-FR';
+  liveRecognition.continuous = false; // false = plus stable sur tous les navigateurs
+  liveRecognition.interimResults = true;
+  liveRecognition.onresult = function(e) {
+    var interim = '';
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) fullTranscript += e.results[i][0].transcript + ' ';
+      else interim = e.results[i][0].transcript;
+    }
+    showTranscript(fullTranscript, interim);
+  };
+  liveRecognition.onend = function() {
+    // Relancer si toujours en cours
+    if (isRec && !isPaused) {
+      setTimeout(function() {
+        if (isRec && !isPaused && liveRecognition) {
+          try { liveRecognition.start(); } catch(e2) {}
+        }
+      }, 100);
+    }
+  };
+  liveRecognition.onerror = function(ev) {
+    if (ev.error === 'not-allowed') return; // déjà géré par MediaRecorder
+    // Autres erreurs : ignorer silencieusement, MediaRecorder continue
+  };
+  try { liveRecognition.start(); } catch(e) {}
+}
+
+function stopLiveRecognition() {
+  if (liveRecognition) {
+    liveRecognition.onend = null;
+    liveRecognition.onresult = null;
+    liveRecognition.onerror = null;
+    try { liveRecognition.abort(); } catch(e) {}
+    liveRecognition = null;
   }
 }
 
-function togglePause() {
-  if (!isRec) return;
-  if (!isPaused) pauseRec(); else resumeRec();
+function startMediaRecorder() {
+  navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    .then(function(stream) {
+      var mimeType = getBestMimeType();
+      var options = mimeType ? { mimeType: mimeType } : {};
+      try { mediaRecorder = new MediaRecorder(stream, options); }
+      catch(e) { mediaRecorder = new MediaRecorder(stream); }
+
+      mediaRecorder.ondataavailable = function(e) {
+        if (e.data && e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = function() {
+        stream.getTracks().forEach(function(t){ t.stop(); });
+        stopLiveRecognition();
+        processAudio();
+      };
+
+      mediaRecorder.start(250);
+      setVocalState('Micro actif — parlez...', 'Appuyez sur ⏸ pour une pause');
+      // Lancer la reconnaissance en direct en parallèle
+      startLiveRecognition();
+    })
+    .catch(function(err) {
+      console.error('[Devizy] getUserMedia:', err);
+      isRec = false; resetMicBtn();
+      document.getElementById('pause-btn').classList.remove('visible');
+      stopTimer(); clearInterval(waveInt);
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        showToast('Accès micro refusé — autorisez dans les réglages');
+        showManualFallback();
+      } else {
+        showToast('Micro indisponible : ' + err.message.substring(0,30));
+        showManualFallback();
+      }
+    });
 }
 
-// ── START ──
-function startRec() {
-  var browser = detectBrowser();
-
-  // Fallback manuel si Web Speech totalement absent (Firefox, anciens navigateurs)
-  if (!browser.hasWebSpeech) {
+// ════════════════════════════════════
+//  TRAITEMENT AUDIO → TRANSCRIPTION
+// ════════════════════════════════════
+async function processAudio() {
+  if (audioChunks.length === 0) {
     showManualFallback();
     return;
   }
 
-  isRec = true;
-  isPaused = false;
-  fullTranscript = '';
-  elapsed = 0;
-  liveCatMatches = 0;
+  setVocalState('Transcription...', 'L\'IA analyse votre dictée...');
+  document.getElementById('transcript-text').innerHTML =
+    '<span style="color:var(--text-muted);font-style:italic;">Transcription en cours...</span>';
 
-  setMicRecording();
-  document.getElementById('pause-btn').classList.add('visible');
-  document.getElementById('cat-match-banner').classList.remove('visible');
-  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour marquer une pause');
-  startTimer();
-  waveInt = setInterval(animWave, 130);
-  startSpeechEngine(browser);
-}
+  try {
+    // Si Web Speech a déjà tout transcrit → on utilise directement
+    if (fullTranscript && fullTranscript.trim().length > 5) {
+      state.transcription = fullTranscript.trim();
+      showTranscript(state.transcription);
+      detectCatalogMatches(state.transcription);
+      setVocalState('Transcription terminée ✓', 'Vérifiez et cliquez sur Générer');
+      document.getElementById('gen-btn').disabled = false;
+      return;
+    }
 
-// ── PAUSE ──
-function pauseRec() {
-  isPaused = true;
-  killRecognition();
-  stopTimer();
-  clearInterval(waveInt);
-  // Figer les barres
-  for (var i = 1; i <= 12; i++) {
-    var b = document.getElementById('wb' + i);
-    b.style.height = '8px';
-    b.classList.add('paused');
-  }
-  setMicPaused();
-  document.getElementById('pause-icon').innerHTML = '<polygon points="5,3 19,12 5,21"/>';
-  setVocalState('En pause', 'Appuyez ▶ pour reprendre · Stop pour terminer');
-  document.getElementById('pause-badge').classList.add('visible');
-}
+    // Sinon → Whisper via l'API (nécessite OPENAI_API_KEY sur Vercel)
+    setVocalState('Transcription...', 'L'IA analyse votre dictée...');
+    var blob = new Blob(audioChunks, { type: audioChunks[0].type || 'audio/webm' });
+    var base64 = await blobToBase64(blob);
 
-// ── RESUME ──
-function resumeRec() {
-  isPaused = false;
-  for (var i = 1; i <= 12; i++) {
-    document.getElementById('wb' + i).classList.remove('paused');
-  }
-  document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
-  setMicRecording();
-  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour marquer une pause');
-  document.getElementById('pause-badge').classList.remove('visible');
-  startTimer();
-  waveInt = setInterval(animWave, 130);
-  startSpeechEngine(detectBrowser());
-}
+    var resp = await fetch('/api/transcribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ audio: base64, mimeType: blob.type })
+    });
 
-// ── STOP ──
-function stopRec() {
-  isRec = false;
-  isPaused = false;
-  killRecognition();
-  stopTimer();
-  clearInterval(waveInt);
-  resetMicBtn();
-  document.getElementById('pause-btn').classList.remove('visible');
-  document.getElementById('pause-badge').classList.remove('visible');
-  for (var i = 1; i <= 12; i++) {
-    var b = document.getElementById('wb' + i);
-    b.style.height = '8px';
-    b.classList.remove('paused');
-  }
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    var data = await resp.json();
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
 
-  // Récupérer la transcription : fullTranscript d'abord, puis DOM (Safari tarde parfois)
-  state.transcription = fullTranscript.trim();
-  if (!state.transcription) {
-    var domRaw = document.getElementById('transcript-text').innerText || '';
-    var cleaned = domRaw
-      .replace('La transcription apparaîtra ici...', '')
-      .replace('Micro actif — parlez...', '')
-      .trim();
-    if (cleaned.length > 3) state.transcription = cleaned;
-  }
+    var transcription = data.text || '';
+    if (!transcription || transcription.trim().length < 3) {
+      throw new Error('Transcription vide — réessayez en parlant plus distinctement');
+    }
 
-  if (state.transcription && state.transcription.length > 5) {
-    setVocalState('Enregistrement terminé ✓', 'Vérifiez la transcription puis générez le devis');
+    fullTranscript = transcription.trim();
+    state.transcription = fullTranscript;
+    showTranscript(fullTranscript);
+    detectCatalogMatches(fullTranscript);
+    setVocalState('Transcription terminée ✓', 'Vérifiez et cliquez sur Générer');
     document.getElementById('gen-btn').disabled = false;
-    detectCatalogMatches(state.transcription);
-  } else {
-    // Aucun texte capturé — afficher le fallback manuel
-    showManualFallback();
+
+  } catch(e) {
+    console.error('[Devizy] processAudio:', e);
+    // Fallback : afficher un textarea pour saisie manuelle
+    setVocalState('Transcription impossible', 'Saisissez votre description ci-dessous');
+    showManualFallback(e.message);
   }
 }
 
-// ════════════════════════════════════════════
-//  MOTEUR DE RECONNAISSANCE VOCALE
-// ════════════════════════════════════════════
-function startSpeechEngine(browser) {
-  killRecognition(); // toujours tuer l'instance précédente
-
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SR();
-  recognition.lang = 'fr-FR';
-  recognition.interimResults = true;
-
-  // Safari iOS ne supporte pas continuous=true — on gère la relance manuellement
-  recognition.continuous = !(browser.isSafari || browser.isIOS);
-
-  recognition.onstart = function() {
-    if (isRec && !isPaused) {
-      setVocalState('Micro actif — parlez...', 'Appuyez sur ⏸ pour marquer une pause');
-    }
-  };
-
-  recognition.onresult = function(e) {
-    var interim = '';
-    for (var i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) {
-        fullTranscript += e.results[i][0].transcript + ' ';
-      } else {
-        interim = e.results[i][0].transcript;
-      }
-    }
-    updateTranscriptDOM(interim);
-  };
-
-  recognition.onerror = function(ev) {
-    console.warn('[Devizy vocal]', ev.error);
-    if (ev.error === 'not-allowed' || ev.error === 'denied') {
-      showToast('Micro refusé — autorisez dans les réglages');
-      stopRec();
-      showManualFallback();
-    } else if (ev.error === 'network') {
-      showToast('Erreur réseau micro');
-    }
-    // 'no-speech', 'aborted' : on ignore, la relance gère ça
-  };
-
-  recognition.onend = function() {
-    // Relance automatique si toujours en cours (nécessaire sur Safari/iOS)
-    if (isRec && !isPaused) {
-      setTimeout(function() {
-        if (isRec && !isPaused && recognition === null) {
-          startSpeechEngine(browser);
-        }
-      }, 200);
-    }
-  };
-
-  // Safari iOS : délai minimal pour rester dans le contexte du geste utilisateur
-  var _browser = browser;
-  setTimeout(function() {
-    if (!isRec || isPaused) return; // annulé entre-temps
-    try {
-      recognition.start();
-    } catch(e) {
-      var errMsg = e.message || String(e);
-    console.warn('[Devizy vocal] start failed:', errMsg);
-    if (errMsg.includes('already started') || errMsg.includes('InvalidStateError')) {
-      // Chrome : instance déjà active — tuer et relancer
-      setTimeout(function() {
-        killRecognition();
-        if (isRec && !isPaused) startSpeechEngine(detectBrowser());
-      }, 300);
-    } else {
-      showToast('Micro indisponible — ' + errMsg.substring(0, 30));
-      showManualFallback();
-    }
-  }
-  }, 50); // 50ms — suffit pour Safari iOS
+function blobToBase64(blob) {
+  return new Promise(function(resolve, reject) {
+    var reader = new FileReader();
+    reader.onloadend = function() {
+      var base64 = reader.result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
-// ════════════════════════════════════════════
+// ════════════════════════════════════
 //  FALLBACK MANUEL
-// ════════════════════════════════════════════
-function showManualFallback() {
-  isRec = false;
-  killRecognition();
-  stopTimer();
-  clearInterval(waveInt);
+// ════════════════════════════════════
+function showManualFallback(reason) {
   resetMicBtn();
   document.getElementById('pause-btn').classList.remove('visible');
+  stopTimer(); clearInterval(waveInt);
+  isRec = false;
 
-  setVocalState('Saisissez votre description', 'Le micro n\'est pas disponible sur ce navigateur');
+  var hint = reason
+    ? 'Erreur : ' + reason.substring(0, 60)
+    : 'Saisissez votre description ci-dessous';
+  setVocalState('Saisie manuelle', hint);
 
   document.getElementById('transcript-text').innerHTML =
     '<textarea id="manual-transcript" ' +
-    'style="width:100%;border:1px solid var(--border-med);border-radius:8px;background:var(--bg);' +
-    'font-size:13px;color:var(--text);resize:none;min-height:80px;padding:10px;font-family:inherit;" ' +
-    'placeholder="Ex: Pose climatiseur monosplit, liaison frigorifique 5m, mise en service..." ' +
+    'style="width:100%;border:1px solid var(--border-med);border-radius:8px;' +
+    'background:var(--bg);font-size:13px;color:var(--text);resize:none;' +
+    'min-height:80px;padding:10px;font-family:inherit;outline:none;" ' +
+    'placeholder="Ex: pose monosplit, liaison frigorifique 5m, mise en service..." ' +
     'oninput="onManualInput(this.value)"></textarea>';
 
   document.getElementById('gen-btn').disabled = true;
@@ -1478,6 +1502,8 @@ function onManualInput(val) {
   detectCatalogMatches(val);
   document.getElementById('gen-btn').disabled = val.trim().length < 5;
 }
+
+
 
 function animWave() {
   for (var i=1; i<=12; i++) {
