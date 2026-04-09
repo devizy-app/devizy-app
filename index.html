@@ -10,7 +10,7 @@
   // Remplacez ces deux valeurs par celles de votre projet Supabase
   // Dashboard → Settings → API
   var SUPABASE_URL = 'https://pvcghstklmmmlxavrmhy.supabase.co';
-  var SUPABASE_ANON_KEY = 'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF';
+  var SUPABASE_ANON_KEY = 'VOTRE_ANON_KEY_ICI';
   var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 </script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -386,7 +386,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <input class="login-input" id="login-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
     </div>
 
-    <button class="login-btn" id="login-btn" onclick="loginSubmit()">Se connecter</button>
+    <button class="login-btn" id="login-btn" onclick="loginSubmit().catch(function(e){ document.getElementById('login-error').textContent = e.message || 'Erreur inattendue'; document.getElementById('login-btn').disabled=false; })">Se connecter</button>
     <div class="login-error" id="login-error"></div>
 
     <div class="login-switch" id="login-switch">
@@ -866,7 +866,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       </div>
     </div>
     <button class="profil-save-btn" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
-    <button onclick="loginLogout()" style="margin:8px 16px 24px;width:calc(100% - 32px);display:block;padding:13px;background:transparent;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:14px;color:var(--text-muted);cursor:pointer;font-family:inherit;">Se déconnecter</button>
+    <button onclick="loginLogout().catch(function(e){ console.error(e); })" style="margin:8px 16px 24px;width:calc(100% - 32px);display:block;padding:13px;background:transparent;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:14px;color:var(--text-muted);cursor:pointer;font-family:inherit;">Se déconnecter</button>
   </div>
 </div>
 </div><!-- #app -->
@@ -889,31 +889,7 @@ var state = {
     { id:3, client:'M. Lacoste', desc:'Installation électrique', montant:1950, marge:44, statut:'brouillon', date:'19 mars' },
     { id:4, client:'Résidence du Parc', desc:'Ravalement façade', montant:11800, marge:14, statut:'refuse', date:'15 mars' },
   ],
-  catalogue: [
-    { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur trisplit - Pose complete', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur gainable - Pose complete', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
-    { nom:'Unite interieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Unite exterieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Clim reversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
-    { nom:'Clim reversible multisplit 3 pieces - Fourniture + pose', prix:4600, cout_achat:1950, unite:'forfait', categorie:'Fourniture materiel' },
-    { nom:'Liaison frigorifique cuivre', prix:28, cout_achat:12, unite:'ml', categorie:'Raccordement' },
-    { nom:'Goulotte PVC passage cable', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
-    { nom:'Raccordement electrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Percage mur beton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
-    { nom:'Support mural unite exterieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
-    { nom:'Mise en service + verification etancheite', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Mise sous vide circuit frigorifique', prix:95, cout_achat:15, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Charge fluide frigorigene R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
-    { nom:'Depose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
-    { nom:'Recuperation fluide frigorigene F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
-    { nom:'Contrat entretien annuel monosplit', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Contrat entretien annuel multisplit', prix:220, cout_achat:60, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Nettoyage filtres + verification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Deplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' },
-  ],
+  catalogue: [], // Chargé depuis Supabase après connexion
   profil: {
     prenom: 'Marc', nom: 'Lambert', entreprise: 'DevisBTP', siret: '',
     email: 'marc@devizy.fr', telephone: '', metier: 'Climatisation',
@@ -984,9 +960,18 @@ async function loginSubmit() {
   } catch(e) {
     loginSetLoading(false);
     var msg = e.message || String(e);
-    if (msg.includes('Invalid login'))      errEl.textContent = 'Email ou mot de passe incorrect.';
-    else if (msg.includes('already registered')) errEl.textContent = 'Un compte existe déjà avec cet email.';
-    else if (msg.includes('Email not confirmed')) errEl.textContent = 'Vérifiez votre email pour confirmer votre compte.';
+    if (msg.includes('Invalid login') || msg.includes('invalid_credentials'))
+      errEl.textContent = 'Email ou mot de passe incorrect.';
+    else if (msg.includes('already registered') || msg.includes('User already registered'))
+      errEl.textContent = 'Un compte existe déjà avec cet email. Connectez-vous.';
+    else if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed'))
+      errEl.textContent = 'Confirmez votre email avant de vous connecter (vérifiez vos spams).';
+    else if (msg.includes('signup_disabled'))
+      errEl.textContent = 'Les inscriptions sont désactivées.';
+    else if (msg.includes('over_email_send_rate_limit'))
+      errEl.textContent = 'Trop de tentatives. Attendez quelques minutes.';
+    else if (msg.includes('Failed to fetch') || msg.includes('NetworkError'))
+      errEl.textContent = 'Erreur réseau. Vérifiez votre connexion.';
     else errEl.textContent = msg;
   }
 }
@@ -997,6 +982,13 @@ async function loginAfterAuth(isNew) {
   if (!user) { showScreen('screen-login'); return; }
 
   await chargerDonneesSupabase(user.id);
+
+  // Si catalogue toujours vide après chargement → assigner le catalogue par défaut
+  if (!state.catalogue || state.catalogue.length === 0) {
+    state.catalogue = defaultCatalogue();
+    // Et le sauvegarder tout de suite pour ce nouvel utilisateur
+    await sauvegarderCatalogueSupabase(user.id);
+  }
 
   state.profil.email = user.email;
 
@@ -1210,6 +1202,35 @@ function killRecognition() {
   }
 }
 
+// ── Détection catalogue en live pendant la dictée ──
+function detectCatalogMatches(text) {
+  if (!text || !state.catalogue) return;
+  var textLower = text.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, ''); // enlever accents
+  var matches = 0;
+  state.catalogue.forEach(function(c) {
+    var nomLower = c.nom.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '');
+    // Découper en mots significatifs (> 3 lettres, pas les mots vides)
+    var stopWords = ['avec','pour','dans','plus','mise','sur','les','des','une','par'];
+    var words = nomLower.split(/[\s\-+,\/]+/).filter(function(w) {
+      return w.length > 3 && stopWords.indexOf(w) === -1;
+    });
+    var found = words.some(function(w) { return textLower.includes(w); });
+    if (found) matches++;
+  });
+  var banner = document.getElementById('cat-match-banner');
+  var txt = document.getElementById('cat-match-text');
+  if (!banner || !txt) return;
+  if (matches > 0) {
+    banner.classList.add('visible');
+    txt.innerHTML = '<strong>' + matches + ' prestation' + (matches > 1 ? 's' : '') +
+      '</strong> du catalogue détectée' + (matches > 1 ? 's' : '');
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+
 // ── Mise à jour transcript dans le DOM ──
 function updateTranscriptDOM(interim) {
   var full = fullTranscript;
@@ -1405,21 +1426,27 @@ function startSpeechEngine(browser) {
     }
   };
 
-  try {
-    recognition.start();
-  } catch(e) {
-    console.error('[Devizy vocal] start failed:', e);
-    // Souvent "already started" sur Chrome — attendre 300ms et réessayer
-    setTimeout(function() {
-      try {
+  // Safari iOS : délai minimal pour rester dans le contexte du geste utilisateur
+  var _browser = browser;
+  setTimeout(function() {
+    if (!isRec || isPaused) return; // annulé entre-temps
+    try {
+      recognition.start();
+    } catch(e) {
+      var errMsg = e.message || String(e);
+    console.warn('[Devizy vocal] start failed:', errMsg);
+    if (errMsg.includes('already started') || errMsg.includes('InvalidStateError')) {
+      // Chrome : instance déjà active — tuer et relancer
+      setTimeout(function() {
         killRecognition();
-        startSpeechEngine(browser);
-      } catch(e2) {
-        showToast('Micro indisponible');
-        showManualFallback();
-      }
-    }, 300);
+        if (isRec && !isPaused) startSpeechEngine(detectBrowser());
+      }, 300);
+    } else {
+      showToast('Micro indisponible — ' + errMsg.substring(0, 30));
+      showManualFallback();
+    }
   }
+  }, 50); // 50ms — suffit pour Safari iOS
 }
 
 // ════════════════════════════════════════════
@@ -1487,6 +1514,14 @@ async function generateDevis() {
     si++;
     if (si < procSteps.length) document.getElementById('proc-label').textContent = procSteps[si];
   }, 800);
+
+  // Debug : vérifier que le catalogue est chargé
+  console.log('[Devizy] Catalogue items:', state.catalogue.length);
+  if (state.catalogue.length === 0) {
+    // Catalogue vide — essayer de recharger
+    state.catalogue = defaultCatalogue();
+    console.warn('[Devizy] Catalogue vide — fallback defaultCatalogue');
+  }
 
   var catalogueStr = state.catalogue.map(function(c, i) {
     return '[ID:' + i + '] ' + c.nom +
@@ -1584,9 +1619,13 @@ async function generateDevis() {
     clearInterval(stepInt);
     goTo('screen-vocal');
     document.getElementById('gen-btn').disabled = false;
-    var msg = (e.message || String(e)).substring(0, 55);
-    showToast(msg);
-    console.error('[Devizy]', e);
+    var msg = e.message || String(e);
+    console.error('[Devizy] generateDevis:', msg, e);
+    // Afficher l'erreur complète dans le transcript pour debug
+    document.getElementById('transcript-text').innerHTML =
+      '<div style="color:var(--red);font-size:12px;line-height:1.5;padding:4px 0;">' +
+      '<strong>Erreur :</strong> ' + msg + '</div>';
+    showToast('Erreur — voir détail ci-dessus');
   }
 }
 
@@ -1942,7 +1981,9 @@ function importerCSV(input) {
       var categorie = (cols[4]||'Autre').trim().replace(/"/g,'') || 'Autre';
       if (nom && prix > 0) { state.catalogue.push({nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie}); added++; }
     });
-    sauvegarderDonnees();
+    sb.auth.getUser().then(function(r) {
+      if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
+    });
     renderCatalogueScreen();
     showToast(added + ' prestation(s) importée(s)');
     input.value = '';
