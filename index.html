@@ -1905,6 +1905,10 @@ document.addEventListener('DOMContentLoaded', async function() {
   initCanvas();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(function(){});
+    // Forcer le SW à se mettre à jour immédiatement
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(reg) { reg.update(); });
+    });
   }
   // Initialiser le catalogue par défaut si vide
   if (!state.catalogue || state.catalogue.length === 0) {
