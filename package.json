@@ -1,0 +1,7 @@
+{
+  "name": "devizy-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "formdata-node": "^6.0.3"
+  }
+}
