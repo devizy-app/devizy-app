@@ -1560,7 +1560,10 @@ async function generateDevis() {
     'Artisan : ' + (state.profil.prenom || '') + ' ' + (state.profil.nom || '') +
     ' | Metier : ' + (state.profil.metier || 'BTP') +
     ' | TVA : ' + (state.profil.tva || '10') + '%\n\n' +
-    'REGLE ABSOLUE : Utilise OBLIGATOIREMENT les prestations du catalogue ci-dessous quand elles correspondent. Retourne leur catalogue_id exact.\n\n' +
+    'REGLES ABSOLUES :\n' +
+'1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent. Retourne leur catalogue_id exact.\n' +
+'2. Si l\'artisan mentionne un nombre (ex: 2 splits, 3 unites, 5 metres), utilise ce nombre exact comme quantite.\n' +
+'3. Par defaut quantite = 1 sauf si un nombre est explicitement mentionne.\n\n' +
     'CATALOGUE :\n' + catalogueStr + '\n\n' +
     'TRANSCRIPTION : "' + state.transcription + '"\n\n' +
     'Reponds UNIQUEMENT avec du JSON valide, aucun texte avant ou apres, aucun markdown :\n' +
