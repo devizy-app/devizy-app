@@ -1362,26 +1362,29 @@ function stopLiveRecognition() {
 }
 
 function startMediaRecorder() {
+  var isChromeMobile = /CriOS|Chrome/.test(navigator.userAgent) && /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
+  if (isChromeMobile) {
+    stopRec();
+    showManualFallback();
+    setVocalState('Saisie vocale', 'Appuyez sur le micro de votre clavier pour dicter');
+    return;
+  }
   navigator.mediaDevices.getUserMedia({ audio: true, video: false })
     .then(function(stream) {
       var mimeType = getBestMimeType();
       var options = mimeType ? { mimeType: mimeType } : {};
       try { mediaRecorder = new MediaRecorder(stream, options); }
       catch(e) { mediaRecorder = new MediaRecorder(stream); }
-
       mediaRecorder.ondataavailable = function(e) {
         if (e.data && e.data.size > 0) audioChunks.push(e.data);
       };
-
       mediaRecorder.onstop = function() {
         stream.getTracks().forEach(function(t){ t.stop(); });
         stopLiveRecognition();
         processAudio();
       };
-
       mediaRecorder.start(250);
       setVocalState('Micro actif — parlez...', 'Appuyez sur ⏸ pour une pause');
-      // Lancer la reconnaissance en direct en parallèle
       startLiveRecognition();
     })
     .catch(function(err) {
@@ -1398,7 +1401,6 @@ function startMediaRecorder() {
       }
     });
 }
-
 // ════════════════════════════════════
 //  TRAITEMENT AUDIO → TRANSCRIPTION
 // ════════════════════════════════════
