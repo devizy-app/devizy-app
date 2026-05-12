@@ -2128,6 +2128,10 @@ async function chargerDonnees() {
   var user = (await sb.auth.getUser()).data.user;
   if (!user) return;
   await chargerDonneesSupabase(user.id);
+// Forcer le métier depuis user_metadata si nouveau compte
+if (isNew && user.user_metadata && user.user_metadata.metier) {
+  state.profil.metier = user.user_metadata.metier;
+}
 }
 
 async function chargerDonneesSupabase(userId) {
