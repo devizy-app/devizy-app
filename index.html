@@ -2131,6 +2131,8 @@ async function chargerDonnees() {
 // Forcer le métier depuis user_metadata si nouveau compte
 if (isNew && user.user_metadata && user.user_metadata.metier) {
   state.profil.metier = user.user_metadata.metier;
+  // Sauvegarder immédiatement dans Supabase
+  await sauvegarderProfilSupabase(user.id);
 }
 }
 
