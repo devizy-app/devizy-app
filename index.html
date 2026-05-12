@@ -938,6 +938,7 @@ function loginToggleMode() {
     : 'Accédez à votre espace artisan.';
   document.getElementById('login-btn').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
   document.getElementById('login-confirm-wrap').style.display = isReg ? 'block' : 'none';
+document.getElementById('login-metier-wrap').style.display = isReg ? 'block' : 'none';
   document.getElementById('login-switch').innerHTML = isReg
     ? 'Déjà un compte ? <span onclick="loginToggleMode()">Se connecter</span>'
     : 'Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>';
