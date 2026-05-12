@@ -1005,8 +1005,9 @@ async function loginAfterAuth(isNew) {
   // Si catalogue toujours vide après chargement → assigner le catalogue par défaut
   if (!state.catalogue || state.catalogue.length === 0) {
     var metier = (user.user_metadata && user.user_metadata.metier) || 
-             (document.getElementById('login-metier') && document.getElementById('login-metier').value) ||
-             state.profil.metier || 'Climatisation';
+         (document.getElementById('login-metier') && document.getElementById('login-metier').value) ||
+         'Climatisation';
+if (isNew) state.profil.metier = metier;
 state.catalogue = defaultCatalogue(metier);
     // Et le sauvegarder tout de suite pour ce nouvel utilisateur
     await sauvegarderCatalogueSupabase(user.id);
