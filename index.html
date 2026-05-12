@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DevisBTP</title>
+<title>Devizy</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ── Supabase config ──
@@ -398,7 +398,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <div class="screen" id="screen-home">
   <div class="topbar-home">
     <div class="topbar-home-row">
-      <div class="brand">DevisBTP</div>
+      <div class="brand">Devizy</div>
       <div class="avatar">ML</div>
     </div>
     <div class="greeting">Bonjour, Marc 👋</div>
@@ -838,7 +838,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     </div>
     <div class="profil-section">
       <div class="profil-section-title">Mon entreprise</div>
-      <div class="profil-field"><label>Nom entreprise</label><input id="profil-entreprise" type="text" placeholder="DevisBTP"></div>
+      <div class="profil-field"><label>Nom entreprise</label><input id="profil-entreprise" type="text" placeholder="Devizy"></div>
       <div class="profil-field"><label>SIRET</label><input id="profil-siret" type="text" placeholder="123 456 789 00012"></div>
       <div class="profil-field"><label>Adresse</label><input id="profil-adresse" type="text" placeholder="12 rue des Artisans, Toulouse"></div>
       <div class="profil-2col">
@@ -891,7 +891,7 @@ var state = {
   ],
   catalogue: [], // Chargé depuis Supabase après connexion
   profil: {
-    prenom: 'Marc', nom: 'Lambert', entreprise: 'DevisBTP', siret: '',
+    prenom: 'Marc', nom: 'Lambert', entreprise: 'Devizy', siret: '',
     email: 'marc@devizy.fr', telephone: '', metier: 'Climatisation',
     taux_horaire: 65, adresse: '', tva: '10', rcpro: ''
   }
@@ -1794,7 +1794,7 @@ function exportPDF() {
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
     '</style></head><body>' +
-    '<div class="header"><div><div class="brand">' + (state.profil.entreprise || 'DevisBTP') + '</div>' +
+    '<div class="header"><div><div class="brand">' + (state.profil.entreprise || 'Devizy') + '</div>' +
     '<div style="font-size:14px;color:#666;margin-top:4px;">' + state.profil.prenom + ' ' + state.profil.nom + '</div>' +
     '<div style="font-size:13px;color:#666;margin-top:2px;">' + (state.profil.email || '') + '</div></div>' +
     '<div class="devis-num"><div>' + state.devisNum + '</div><div style="font-size:14px;color:#666;margin-top:4px;">' + new Date().toLocaleDateString('fr-FR') + '</div></div></div>' +
@@ -2062,7 +2062,7 @@ function sauvegarderProfil() {
   state.profil.tva = document.getElementById('profil-tva').value;
   state.profil.rcpro = document.getElementById('profil-rcpro').value.trim();
   var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
-  document.querySelector('.brand').textContent = state.profil.entreprise || 'DevisBTP';
+  document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
   document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom||'Marc') + ' !';
   document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
   var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
