@@ -769,6 +769,11 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <div class="catalog-sheet" id="catalog-sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">Catalogue de prestations</div>
+  <div style="padding:8px 16px 0;">
+    <input id="catalog-search" type="text" placeholder="Rechercher une prestation..." 
+    oninput="filterCatalog(this.value)"
+    style="width:100%;padding:10px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);">
+  </div>
   <div class="catalog-items" id="catalog-items"></div>
 </div>
 
@@ -1744,12 +1749,27 @@ function updateTotaux() {
 
 // ═══════════════════════════════ CATALOGUE ═══════════════════════════════
 function openCatalog() {
+  function filterCatalog(query) {
+  var q = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var html = '';
+  state.catalogue.forEach(function(c, i) {
+    var nom = c.nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if (!q || nom.includes(q)) {
+      html += '<div class="cat-item" onclick="addFromCatalog(' + i + ')">' +
+        '<div><div class="cat-name">' + c.nom + '</div><div class="cat-price">' + c.prix + ' €/' + c.unite + '</div></div>' +
+        '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
+        '</div>';
+    }
+  });
+  document.getElementById('catalog-items').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun résultat</div>';
+}
   var html = '';
   state.catalogue.forEach(function(c, i) {
     html += '<div class="cat-item" onclick="addFromCatalog(' + i + ')">' +
       '<div><div class="cat-name">' + c.nom + '</div><div class="cat-price">' + c.prix + ' €/' + c.unite + '</div></div>' +
       '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
       '</div>';
+    document.getElementById('catalog-search').value = '';
   });
   document.getElementById('catalog-items').innerHTML = html;
   document.getElementById('sheet-overlay').classList.add('open');
