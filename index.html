@@ -381,6 +381,18 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <input class="login-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" id="login-pwd">
 
     <!-- Champ confirm mdp — uniquement en mode inscription -->
+    <div id="login-metier-wrap" style="display:none;">
+  <label class="login-label">Corps de métier</label>
+  <select id="login-metier" class="login-input" style="color:#fff;">
+    <option value="Climatisation">Climatisation / CVC</option>
+    <option value="Plomberie">Plomberie</option>
+    <option value="Electricite">Électricité</option>
+    <option value="Maconnerie">Maçonnerie</option>
+    <option value="Peinture">Peinture</option>
+    <option value="Menuiserie">Menuiserie</option>
+    <option value="Multi-metiers">Multi-métiers</option>
+  </select>
+</div>
     <div id="login-confirm-wrap" style="display:none;">
       <label class="login-label" for="login-confirm">Confirmer le mot de passe</label>
       <input class="login-input" id="login-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
