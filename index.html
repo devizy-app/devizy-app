@@ -966,7 +966,8 @@ async function loginSubmit() {
         errEl.textContent = 'Les mots de passe ne correspondent pas.';
         loginSetLoading(false); return;
       }
-      var res = await sb.auth.signUp({ email: email, password: password });
+      var metier = document.getElementById('login-metier').value || 'Climatisation';
+var res = await sb.auth.signUp({ email: email, password: password, options: { data: { metier: metier } } });
       if (res.error) throw res.error;
       // Attendre la session (signUp connecte automatiquement sur Supabase)
       await loginAfterAuth(true);
