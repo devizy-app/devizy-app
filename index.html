@@ -2252,7 +2252,43 @@ async function updateDevisStatut(devisId, statut) {
   } catch(e) { console.error('[Devizy] updateStatut:', e); }
 }
 
-function defaultCatalogue() {
+function defaultCatalogue(metier) {
+  metier = metier || 'Climatisation';
+  if (metier === 'Plomberie') return [
+    { nom:'Remplacement robinet mitigeur', prix:120, cout_achat:35, unite:'u', categorie:'Robinetterie' },
+    { nom:'Remplacement chauffe-eau electrique 200L', prix:850, cout_achat:350, unite:'forfait', categorie:'Chauffe-eau' },
+    { nom:'Remplacement chauffe-eau thermodynamique', prix:1800, cout_achat:750, unite:'forfait', categorie:'Chauffe-eau' },
+    { nom:'Installation douche italienne', prix:1200, cout_achat:450, unite:'forfait', categorie:'Sanitaire' },
+    { nom:'Remplacement baignoire', prix:900, cout_achat:380, unite:'forfait', categorie:'Sanitaire' },
+    { nom:'Remplacement WC suspendu', prix:650, cout_achat:250, unite:'forfait', categorie:'Sanitaire' },
+    { nom:'Debouchage canalisation', prix:180, cout_achat:30, unite:'forfait', categorie:'Depannage' },
+    { nom:'Recherche fuite', prix:150, cout_achat:20, unite:'forfait', categorie:'Depannage' },
+    { nom:'Remplacement joint + cartouche', prix:85, cout_achat:15, unite:'u', categorie:'Robinetterie' },
+    { nom:'Installation lave-vaisselle + raccordement', prix:180, cout_achat:20, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Installation lave-linge + raccordement', prix:160, cout_achat:20, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Remplacement colonne de douche', prix:320, cout_achat:120, unite:'forfait', categorie:'Sanitaire' },
+    { nom:'Pose radiateur seche-serviette', prix:450, cout_achat:180, unite:'forfait', categorie:'Chauffage' },
+    { nom:'Remplacement pompe de circulation', prix:380, cout_achat:150, unite:'forfait', categorie:'Chauffage' },
+    { nom:'Entretien chaudiere gaz', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Depannage chaudiere gaz', prix:180, cout_achat:30, unite:'forfait', categorie:'Maintenance' },
+  ];
+  if (metier === 'Electricite') return [
+    { nom:'Tableau electrique 1 rangee', prix:850, cout_achat:320, unite:'forfait', categorie:'Tableau' },
+    { nom:'Tableau electrique 2 rangees', prix:1400, cout_achat:550, unite:'forfait', categorie:'Tableau' },
+    { nom:'Point electrique prise', prix:65, cout_achat:18, unite:'point', categorie:'Appareillage' },
+    { nom:'Point electrique interrupteur', prix:55, cout_achat:15, unite:'point', categorie:'Appareillage' },
+    { nom:'Point electrique luminaire', prix:75, cout_achat:20, unite:'point', categorie:'Appareillage' },
+    { nom:'Mise en securite installation', prix:1200, cout_achat:400, unite:'forfait', categorie:'Mise aux normes' },
+    { nom:'Installation VMC simple flux', prix:450, cout_achat:180, unite:'forfait', categorie:'VMC' },
+    { nom:'Installation VMC double flux', prix:1800, cout_achat:750, unite:'forfait', categorie:'VMC' },
+    { nom:'Installation borne de recharge vehicule', prix:950, cout_achat:380, unite:'forfait', categorie:'IRVE' },
+    { nom:'Mise a la terre', prix:380, cout_achat:120, unite:'forfait', categorie:'Mise aux normes' },
+    { nom:'Remplacement disjoncteur', prix:120, cout_achat:35, unite:'u', categorie:'Tableau' },
+    { nom:'Installation detecteur fumee', prix:85, cout_achat:25, unite:'u', categorie:'Securite' },
+    { nom:'Passage de gaine', prix:25, cout_achat:8, unite:'ml', categorie:'Gaine' },
+    { nom:'Diagnostic electrique NF C 15-100', prix:250, cout_achat:0, unite:'forfait', categorie:'Diagnostic' },
+    { nom:'Depannage panne electrique', prix:150, cout_achat:20, unite:'forfait', categorie:'Depannage' },
+  ];
   return [
     { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
     { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
