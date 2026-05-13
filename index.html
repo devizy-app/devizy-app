@@ -6,9 +6,6 @@
 <title>Devizy</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-  // ── Supabase config ──
-  // Remplacez ces deux valeurs par celles de votre projet Supabase
-  // Dashboard → Settings → API
   var SUPABASE_URL = 'https://pvcghstklmmmlxavrmhy.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_y2pz6M3dP64FvApA_uQdrw_3_ltkeXF';
   var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -79,13 +76,13 @@
 html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overscroll-behavior: none; }
 input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 
-/* ── APP SHELL ── */
+/* APP SHELL */
 #app { max-width: 430px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; position: relative; background: var(--bg); overflow: hidden; }
 .screen { flex: 1; display: none; flex-direction: column; overflow: hidden; }
 .screen.active { display: flex; }
 .scroll-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
 
-/* ── TOPBAR ── */
+/* TOPBAR */
 .topbar { background: var(--g-dark); padding: 52px 18px 16px; display: flex; align-items: center; gap: 10px; }
 .topbar-home { background: var(--g-dark); padding: 44px 18px 10px; }
 .back-btn { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.12); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -98,7 +95,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .topbar-home-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: #2E6B4A; display: flex; align-items: center; justify-content: center; color: #9FE1CB; font-size: 13px; font-weight: 600; }
 
-/* ── KPI ROW ── */
+/* KPI ROW */
 .kpi-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; padding: 0 16px; margin-top: 10px; margin-bottom: 16px; }
 .kpi { background: var(--card); border-radius: var(--radius-sm); padding: 12px; box-shadow: var(--shadow); }
 .kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
@@ -107,7 +104,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .kpi-value.amber { color: #B45309; }
 .kpi-sub { font-size: 10px; color: var(--text-light); margin-top: 1px; }
 
-/* ── SECTION ── */
+/* SECTION */
 .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 10px; }
 .section-title { font-size: 15px; font-weight: 500; }
 .see-all { font-size: 13px; color: var(--g-med); cursor: pointer; }
@@ -116,7 +113,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .chip { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-med); color: var(--text-muted); cursor: pointer; white-space: nowrap; background: var(--card); transition: all 0.15s; }
 .chip.active { background: var(--g-dark); color: #fff; border-color: transparent; }
 
-/* ── DEVIS CARDS ── */
+/* DEVIS CARDS */
 .devis-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
 .dcard { background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); cursor: pointer; transition: box-shadow 0.15s; }
 .dcard:active { box-shadow: none; }
@@ -135,7 +132,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .badge.signe { background: var(--g-light); color: #065F46; }
 .badge.refuse { background: var(--red-bg); color: #B91C1C; }
 
-/* ── FAB + NAVBAR ── */
+/* FAB + NAVBAR */
 .navbar { background: var(--card); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 8px 0 20px; position: absolute; bottom: 0; left: 0; right: 0; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
 .nav-item svg { width: 22px; height: 22px; }
@@ -145,7 +142,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .fab { width: 52px; height: 52px; border-radius: 50%; background: var(--g-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); }
 .fab svg { width: 22px; height: 22px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
-/* ── VOCAL SCREEN ── */
+/* VOCAL SCREEN */
 .vocal-client { margin: 16px; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
 .v-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--g-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #065F46; flex-shrink: 0; }
 .v-name { font-size: 14px; font-weight: 500; }
@@ -155,8 +152,6 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .waveform { display: flex; align-items: center; justify-content: center; gap: 3px; height: 50px; }
 .wbar { width: 4px; border-radius: 2px; background: var(--g-med); transition: height 0.1s; }
 .wbar.paused { background: var(--border-med); }
-
-/* ── MIC + PAUSE CONTROLS ── */
 .mic-controls { display: flex; align-items: center; gap: 16px; }
 .mic-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--g-dark); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
 .mic-btn:active { transform: scale(0.95); }
@@ -169,34 +164,30 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .pause-btn svg { width: 20px; height: 20px; stroke: var(--text-muted); fill: none; stroke-width: 2; stroke-linecap: round; }
 .pause-badge { font-size: 11px; font-weight: 600; color: #B45309; background: var(--amber-bg); padding: 3px 10px; border-radius: 20px; display: none; }
 .pause-badge.visible { display: inline-block; }
-
 .timer { font-size: 26px; font-weight: 500; font-family: 'DM Mono', monospace; color: var(--text); }
 .vocal-hint { font-size: 12px; color: var(--text-light); text-align: center; line-height: 1.5; }
 .transcript-box { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); }
 .transcript-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .transcript-text { font-size: 13px; color: var(--text); line-height: 1.6; min-height: 40px; }
-
-/* Compteur de mots détectés */
 .cat-match-banner { margin: 8px 16px 0; background: var(--g-light); border: 1px solid var(--g-border); border-radius: var(--radius-sm); padding: 9px 13px; display: none; align-items: center; gap: 8px; }
 .cat-match-banner.visible { display: flex; }
 .cat-match-icon { width: 22px; height: 22px; border-radius: 6px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .cat-match-icon svg { width: 12px; height: 12px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .cat-match-text { font-size: 12px; color: #065F46; }
 .cat-match-text strong { font-weight: 600; }
-
 .cursor { display: inline-block; width: 2px; height: 13px; background: var(--g-med); margin-left: 2px; vertical-align: middle; animation: blink 0.8s step-end infinite; }
 @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
 .gen-btn { margin: 12px 16px 0; width: calc(100% - 32px); padding: 16px; background: var(--g-dark); color: #fff; font-size: 15px; font-weight: 500; border: none; border-radius: var(--radius); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
 .gen-btn:disabled { background: var(--border-med); cursor: default; }
 .gen-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
 
-/* ── PROCESSING ── */
+/* PROCESSING */
 .processing { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px; }
 .spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--g-med); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .proc-label { font-size: 15px; color: var(--text-muted); text-align: center; }
 
-/* ── DEVIS GENERATED ── */
+/* DEVIS GENERATED */
 .devis-header { margin: 16px 16px 0; background: var(--g-light); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--g-border); }
 .dh-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; }
 .dh-title { font-size: 14px; font-weight: 600; color: #065F46; }
@@ -240,7 +231,7 @@ input, textarea, button, select { font-family: 'DM Sans', sans-serif; }
 .btn-primary svg { stroke: #fff; }
 .btn-full { grid-column: 1 / 3; }
 
-/* ── SIGNATURE ── */
+/* SIGNATURE */
 .sig-hdr { margin: 16px 16px 0; background: var(--g-light); border-radius: var(--radius-sm); padding: 14px; border: 1px solid var(--g-border); }
 .sig-hdr-title { font-size: 14px; font-weight: 600; color: #065F46; margin-bottom: 2px; }
 .sig-hdr-sub { font-size: 12px; color: var(--g-med); }
@@ -268,11 +259,11 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .ys-text { font-size: 11px; color: var(--text-muted); }
 .ys-text strong { color: #534AB7; }
 
-/* ── TOAST ── */
+/* TOAST */
 .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--g-dark); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── CATALOGUE SHEET ── */
+/* CATALOGUE SHEET */
 .sheet-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 50; display: none; }
 .sheet-overlay.open { display: block; }
 .catalog-sheet { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-radius: 20px 20px 0 0; padding: 0 0 30px; z-index: 51; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1); }
@@ -287,7 +278,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .cat-add { width: 24px; height: 24px; border-radius: 50%; background: var(--g-dark); display: flex; align-items: center; justify-content: center; }
 .cat-add svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 
-/* ── SUIVI ── */
+/* SUIVI */
 .sent-header { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 16px 16px; }
 .sent-icon { width: 60px; height: 60px; border-radius: 50%; background: var(--g-light); display: flex; align-items: center; justify-content: center; }
 .sent-icon svg { width: 26px; height: 26px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
@@ -313,25 +304,12 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .notif-icon { width: 28px; height: 28px; border-radius: 8px; background: var(--g-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .notif-icon svg { width: 14px; height: 14px; stroke: #065F46; fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .notif-text { font-size: 12px; color: #065F46; line-height: 1.5; }
-.ob-progress { display:flex; gap:4px; margin-bottom:20px; }
-.ob-prog-bar { height:3px; flex:1; border-radius:2px; background:rgba(255,255,255,0.15); transition:background 0.3s; }
-.ob-prog-bar.done { background:#9FE1CB; }
-.ob-prog-bar.active { background:rgba(159,225,203,0.6); }
 
-/* Welcome card premier devis */
-.welcome-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; margin-bottom:16px; }
-.wc-title { font-size:17px; font-weight:600; color:#fff; margin-bottom:6px; }
-.wc-sub { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5; }
-.wc-steps { margin-top:14px; display:flex; flex-direction:column; gap:8px; }
-.wc-step { display:flex; align-items:center; gap:10px; }
-.wc-num { width:24px; height:24px; border-radius:50%; background:#9FE1CB; color:#0A2618; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.wc-text { font-size:13px; color:rgba(255,255,255,0.7); }
-
-/* ── LOGIN ── */
-.login-screen { position:fixed; inset:0; z-index:200; background:var(--g-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; }
+/* LOGIN */
+.login-screen { position:fixed; inset:0; z-index:200; background:var(--g-dark); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px; overflow-y:auto; }
 .login-logo { font-size:32px; font-weight:700; color:#fff; letter-spacing:-1px; margin-bottom:6px; }
 .login-logo span { color:#9FE1CB; }
-.login-tagline { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:40px; }
+.login-tagline { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:32px; }
 .login-card { width:100%; max-width:360px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:18px; padding:28px 24px; }
 .login-card-title { font-size:18px; font-weight:600; color:#fff; margin-bottom:4px; }
 .login-card-sub { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:24px; }
@@ -344,100 +322,66 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .login-error { font-size:13px; color:#FCA5A5; margin-top:10px; text-align:center; min-height:18px; }
 .login-switch { margin-top:18px; text-align:center; font-size:13px; color:rgba(255,255,255,0.4); }
 .login-switch span { color:#9FE1CB; cursor:pointer; text-decoration:underline; }
-.login-mode-title { display:none; }
-
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
-
-
-<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
-
-<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
-
-
-<!-- ═══════════════════════════════ SCREEN: HOME ═══════════════════════════════ -->
-
-<!-- ═══════════════════════════════ SCREEN: LOGIN ═══════════════════════════════ -->
+<!-- LOGIN -->
 <div class="login-screen" id="screen-login">
   <div style="width:64px;height:64px;border-radius:18px;background:rgba(159,225,203,0.12);border:1.5px solid rgba(159,225,203,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9FE1CB" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
   </div>
   <div class="login-logo">Devi<span>zy</span></div>
   <div class="login-tagline">Devis BTP par la voix</div>
-
   <div class="login-card">
-    <!-- Titre dynamique selon le mode -->
     <div class="login-card-title" id="login-title">Connexion</div>
     <div class="login-card-sub" id="login-sub">Accédez à votre espace artisan.</div>
-
-    <label class="login-label" for="login-email">Email</label>
+    <label class="login-label">Email</label>
     <input class="login-input" id="login-email" type="email" placeholder="marc@monentreprise.fr" autocomplete="email" inputmode="email">
-
-    <label class="login-label" for="login-password">Mot de passe</label>
-    <input class="login-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" id="login-pwd">
-
-    <!-- Champ confirm mdp — uniquement en mode inscription -->
+    <label class="login-label">Mot de passe</label>
+    <input class="login-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password">
     <div id="login-metier-wrap" style="display:none;">
-  <label class="login-label">Corps de métier</label>
-  <select id="login-metier" class="login-input" style="color:#fff;">
-    <option value="Climatisation">Climatisation / CVC</option>
-    <option value="Plomberie">Plomberie</option>
-    <option value="Electricite">Électricité</option>
-    <option value="Maconnerie">Maçonnerie</option>
-    <option value="Peinture">Peinture</option>
-    <option value="Menuiserie">Menuiserie</option>
-    <option value="Multi-metiers">Multi-métiers</option>
-  </select>
-</div>
+      <label class="login-label">Corps de métier</label>
+      <select id="login-metier" class="login-input" style="color:#fff;">
+        <option value="Climatisation">Climatisation / CVC</option>
+        <option value="Plomberie">Plomberie</option>
+        <option value="Electricite">Électricité</option>
+        <option value="Maconnerie">Maçonnerie</option>
+        <option value="Peinture">Peinture</option>
+        <option value="Menuiserie">Menuiserie</option>
+        <option value="Multi-metiers">Multi-métiers</option>
+      </select>
+    </div>
     <div id="login-confirm-wrap" style="display:none;">
-      <label class="login-label" for="login-confirm">Confirmer le mot de passe</label>
+      <label class="login-label">Confirmer le mot de passe</label>
       <input class="login-input" id="login-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
     </div>
-
     <button class="login-btn" id="login-btn" onclick="loginSubmit().catch(function(e){ document.getElementById('login-error').textContent = e.message || 'Erreur inattendue'; document.getElementById('login-btn').disabled=false; })">Se connecter</button>
     <div class="login-error" id="login-error"></div>
-
     <div class="login-switch" id="login-switch">
       Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>
     </div>
   </div>
 </div>
 
+<!-- HOME -->
 <div class="screen" id="screen-home">
   <div class="topbar-home">
     <div class="topbar-home-row">
       <div class="brand">Devizy</div>
-      <div class="avatar">ML</div>
+      <div class="avatar">?</div>
     </div>
-    <div class="greeting">Bonjour, Marc 👋</div>
+    <div class="greeting">Bonjour 👋</div>
     <h1>Vos devis</h1>
   </div>
   <div class="scroll-body">
     <div class="kpi-row">
-      <div class="kpi">
-        <div class="kpi-label">En cours</div>
-        <div class="kpi-value" id="kpi-count">0</div>
-        <div class="kpi-sub">devis actifs</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Ce mois</div>
-        <div class="kpi-value green" id="kpi-mrr">0 €</div>
-        <div class="kpi-sub">signé</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Taux sign.</div>
-        <div class="kpi-value amber" id="kpi-taux">0%</div>
-        <div class="kpi-sub">conversion</div>
-      </div>
+      <div class="kpi"><div class="kpi-label">En cours</div><div class="kpi-value" id="kpi-count">0</div><div class="kpi-sub">devis actifs</div></div>
+      <div class="kpi"><div class="kpi-label">Ce mois</div><div class="kpi-value green" id="kpi-mrr">0 €</div><div class="kpi-sub">signé</div></div>
+      <div class="kpi"><div class="kpi-label">Taux sign.</div><div class="kpi-value amber" id="kpi-taux">0%</div><div class="kpi-sub">conversion</div></div>
     </div>
-    <div class="section-header">
-      <span class="section-title">Devis récents</span>
-      <span class="see-all">Tout voir</span>
-    </div>
+    <div class="section-header"><span class="section-title">Devis récents</span><span class="see-all">Tout voir</span></div>
     <div class="filters">
       <div class="chip active" onclick="filterDevis('tous',this)">Tous</div>
       <div class="chip" onclick="filterDevis('brouillon',this)">Brouillon</div>
@@ -472,37 +416,22 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: NEW CLIENT ═══════════════════════════════ -->
+<!-- NEW CLIENT -->
 <div class="screen" id="screen-new-client">
   <div class="topbar">
     <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
     <span class="topbar-title">Nouveau devis</span>
   </div>
-  <div class="scroll-body" style="padding: 16px;">
+  <div class="scroll-body" style="padding:16px;">
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.5;">Renseignez les informations du client avant de dicter le devis.</p>
     <div style="display:flex;flex-direction:column;gap:12px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <div>
-          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Prénom</label>
-          <input id="client-prenom" type="text" placeholder="Sophie" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
-        </div>
-        <div>
-          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Nom</label>
-          <input id="client-nom" type="text" placeholder="Moreau" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
-        </div>
+        <div><label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Prénom</label><input id="client-prenom" type="text" placeholder="Sophie" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);"></div>
+        <div><label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Nom</label><input id="client-nom" type="text" placeholder="Moreau" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);"></div>
       </div>
-      <div>
-        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Adresse du chantier</label>
-        <input id="client-adresse" type="text" placeholder="12 rue des Lilas, Toulouse" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label>
-        <input id="client-email" type="email" placeholder="client@email.fr" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
-      </div>
-      <div>
-        <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Téléphone</label>
-        <input id="client-tel" type="tel" placeholder="06 12 34 56 78" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);">
-      </div>
+      <div><label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Adresse du chantier</label><input id="client-adresse" type="text" placeholder="12 rue des Lilas, Toulouse" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Email</label><input id="client-email" type="email" placeholder="client@email.fr" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:5px;">Téléphone</label><input id="client-tel" type="tel" placeholder="06 12 34 56 78" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--card);"></div>
     </div>
     <button class="gen-btn" style="margin:24px 0 0;width:100%;" onclick="goToVocal()">
       <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
@@ -511,7 +440,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: VOCAL ═══════════════════════════════ -->
+<!-- VOCAL -->
 <div class="screen" id="screen-vocal">
   <div class="topbar">
     <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -520,10 +449,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   <div class="scroll-body">
     <div class="vocal-client">
       <div class="v-avatar" id="v-avatar">??</div>
-      <div>
-        <div class="v-name" id="v-name">Client</div>
-        <div class="v-addr" id="v-addr">Adresse du chantier</div>
-      </div>
+      <div><div class="v-name" id="v-name">Client</div><div class="v-addr" id="v-addr">Adresse du chantier</div></div>
     </div>
     <div class="vocal-zone">
       <div class="vocal-state" id="vocal-state">Appuyez pour dicter votre devis</div>
@@ -535,34 +461,25 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
         <div class="wbar" style="height:10px" id="wb9"></div><div class="wbar" style="height:22px" id="wb10"></div>
         <div class="wbar" style="height:8px" id="wb11"></div><div class="wbar" style="height:14px" id="wb12"></div>
       </div>
-
-      <!-- Contrôles : pause à gauche, micro au centre -->
       <div class="mic-controls">
         <button class="pause-btn" id="pause-btn" onclick="togglePause()">
           <svg id="pause-icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
         </button>
         <button class="mic-btn" id="mic-btn" onclick="toggleRec()">
-          <svg id="mic-icon" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
+          <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg>
         </button>
-        <!-- Espace miroir pour centrage -->
         <div style="width:52px;"></div>
       </div>
-
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="timer" id="timer">0:00</div>
         <span class="pause-badge" id="pause-badge">⏸ En pause</span>
       </div>
       <div class="vocal-hint" id="vocal-hint">Décrivez les travaux, les matériaux<br>et les quantités à voix haute</div>
     </div>
-
-    <!-- Bannière correspondances catalogue -->
     <div class="cat-match-banner" id="cat-match-banner">
-      <div class="cat-match-icon">
-        <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
-      </div>
+      <div class="cat-match-icon"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div>
       <div class="cat-match-text" id="cat-match-text">Prestations catalogue détectées</div>
     </div>
-
     <div class="transcript-box">
       <div class="transcript-label">Transcription en direct</div>
       <div class="transcript-text" id="transcript-text"><span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span></div>
@@ -575,18 +492,13 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: PROCESSING ═══════════════════════════════ -->
+<!-- PROCESSING -->
 <div class="screen" id="screen-processing">
-  <div class="topbar">
-    <span class="topbar-title" style="text-align:center;width:100%;">Analyse en cours...</span>
-  </div>
-  <div class="processing">
-    <div class="spinner"></div>
-    <div class="proc-label" id="proc-label">Analyse de la transcription...</div>
-  </div>
+  <div class="topbar"><span class="topbar-title" style="text-align:center;width:100%;">Analyse en cours...</span></div>
+  <div class="processing"><div class="spinner"></div><div class="proc-label" id="proc-label">Analyse de la transcription...</div></div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: DEVIS GENERATED ═══════════════════════════════ -->
+<!-- DEVIS GENERATED -->
 <div class="screen" id="screen-devis">
   <div class="topbar">
     <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -595,10 +507,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
   <div class="scroll-body">
     <div class="devis-header">
-      <div class="dh-top">
-        <div class="dh-title" id="dh-numero">DEV-2026-001</div>
-        <div class="dh-badge">Généré par IA</div>
-      </div>
+      <div class="dh-top"><div class="dh-title" id="dh-numero">DEV-2026-001</div><div class="dh-badge">Généré par IA</div></div>
       <div class="dh-sub" id="dh-client">Client — Adresse</div>
     </div>
     <div class="transcrit-ref" style="display:none;" id="transcrit-ref">
@@ -617,10 +526,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <hr class="total-div">
       <div class="total-main"><span>Total TTC</span><span id="total-ttc">0 €</span></div>
       <div class="rent-wrap">
-        <div class="rent-labels">
-          <span class="rent-title">Rentabilité estimée</span>
-          <span class="rent-pct" id="rent-pct">0%</span>
-        </div>
+        <div class="rent-labels"><span class="rent-title">Rentabilité estimée</span><span class="rent-pct" id="rent-pct">0%</span></div>
         <div class="rent-bar-bg"><div class="rent-bar-fill" id="rent-bar"></div></div>
       </div>
     </div>
@@ -642,7 +548,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: SEND ═══════════════════════════════ -->
+<!-- SEND -->
 <div class="screen" id="screen-send">
   <div class="topbar">
     <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -652,26 +558,26 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <div>
       <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Destinataire</div>
       <div style="background:var(--card);border-radius:var(--radius-sm);padding:13px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;">
-        <div style="width:38px;height:38px;border-radius:50%;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#065F46;flex-shrink:0;" id="send-avatar">SM</div>
-        <div><div style="font-size:14px;font-weight:500;" id="send-name">Sophie Moreau</div><div style="font-size:12px;color:var(--text-muted);" id="send-contact">email</div></div>
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--g-light);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#065F46;flex-shrink:0;" id="send-avatar">?</div>
+        <div><div style="font-size:14px;font-weight:500;" id="send-name">Client</div><div style="font-size:12px;color:var(--text-muted);" id="send-contact">email</div></div>
       </div>
     </div>
     <div>
       <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Canal d'envoi</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div class="channel sel" id="ch-email" onclick="selectCh('email')" style="background:var(--card);border:1.5px solid var(--g-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+        <div id="ch-email" onclick="selectCh('email')" style="background:var(--card);border:1.5px solid var(--g-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
           <div style="width:28px;height:28px;border-radius:8px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#1E40AF;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></div>
           <div style="font-size:12px;font-weight:500;">Email</div><div style="font-size:10px;color:var(--text-muted);">Lien de signature</div>
         </div>
-        <div onclick="selectCh('sms')" id="ch-sms" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+        <div id="ch-sms" onclick="selectCh('sms')" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
           <div style="width:28px;height:28px;border-radius:8px;background:#EAF3DE;display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#3B6D11;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
           <div style="font-size:12px;font-weight:500;">SMS</div><div style="font-size:10px;color:var(--text-muted);">Lien court</div>
         </div>
-        <div onclick="selectCh('wa')" id="ch-wa" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+        <div id="ch-wa" onclick="selectCh('wa')" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
           <div style="width:28px;height:28px;border-radius:8px;background:var(--g-light);display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#0F6E56;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8A8.5 8.5 0 0 1 12.7 20a8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 3 11.5 8.5 8.5 0 0 1 8.7 4a8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
           <div style="font-size:12px;font-weight:500;">WhatsApp</div><div style="font-size:10px;color:var(--text-muted);">Message direct</div>
         </div>
-        <div onclick="selectCh('pdf')" id="ch-pdf" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
+        <div id="ch-pdf" onclick="selectCh('pdf')" style="background:var(--card);border:1px solid var(--border-med);border-radius:var(--radius-sm);padding:11px;cursor:pointer;">
           <div style="width:28px;height:28px;border-radius:8px;background:#FAECE7;display:flex;align-items:center;justify-content:center;margin-bottom:6px;"><svg style="width:14px;height:14px;fill:none;stroke:#993C1D;stroke-width:2;stroke-linecap:round;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
           <div style="font-size:12px;font-weight:500;">PDF</div><div style="font-size:10px;color:var(--text-muted);">Export direct</div>
         </div>
@@ -679,7 +585,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     </div>
     <div>
       <div style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Message</div>
-      <textarea id="send-msg" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:13px;resize:none;height:80px;background:var(--card);color:var(--text);">Bonjour, veuillez trouver ci-joint votre devis. Vous pouvez le signer directement en ligne. Cordialement, Marc</textarea>
+      <textarea id="send-msg" style="width:100%;padding:11px 12px;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:13px;resize:none;height:80px;background:var(--card);color:var(--text);">Bonjour, veuillez trouver ci-joint votre devis. Vous pouvez le signer directement en ligne. Cordialement</textarea>
     </div>
     <button class="btn btn-primary" style="width:100%;padding:15px;font-size:15px;" onclick="sendDevis()">
       <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M22 2L11 13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
@@ -688,7 +594,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: SENT ═══════════════════════════════ -->
+<!-- SENT -->
 <div class="screen" id="screen-sent">
   <div class="topbar">
     <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -730,7 +636,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ SCREEN: SIGNATURE ═══════════════════════════════ -->
+<!-- SIGNATURE -->
 <div class="screen" id="screen-signature">
   <div class="topbar">
     <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -739,7 +645,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   <div class="scroll-body">
     <div class="sig-hdr">
       <div class="sig-hdr-title" id="sig-num">DEV-2026-001 — 0 € TTC</div>
-      <div class="sig-hdr-sub">Marc Lambert · Artisan</div>
+      <div class="sig-hdr-sub" id="sig-artisan">Artisan</div>
     </div>
     <div class="sig-recap">
       <div class="sig-row"><span class="lbl">Client</span><span id="sig-client" style="font-weight:500;">–</span></div>
@@ -755,10 +661,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="cgv-text">J'ai lu et j'accepte les <a>conditions générales de vente</a>. Ma signature électronique a valeur contractuelle.</div>
     </div>
     <div class="canvas-wrap">
-      <div class="canvas-header">
-        <span class="canvas-lbl">Signez ici avec votre doigt</span>
-        <span class="canvas-clear" onclick="clearCanvas()">Effacer</span>
-      </div>
+      <div class="canvas-header"><span class="canvas-lbl">Signez ici avec votre doigt</span><span class="canvas-clear" onclick="clearCanvas()">Effacer</span></div>
       <canvas id="sig-canvas"></canvas>
     </div>
     <div class="sig-cta">
@@ -776,15 +679,15 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
-<!-- ═══════════════════════════════ CATALOGUE SHEET ═══════════════════════════════ -->
+<!-- CATALOGUE SHEET -->
 <div class="sheet-overlay" id="sheet-overlay" onclick="closeCatalog()"></div>
 <div class="catalog-sheet" id="catalog-sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">Catalogue de prestations</div>
   <div style="padding:8px 16px 0;">
-    <input id="catalog-search" type="text" placeholder="Rechercher une prestation..." 
-    oninput="filterCatalog(this.value)" onkeyup="filterCatalog(this.value)" onchange="filterCatalog(this.value)"
-    style="width:100%;padding:10px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);">
+    <input id="catalog-search" type="text" placeholder="Rechercher une prestation..."
+      oninput="filterCatalog(this.value)" onkeyup="filterCatalog(this.value)" onchange="filterCatalog(this.value)"
+      style="width:100%;padding:10px 12px;border:1px solid var(--border-med);border-radius:10px;font-size:14px;background:var(--bg);color:var(--text);">
   </div>
   <div class="catalog-items" id="catalog-items"></div>
 </div>
@@ -792,7 +695,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-
+<!-- CATALOGUE SCREEN -->
 <div class="screen" id="screen-catalogue">
   <div class="cat-screen-header">
     <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -833,6 +736,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
 </div>
 
+<!-- PROFIL SCREEN -->
 <div class="screen" id="screen-profil">
   <div class="topbar">
     <button class="back-btn" onclick="goTo('screen-home')"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
@@ -840,9 +744,9 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
   </div>
   <div class="scroll-body">
     <div class="profil-avatar-wrap">
-      <div class="profil-avatar-big" id="profil-avatar-big">ML</div>
-      <div class="profil-name-big" id="profil-name-big">Marc Lambert</div>
-      <div class="profil-metier-lbl" id="profil-metier-display">Climatisation</div>
+      <div class="profil-avatar-big" id="profil-avatar-big">?</div>
+      <div class="profil-name-big" id="profil-name-big"></div>
+      <div class="profil-metier-lbl" id="profil-metier-display"></div>
     </div>
     <div class="profil-section">
       <div class="profil-section-title">Informations personnelles</div>
@@ -861,8 +765,10 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="profil-2col">
         <div class="profil-field"><label>Corps de metier</label>
           <select id="profil-metier">
-            <option>Climatisation</option><option>Plomberie</option><option>Electricite</option>
-            <option>Maconnerie</option><option>Peinture</option><option>Menuiserie</option><option>Multi-metiers</option>
+            <option value="Climatisation">Climatisation</option><option value="Plomberie">Plomberie</option>
+            <option value="Electricite">Electricite</option><option value="Maconnerie">Maconnerie</option>
+            <option value="Peinture">Peinture</option><option value="Menuiserie">Menuiserie</option>
+            <option value="Multi-metiers">Multi-metiers</option>
           </select>
         </div>
         <div class="profil-field"><label>Taux horaire (euros/h)</label><input id="profil-taux" type="number" placeholder="65" min="0"></div>
@@ -886,6 +792,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <button onclick="loginLogout().catch(function(e){ console.error(e); })" style="margin:8px 16px 24px;width:calc(100% - 32px);display:block;padding:13px;background:transparent;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-size:14px;color:var(--text-muted);cursor:pointer;font-family:inherit;">Se déconnecter</button>
   </div>
 </div>
+
 </div><!-- #app -->
 
 <script>
@@ -900,121 +807,107 @@ var state = {
   selectedCh: 'email',
   cgvChecked: false,
   hasSig: false,
-  devisList: [
-    { id:1, client:'Famille Bertrand', desc:'Rénovation salle de bain', montant:4200, marge:38, statut:'signe', date:'24 mars' },
-    { id:2, client:'SCI Les Oliviers', desc:'Extension terrasse 18 m²', montant:6850, marge:22, statut:'envoye', date:'22 mars' },
-    { id:3, client:'M. Lacoste', desc:'Installation électrique', montant:1950, marge:44, statut:'brouillon', date:'19 mars' },
-    { id:4, client:'Résidence du Parc', desc:'Ravalement façade', montant:11800, marge:14, statut:'refuse', date:'15 mars' },
-  ],
-  catalogue: [], // Chargé depuis Supabase après connexion
+  devisList: [],
+  catalogue: [],
   profil: {
-    prenom: 'Marc', nom: 'Lambert', entreprise: 'Devizy', siret: '',
-    email: 'marc@devizy.fr', telephone: '', metier: 'Climatisation',
+    prenom: '', nom: '', entreprise: 'Devizy', siret: '',
+    email: '', telephone: '', metier: 'Climatisation',
     taux_horaire: 65, adresse: '', tva: '10', rcpro: ''
   }
 };
 
-
-
-// ═══════════════════════════════ AUTH — SUPABASE ═══════════════════════════════
+// ═══════════════════════════════ AUTH ═══════════════════════════════
 var loginMode = 'login';
 
-// ── Affichage loading sur le bouton ──
 function loginSetLoading(on) {
   var btn = document.getElementById('login-btn');
-  if (btn) btn.textContent = on
-    ? 'Chargement...'
-    : (loginMode === 'register' ? 'Créer mon compte' : 'Se connecter');
+  if (btn) btn.textContent = on ? 'Chargement...' : (loginMode === 'register' ? 'Creer mon compte' : 'Se connecter');
   if (btn) btn.disabled = on;
 }
 
-// ── Bascule login ↔ inscription ──
 function loginToggleMode() {
   loginMode = loginMode === 'login' ? 'register' : 'login';
   var isReg = loginMode === 'register';
-  document.getElementById('login-title').textContent = isReg ? 'Créer mon compte' : 'Connexion';
-  document.getElementById('login-sub').textContent = isReg
-    ? 'Créez votre espace artisan gratuitement.'
-    : 'Accédez à votre espace artisan.';
-  document.getElementById('login-btn').textContent = isReg ? 'Créer mon compte' : 'Se connecter';
+  document.getElementById('login-title').textContent = isReg ? 'Creer mon compte' : 'Connexion';
+  document.getElementById('login-sub').textContent = isReg ? 'Creez votre espace artisan gratuitement.' : 'Accedez a votre espace artisan.';
+  document.getElementById('login-btn').textContent = isReg ? 'Creer mon compte' : 'Se connecter';
+  document.getElementById('login-metier-wrap').style.display = isReg ? 'block' : 'none';
   document.getElementById('login-confirm-wrap').style.display = isReg ? 'block' : 'none';
-document.getElementById('login-metier-wrap').style.display = isReg ? 'block' : 'none';
   document.getElementById('login-switch').innerHTML = isReg
-    ? 'Déjà un compte ? <span onclick="loginToggleMode()">Se connecter</span>'
-    : 'Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>';
+    ? 'Deja un compte ? <span onclick="loginToggleMode()">Se connecter</span>'
+    : 'Pas encore de compte ? <span onclick="loginToggleMode()">Creer mon compte</span>';
   document.getElementById('login-error').textContent = '';
   document.getElementById('login-password').value = '';
-  document.getElementById('login-confirm').value = '';
+  if (document.getElementById('login-confirm')) document.getElementById('login-confirm').value = '';
 }
 
-// ── Soumission ──
 async function loginSubmit() {
-  var email    = document.getElementById('login-email').value.trim().toLowerCase();
+  var email = document.getElementById('login-email').value.trim().toLowerCase();
   var password = document.getElementById('login-password').value;
-  var errEl    = document.getElementById('login-error');
+  var errEl = document.getElementById('login-error');
   errEl.textContent = '';
-
   if (!email || !email.includes('@')) { errEl.textContent = 'Adresse email invalide.'; return; }
-  if (password.length < 6)            { errEl.textContent = 'Mot de passe : 6 caractères minimum.'; return; }
-
+  if (password.length < 6) { errEl.textContent = 'Mot de passe : 6 caracteres minimum.'; return; }
   loginSetLoading(true);
-
   try {
     if (loginMode === 'register') {
       var confirm = document.getElementById('login-confirm').value;
-      if (password !== confirm) {
-        errEl.textContent = 'Les mots de passe ne correspondent pas.';
-        loginSetLoading(false); return;
-      }
-      var metier = document.getElementById('login-metier').value || 'Climatisation';
-var res = await sb.auth.signUp({ email: email, password: password, options: { data: { metier: metier } } });
+      if (password !== confirm) { errEl.textContent = 'Les mots de passe ne correspondent pas.'; loginSetLoading(false); return; }
+      var metierChoisi = document.getElementById('login-metier').value || 'Climatisation';
+      var res = await sb.auth.signUp({ email: email, password: password, options: { data: { metier: metierChoisi } } });
       if (res.error) throw res.error;
-      // Attendre la session (signUp connecte automatiquement sur Supabase)
-      await loginAfterAuth(true);
+      await loginAfterAuth(true, metierChoisi);
     } else {
       var res = await sb.auth.signInWithPassword({ email: email, password: password });
       if (res.error) throw res.error;
-      await loginAfterAuth(false);
+      await loginAfterAuth(false, null);
     }
   } catch(e) {
     loginSetLoading(false);
     var msg = e.message || String(e);
-    if (msg.includes('Invalid login') || msg.includes('invalid_credentials'))
-      errEl.textContent = 'Email ou mot de passe incorrect.';
-    else if (msg.includes('already registered') || msg.includes('User already registered'))
-      errEl.textContent = 'Un compte existe déjà avec cet email. Connectez-vous.';
-    else if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed'))
-      errEl.textContent = 'Confirmez votre email avant de vous connecter (vérifiez vos spams).';
-    else if (msg.includes('signup_disabled'))
-      errEl.textContent = 'Les inscriptions sont désactivées.';
-    else if (msg.includes('over_email_send_rate_limit'))
-      errEl.textContent = 'Trop de tentatives. Attendez quelques minutes.';
-    else if (msg.includes('Failed to fetch') || msg.includes('NetworkError'))
-      errEl.textContent = 'Erreur réseau. Vérifiez votre connexion.';
+    if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) errEl.textContent = 'Email ou mot de passe incorrect.';
+    else if (msg.includes('already registered') || msg.includes('User already registered')) errEl.textContent = 'Un compte existe deja avec cet email.';
+    else if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed')) errEl.textContent = 'Confirmez votre email avant de vous connecter.';
+    else if (msg.includes('signup_disabled')) errEl.textContent = 'Les inscriptions sont desactivees.';
+    else if (msg.includes('over_email_send_rate_limit')) errEl.textContent = 'Trop de tentatives. Attendez quelques minutes.';
+    else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) errEl.textContent = 'Erreur reseau. Verifiez votre connexion.';
     else errEl.textContent = msg;
   }
 }
 
-// ── Après connexion réussie : charger profil + données ──
-async function loginAfterAuth(isNew) {
+// ── Correction principale : metierChoisi passé en paramètre ──
+async function loginAfterAuth(isNew, metierChoisi) {
   var user = (await sb.auth.getUser()).data.user;
   if (!user) { showScreen('screen-login'); return; }
 
   await chargerDonneesSupabase(user.id);
 
-  // Si catalogue toujours vide après chargement → assigner le catalogue par défaut
+  // Si nouveau compte → forcer le métier choisi à l'inscription
+  if (isNew && metierChoisi) {
+    state.profil.metier = metierChoisi;
+  }
+
+  // Si catalogue vide → assigner le catalogue du bon métier
   if (!state.catalogue || state.catalogue.length === 0) {
-    var metier = (user.user_metadata && user.user_metadata.metier) || 
-         (document.getElementById('login-metier') && document.getElementById('login-metier').value) ||
-         'Climatisation';
-if (isNew) state.profil.metier = metier;
-state.catalogue = defaultCatalogue(metier);
-    // Et le sauvegarder tout de suite pour ce nouvel utilisateur
+    state.catalogue = defaultCatalogue(state.profil.metier);
     await sauvegarderCatalogueSupabase(user.id);
+    // Sauvegarder aussi le profil avec le bon métier
+    if (isNew) await sauvegarderProfilSupabase(user.id);
   }
 
   state.profil.email = user.email;
+  updateHeaderUI();
 
+  if (isNew || !state.profil.prenom) {
+    showScreen('screen-profil');
+    showToast('Bienvenue ! Completez votre profil.');
+  } else {
+    showScreen('screen-home');
+    renderHome();
+  }
+}
+
+function updateHeaderUI() {
   var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
   var brand = document.querySelector('.brand');
   var greeting = document.querySelector('.greeting');
@@ -1022,36 +915,27 @@ state.catalogue = defaultCatalogue(metier);
   if (brand) brand.textContent = state.profil.entreprise || 'Devizy';
   if (greeting) greeting.textContent = 'Bonjour' + (state.profil.prenom ? ', ' + state.profil.prenom : '') + ' 👋';
   if (avatar) avatar.textContent = ini.toUpperCase() || '?';
-
-  if (isNew || !state.profil.prenom) {
-    showScreen('screen-profil');
-    showToast('Bienvenue ! Complétez votre profil.');
-  } else {
-    showScreen('screen-home');
-    renderHome();
-  }
 }
 
-// ── Déconnexion ──
 async function loginLogout() {
   await sb.auth.signOut();
   state.devisList = [];
-  state.catalogue = defaultCatalogue();
+  state.catalogue = [];
   state.profil = defaultProfil();
   showScreen('screen-login');
   loginMode = 'login';
   document.getElementById('login-title').textContent = 'Connexion';
-  document.getElementById('login-sub').textContent = 'Accédez à votre espace artisan.';
+  document.getElementById('login-sub').textContent = 'Accedez a votre espace artisan.';
   document.getElementById('login-btn').textContent = 'Se connecter';
   document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-metier-wrap').style.display = 'none';
   document.getElementById('login-confirm-wrap').style.display = 'none';
-  document.getElementById('login-switch').innerHTML = 'Pas encore de compte ? <span onclick="loginToggleMode()">Créer mon compte</span>';
+  document.getElementById('login-switch').innerHTML = 'Pas encore de compte ? <span onclick="loginToggleMode()">Creer mon compte</span>';
   document.getElementById('login-email').value = '';
   document.getElementById('login-password').value = '';
   document.getElementById('login-error').textContent = '';
 }
 
-// ── Valeurs par défaut ──
 function defaultProfil() {
   return { prenom:'', nom:'', entreprise:'', siret:'', email:'', telephone:'',
            metier:'Climatisation', taux_horaire:65, adresse:'', tva:'10', rcpro:'' };
@@ -1070,22 +954,15 @@ function goTo(id) {
 
 function showScreen(id) {
   var loginEl = document.getElementById('screen-login');
-  if (id === 'screen-login') {
-    if (loginEl) loginEl.style.display = 'flex';
-    return;
-  }
+  if (id === 'screen-login') { if (loginEl) loginEl.style.display = 'flex'; return; }
   if (loginEl) loginEl.style.display = 'none';
-  // Désactiver tous les screens normaux
   document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
   var target = document.getElementById(id);
-  if (target) {
-    target.classList.add('active');
-    state.currentScreen = id;
-    state.history = [];
-  }
+  if (target) { target.classList.add('active'); state.currentScreen = id; state.history = []; }
   if (id === 'screen-profil') ouvrirProfil();
   if (id === 'screen-catalogue') renderCatalogueScreen();
 }
+
 function goBack() {
   if (state.history.length === 0) return;
   document.getElementById(state.currentScreen).classList.remove('active');
@@ -1115,20 +992,23 @@ function renderHome() {
   document.getElementById('kpi-taux').textContent = taux + '%';
   renderDevisList('tous');
 }
+
 function renderDevisList(filter) {
   var list = filter === 'tous' ? state.devisList : state.devisList.filter(function(d){ return d.statut === filter; });
   var html = '';
   list.forEach(function(d) {
     var mc = d.marge >= 30 ? '#1D9E75' : d.marge >= 20 ? '#F59E0B' : '#EF4444';
-    html += '<div class="dcard" onclick="viewDevis('+d.id+')">' +
-      '<div class="dc-top"><span class="dc-client">'+d.client+'</span><span class="dc-date">'+d.date+'</span></div>' +
-      '<div class="dc-desc">'+d.desc+'</div>' +
-      '<div class="dc-bottom"><div><div class="dc-amount">'+fmt(d.montant)+'</div>' +
-      '<div class="dc-marge"><div class="marge-dot" style="background:'+mc+'"></div><span class="marge-lbl">Marge ~'+d.marge+'%</span></div></div>' +
-      '<div class="badge '+d.statut+'">'+ ({signe:'Signé',envoye:'Envoyé',brouillon:'Brouillon',refuse:'Refusé'}[d.statut])+'</div></div></div>';
+    html += '<div class="dcard" onclick="viewDevis(' + d.id + ')">' +
+      '<div class="dc-top"><span class="dc-client">' + d.client + '</span><span class="dc-date">' + d.date + '</span></div>' +
+      '<div class="dc-desc">' + d.desc + '</div>' +
+      '<div class="dc-bottom"><div><div class="dc-amount">' + fmt(d.montant) + '</div>' +
+      '<div class="dc-marge"><div class="marge-dot" style="background:' + mc + '"></div>' +
+      '<span class="marge-lbl">Marge ~' + (d.marge||0) + '%</span></div></div>' +
+      '<div class="badge ' + d.statut + '">' + ({signe:'Signe',envoye:'Envoye',brouillon:'Brouillon',refuse:'Refuse'}[d.statut]||d.statut) + '</div></div></div>';
   });
   document.getElementById('devis-list').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun devis</div>';
 }
+
 function filterDevis(f, el) {
   document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
   el.classList.add('active');
@@ -1136,32 +1016,24 @@ function filterDevis(f, el) {
 }
 function viewDevis(id) { goTo('screen-devis'); }
 
-// ═══════════════════════════════ VOCAL — ÉTAT ÉTENDU ═══════════════════════════════
-var isRec = false;
-var isPaused = false;
-var timerInt = null;
-var elapsed = 0;
-var waveInt = null;
-var fullTranscript = '';
-// Compteur de correspondances catalogue détectées à la volée
-var liveCatMatches = 0;
+// ═══════════════════════════════ VOCAL ═══════════════════════════════
+var isRec = false, isPaused = false, timerInt = null, elapsed = 0, waveInt = null;
+var fullTranscript = '', liveCatMatches = 0;
+var mediaRecorder = null, audioChunks = [], liveRecognition = null;
 
 function goToVocal() {
   state.client.prenom = document.getElementById('client-prenom').value || 'Client inconnu';
   state.client.nom = document.getElementById('client-nom').value || '';
-  state.client.adresse = document.getElementById('client-adresse').value || 'Adresse non renseignée';
+  state.client.adresse = document.getElementById('client-adresse').value || 'Adresse non renseignee';
   state.client.email = document.getElementById('client-email').value || '';
   state.client.tel = document.getElementById('client-tel').value || '';
   var initials = (state.client.prenom[0]||'?') + (state.client.nom[0]||'');
   document.getElementById('v-avatar').textContent = initials.toUpperCase();
   document.getElementById('v-name').textContent = state.client.prenom + ' ' + state.client.nom;
   document.getElementById('v-addr').textContent = state.client.adresse;
-  fullTranscript = '';
-  elapsed = 0;
-  isPaused = false;
-  liveCatMatches = 0;
+  fullTranscript = ''; elapsed = 0; isPaused = false; liveCatMatches = 0;
   document.getElementById('timer').textContent = '0:00';
-  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span>';
+  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription apparaitra ici...</span>';
   document.getElementById('gen-btn').disabled = true;
   document.getElementById('vocal-state').textContent = 'Appuyez pour dicter votre devis';
   document.getElementById('cat-match-banner').classList.remove('visible');
@@ -1171,21 +1043,6 @@ function goToVocal() {
   goTo('screen-vocal');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   VOCAL ENGINE v3 — MediaRecorder universel (Chrome + Safari iOS)
-   ═══════════════════════════════════════════════════════════════ */
-
-var mediaRecorder = null;
-var audioChunks = [];
-var isRec = false;
-var isPaused = false;
-var timerInt = null;
-var elapsed = 0;
-var waveInt = null;
-var fullTranscript = '';
-var liveCatMatches = 0;
-
-// ── Helpers UI ──
 function resetMicBtn() {
   var btn = document.getElementById('mic-btn');
   btn.classList.remove('recording', 'paused-state');
@@ -1202,24 +1059,14 @@ function setMicPaused() {
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
 }
 function setVocalState(msg, hint) {
-  var s = document.getElementById('vocal-state');
-  var h = document.getElementById('vocal-hint');
+  var s = document.getElementById('vocal-state'), h = document.getElementById('vocal-hint');
   if (s) s.textContent = msg;
   if (h && hint) h.textContent = hint;
 }
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function startTimer() {
-  timerInt = setInterval(function() {
-    elapsed++;
-    var m = Math.floor(elapsed/60), s = elapsed%60;
-    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
-  }, 1000);
-}
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function startTimer() { timerInt = setInterval(function(){ elapsed++; var m=Math.floor(elapsed/60),s=elapsed%60; document.getElementById('timer').textContent=m+':'+(s<10?'0':'')+s; }, 1000); }
 function stopTimer() { clearInterval(timerInt); }
 
-// ── Détection catalogue en live ──
 function detectCatalogMatches(text) {
   if (!text || !state.catalogue || state.catalogue.length === 0) return;
   var textNorm = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -1227,9 +1074,7 @@ function detectCatalogMatches(text) {
   var matches = 0;
   state.catalogue.forEach(function(c) {
     var nomNorm = c.nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-    var words = nomNorm.split(/[\s\-+,\/]+/).filter(function(w) {
-      return w.length > 3 && stopWords.indexOf(w) === -1;
-    });
+    var words = nomNorm.split(/[\s\-+,\/]+/).filter(function(w){ return w.length > 3 && stopWords.indexOf(w) === -1; });
     if (words.some(function(w){ return textNorm.includes(w); })) matches++;
   });
   var banner = document.getElementById('cat-match-banner');
@@ -1237,36 +1082,20 @@ function detectCatalogMatches(text) {
   if (!banner || !txt) return;
   if (matches > 0) {
     banner.classList.add('visible');
-    txt.innerHTML = '<strong>'+matches+' prestation'+(matches>1?'s':'')+
-      '</strong> du catalogue détectée'+(matches>1?'s':'');
-  } else {
-    banner.classList.remove('visible');
-  }
+    txt.innerHTML = '<strong>' + matches + ' prestation' + (matches>1?'s':'') + '</strong> du catalogue detectee' + (matches>1?'s':'');
+  } else { banner.classList.remove('visible'); }
 }
 
-// ── Transcription via Claude ──
-async function transcribeWithClaude(text) {
-  // Claude reçoit le texte brut et l'améliore/corrige
-  // (dans le futur : audio → base64 → Whisper)
-  return text;
-}
-
-// ── Afficher la transcription dans le DOM ──
 function showTranscript(text, interim) {
   interim = interim || '';
   detectCatalogMatches(text + interim);
-  if ((text + interim).trim().length > 3) {
-    document.getElementById('gen-btn').disabled = false;
-  }
+  if ((text + interim).trim().length > 3) document.getElementById('gen-btn').disabled = false;
   document.getElementById('transcript-text').innerHTML =
-    (text ? '<span>'+escHtml(text)+'</span>' : '') +
-    (interim ? '<span style="color:var(--text-light);">'+escHtml(interim)+'</span>' : '') +
+    (text ? '<span>' + escHtml(text) + '</span>' : '') +
+    (interim ? '<span style="color:var(--text-light);">' + escHtml(interim) + '</span>' : '') +
     (isRec && !isPaused ? '<span class="cursor"></span>' : '');
 }
 
-// ════════════════════════════════════
-//  CONTRÔLES PRINCIPAUX
-// ════════════════════════════════════
 function toggleRec() { if (!isRec) startRec(); else stopRec(); }
 function togglePause() { if (!isRec) return; if (!isPaused) pauseRec(); else resumeRec(); }
 
@@ -1277,9 +1106,8 @@ function startRec() {
   document.getElementById('pause-btn').classList.add('visible');
   document.getElementById('cat-match-banner').classList.remove('visible');
   document.getElementById('gen-btn').disabled = true;
-  document.getElementById('transcript-text').innerHTML =
-    '<span style="color:var(--text-light);font-style:italic;">Micro actif — parlez...</span><span class="cursor"></span>';
-  setVocalState('Enregistrement en cours...', 'Appuyez sur ⏸ pour une pause');
+  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">Micro actif — parlez...</span><span class="cursor"></span>';
+  setVocalState('Enregistrement en cours...', 'Appuyez sur pause pour une pause');
   startTimer();
   waveInt = setInterval(animWave, 130);
   startMediaRecorder();
@@ -1292,7 +1120,7 @@ function pauseRec() {
   for (var i=1;i<=12;i++) { var b=document.getElementById('wb'+i); b.style.height='8px'; b.classList.add('paused'); }
   setMicPaused();
   document.getElementById('pause-icon').innerHTML = '<polygon points="5,3 19,12 5,21"/>';
-  setVocalState('En pause','Appuyez ▶ pour reprendre');
+  setVocalState('En pause','Appuyez pour reprendre');
   document.getElementById('pause-badge').classList.add('visible');
 }
 
@@ -1302,7 +1130,7 @@ function resumeRec() {
   for (var i=1;i<=12;i++) { document.getElementById('wb'+i).classList.remove('paused'); }
   document.getElementById('pause-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
   setMicRecording();
-  setVocalState('Enregistrement en cours...','Appuyez sur ⏸ pour une pause');
+  setVocalState('Enregistrement en cours...','Appuyez sur pause pour une pause');
   document.getElementById('pause-badge').classList.remove('visible');
   startTimer(); waveInt = setInterval(animWave, 130);
 }
@@ -1310,9 +1138,7 @@ function resumeRec() {
 function stopRec() {
   isRec = false; isPaused = false;
   stopLiveRecognition();
-  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    mediaRecorder.stop(); // déclenche ondataavailable + onstop
-  }
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
   stopTimer(); clearInterval(waveInt);
   resetMicBtn();
   document.getElementById('pause-btn').classList.remove('visible');
@@ -1321,34 +1147,17 @@ function stopRec() {
   setVocalState('Traitement...', 'Transcription en cours...');
 }
 
-// ════════════════════════════════════
-//  MEDIARECORDER — fonctionne partout
-// ════════════════════════════════════
 function getBestMimeType() {
-  var types = [
-    'audio/webm;codecs=opus',
-    'audio/webm',
-    'audio/ogg;codecs=opus',
-    'audio/mp4',
-    'audio/aac',
-    ''
-  ];
-  for (var i=0; i<types.length; i++) {
-    if (!types[i] || MediaRecorder.isTypeSupported(types[i])) return types[i];
-  }
+  var types = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4','audio/aac',''];
+  for (var i=0; i<types.length; i++) { if (!types[i] || MediaRecorder.isTypeSupported(types[i])) return types[i]; }
   return '';
 }
-
-// Reconnaissance vocale en direct (affichage temps réel si disponible)
-var liveRecognition = null;
 
 function startLiveRecognition() {
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) return;
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   liveRecognition = new SR();
-  liveRecognition.lang = 'fr-FR';
-  liveRecognition.continuous = false; // false = plus stable sur tous les navigateurs
-  liveRecognition.interimResults = true;
+  liveRecognition.lang = 'fr-FR'; liveRecognition.continuous = false; liveRecognition.interimResults = true;
   liveRecognition.onresult = function(e) {
     var interim = '';
     for (var i = e.resultIndex; i < e.results.length; i++) {
@@ -1358,27 +1167,15 @@ function startLiveRecognition() {
     showTranscript(fullTranscript, interim);
   };
   liveRecognition.onend = function() {
-    // Relancer si toujours en cours
-    if (isRec && !isPaused) {
-      setTimeout(function() {
-        if (isRec && !isPaused && liveRecognition) {
-          try { liveRecognition.start(); } catch(e2) {}
-        }
-      }, 100);
-    }
+    if (isRec && !isPaused) { setTimeout(function(){ if (isRec && !isPaused && liveRecognition) { try { liveRecognition.start(); } catch(e2){} } }, 100); }
   };
-  liveRecognition.onerror = function(ev) {
-    if (ev.error === 'not-allowed') return; // déjà géré par MediaRecorder
-    // Autres erreurs : ignorer silencieusement, MediaRecorder continue
-  };
+  liveRecognition.onerror = function(ev) { if (ev.error === 'not-allowed') return; };
   try { liveRecognition.start(); } catch(e) {}
 }
 
 function stopLiveRecognition() {
   if (liveRecognition) {
-    liveRecognition.onend = null;
-    liveRecognition.onresult = null;
-    liveRecognition.onerror = null;
+    liveRecognition.onend = null; liveRecognition.onresult = null; liveRecognition.onerror = null;
     try { liveRecognition.abort(); } catch(e) {}
     liveRecognition = null;
   }
@@ -1387,7 +1184,7 @@ function stopLiveRecognition() {
 function startMediaRecorder() {
   var isChromeMobile = /CriOS|Chrome/.test(navigator.userAgent) && /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
   if (isChromeMobile) {
-    stopRec();
+    isRec = false;
     showManualFallback();
     setVocalState('Dictez via votre clavier', 'Ouvrez le clavier puis appuyez sur le micro');
     return;
@@ -1396,18 +1193,11 @@ function startMediaRecorder() {
     .then(function(stream) {
       var mimeType = getBestMimeType();
       var options = mimeType ? { mimeType: mimeType } : {};
-      try { mediaRecorder = new MediaRecorder(stream, options); }
-      catch(e) { mediaRecorder = new MediaRecorder(stream); }
-      mediaRecorder.ondataavailable = function(e) {
-        if (e.data && e.data.size > 0) audioChunks.push(e.data);
-      };
-      mediaRecorder.onstop = function() {
-        stream.getTracks().forEach(function(t){ t.stop(); });
-        stopLiveRecognition();
-        processAudio();
-      };
+      try { mediaRecorder = new MediaRecorder(stream, options); } catch(e) { mediaRecorder = new MediaRecorder(stream); }
+      mediaRecorder.ondataavailable = function(e) { if (e.data && e.data.size > 0) audioChunks.push(e.data); };
+      mediaRecorder.onstop = function() { stream.getTracks().forEach(function(t){ t.stop(); }); stopLiveRecognition(); processAudio(); };
       mediaRecorder.start(250);
-      setVocalState('Micro actif — parlez...', 'Appuyez sur ⏸ pour une pause');
+      setVocalState('Micro actif — parlez...', 'Appuyez sur pause pour une pause');
       startLiveRecognition();
     })
     .catch(function(err) {
@@ -1415,69 +1205,40 @@ function startMediaRecorder() {
       isRec = false; resetMicBtn();
       document.getElementById('pause-btn').classList.remove('visible');
       stopTimer(); clearInterval(waveInt);
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        showToast('Accès micro refusé — autorisez dans les réglages');
-        showManualFallback();
-      } else {
-        showToast('Micro indisponible : ' + err.message.substring(0,30));
-        showManualFallback();
-      }
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') { showToast('Acces micro refuse'); showManualFallback(); }
+      else { showToast('Micro indisponible'); showManualFallback(); }
     });
 }
-// ════════════════════════════════════
-//  TRAITEMENT AUDIO → TRANSCRIPTION
-// ════════════════════════════════════
+
 async function processAudio() {
-  if (audioChunks.length === 0) {
-    showManualFallback();
-    return;
-  }
-
-  setVocalState('Transcription...', 'L\'IA analyse votre dictée...');
-  document.getElementById('transcript-text').innerHTML =
-    '<span style="color:var(--text-muted);font-style:italic;">Transcription en cours...</span>';
-
+  if (audioChunks.length === 0) { showManualFallback(); return; }
+  setVocalState('Transcription...', "L'IA analyse votre dictee...");
+  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-muted);font-style:italic;">Transcription en cours...</span>';
   try {
-    // Si Web Speech a déjà tout transcrit → on utilise directement
     if (fullTranscript && fullTranscript.trim().length > 5) {
       state.transcription = fullTranscript.trim();
       showTranscript(state.transcription);
       detectCatalogMatches(state.transcription);
-      setVocalState('Transcription terminée ✓', 'Vérifiez et cliquez sur Générer');
+      setVocalState('Transcription terminee', 'Verifiez et cliquez sur Generer');
       document.getElementById('gen-btn').disabled = false;
       return;
     }
-
-    // Sinon → Whisper via l'API (nécessite OPENAI_API_KEY sur Vercel)
-    setVocalState('Transcription...', "L'IA analyse votre dictée...");
     var blob = new Blob(audioChunks, { type: audioChunks[0].type || 'audio/webm' });
     var base64 = await blobToBase64(blob);
-
-    var resp = await fetch('/api/transcribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ audio: base64, mimeType: blob.type })
-    });
-
+    var resp = await fetch('/api/transcribe', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ audio:base64, mimeType:blob.type }) });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var data = await resp.json();
     if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-
     var transcription = data.text || '';
-    if (!transcription || transcription.trim().length < 3) {
-      throw new Error('Transcription vide — réessayez en parlant plus distinctement');
-    }
-
+    if (!transcription || transcription.trim().length < 3) throw new Error('Transcription vide');
     fullTranscript = transcription.trim();
     state.transcription = fullTranscript;
     showTranscript(fullTranscript);
     detectCatalogMatches(fullTranscript);
-    setVocalState('Transcription terminée ✓', 'Vérifiez et cliquez sur Générer');
+    setVocalState('Transcription terminee', 'Verifiez et cliquez sur Generer');
     document.getElementById('gen-btn').disabled = false;
-
   } catch(e) {
     console.error('[Devizy] processAudio:', e);
-    // Fallback : afficher un textarea pour saisie manuelle
     setVocalState('Transcription impossible', 'Saisissez votre description ci-dessous');
     showManualFallback(e.message);
   }
@@ -1486,202 +1247,103 @@ async function processAudio() {
 function blobToBase64(blob) {
   return new Promise(function(resolve, reject) {
     var reader = new FileReader();
-    reader.onloadend = function() {
-      var base64 = reader.result.split(',')[1];
-      resolve(base64);
-    };
+    reader.onloadend = function() { resolve(reader.result.split(',')[1]); };
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
 }
 
-// ════════════════════════════════════
-//  FALLBACK MANUEL
-// ════════════════════════════════════
 function showManualFallback(reason) {
   resetMicBtn();
   document.getElementById('pause-btn').classList.remove('visible');
   stopTimer(); clearInterval(waveInt);
   isRec = false;
-
-  var hint = reason
-    ? 'Erreur : ' + reason.substring(0, 60)
-    : 'Saisissez votre description ci-dessous';
-  setVocalState('Saisie manuelle', hint);
-
+  setVocalState('Saisie manuelle', reason ? 'Erreur : ' + reason.substring(0,60) : 'Saisissez votre description ci-dessous');
   document.getElementById('transcript-text').innerHTML =
-    '<textarea id="manual-transcript" ' +
-    'style="width:100%;border:1px solid var(--border-med);border-radius:8px;' +
-    'background:var(--bg);font-size:13px;color:var(--text);resize:none;' +
-    'min-height:80px;padding:10px;font-family:inherit;outline:none;" ' +
-    'placeholder="Ex: pose monosplit, liaison frigorifique 5m, mise en service..." ' +
-    'oninput="onManualInput(this.value)"></textarea>';
-
+    '<textarea id="manual-transcript" style="width:100%;border:1px solid var(--border-med);border-radius:8px;background:var(--bg);font-size:13px;color:var(--text);resize:none;min-height:80px;padding:10px;font-family:inherit;outline:none;" placeholder="Ex: pose monosplit, liaison frigorifique 5m, mise en service..." oninput="onManualInput(this.value)"></textarea>';
   document.getElementById('gen-btn').disabled = true;
 }
 
 function onManualInput(val) {
-  fullTranscript = val;
-  state.transcription = val;
+  fullTranscript = val; state.transcription = val;
   detectCatalogMatches(val);
   document.getElementById('gen-btn').disabled = val.trim().length < 5;
 }
 
+function animWave() { for (var i=1; i<=12; i++) document.getElementById('wb'+i).style.height = Math.round(6+Math.random()*36)+'px'; }
 
-
-function animWave() {
-  for (var i=1; i<=12; i++) {
-    document.getElementById('wb'+i).style.height = Math.round(6+Math.random()*36)+'px';
-  }
-}
-
-// ═══════════════════════════════ IA GENERATION — CATALOGUE STRICT ═══════════════════════════════
-var procSteps = [
-  'Analyse de la transcription...',
-  'Recherche dans votre catalogue...',
-  'Application de vos tarifs...',
-  'Calcul de la rentabilité...'
-];
+// ═══════════════════════════════ IA GENERATION ═══════════════════════════════
+var procSteps = ['Analyse de la transcription...','Recherche dans votre catalogue...','Application de vos tarifs...','Calcul de la rentabilite...'];
 
 async function generateDevis() {
-  // Garde : s'assurer qu'on a bien une transcription
   if (!state.transcription || state.transcription.trim().length < 3) {
-    // Tenter de récupérer ce qui est dans le DOM (cas Safari où onresult est tardif)
-    var domText = document.getElementById('transcript-text').innerText || '';
-    domText = domText.replace('La transcription apparaîtra ici...', '').trim();
-    if (domText.length > 3) {
-      state.transcription = domText;
-    } else {
-      showToast('Dictée vide — enregistrez d\'abord');
-      return;
-    }
+    var domText = (document.getElementById('transcript-text').innerText||'').replace('La transcription apparaitra ici...','').trim();
+    if (domText.length > 3) state.transcription = domText;
+    else { showToast('Dictee vide — enregistrez d\'abord'); return; }
   }
-
   document.getElementById('gen-btn').disabled = true;
   goTo('screen-processing');
   var si = 0;
-  var stepInt = setInterval(function(){
-    si++;
-    if (si < procSteps.length) document.getElementById('proc-label').textContent = procSteps[si];
-  }, 800);
-
-  // Debug : vérifier que le catalogue est chargé
-  console.log('[Devizy] Catalogue items:', state.catalogue.length);
-  if (state.catalogue.length === 0) {
-    // Catalogue vide — essayer de recharger
-    state.catalogue = defaultCatalogue();
-    console.warn('[Devizy] Catalogue vide — fallback defaultCatalogue');
-  }
-
+  var stepInt = setInterval(function(){ si++; if (si<procSteps.length) document.getElementById('proc-label').textContent = procSteps[si]; }, 800);
+  if (state.catalogue.length === 0) state.catalogue = defaultCatalogue(state.profil.metier);
   var catalogueStr = state.catalogue.map(function(c, i) {
-    return '[ID:' + i + '] ' + c.nom +
-      ' | prix_vente:' + c.prix + ' EUR/' + c.unite +
-      (c.cout_achat ? ' | cout_achat:' + c.cout_achat + ' EUR' : '') +
-      ' | cat:' + (c.categorie || 'Autre');
+    return '[ID:' + i + '] ' + c.nom + ' | prix_vente:' + c.prix + ' EUR/' + c.unite +
+      (c.cout_achat ? ' | cout_achat:' + c.cout_achat + ' EUR' : '') + ' | cat:' + (c.categorie||'Autre');
   }).join('\n');
-
   var prompt =
     'Tu es un assistant specialise dans la creation de devis pour artisans BTP en France.\n' +
-    'Artisan : ' + (state.profil.prenom || '') + ' ' + (state.profil.nom || '') +
-    ' | Metier : ' + (state.profil.metier || 'BTP') +
-    ' | TVA : ' + (state.profil.tva || '10') + '%\n\n' +
+    'Artisan : ' + (state.profil.prenom||'') + ' ' + (state.profil.nom||'') +
+    ' | Metier : ' + (state.profil.metier||'BTP') + ' | TVA : ' + (state.profil.tva||'10') + '%\n\n' +
     'REGLES ABSOLUES :\n' +
-'1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent. Retourne leur catalogue_id exact.\n' +
-'2. Si l\'artisan mentionne un nombre (ex: 2 splits, 3 unites, 5 metres), utilise ce nombre exact comme quantite.\n' +
-'3. Par defaut quantite = 1 sauf si un nombre est explicitement mentionne.\n\n' +
+    '1. Utilise OBLIGATOIREMENT les prestations du catalogue quand elles correspondent. Retourne leur catalogue_id exact.\n' +
+    '2. Si l\'artisan mentionne un nombre (ex: 2 splits, 3 unites, 5 metres), utilise ce nombre exact comme quantite.\n' +
+    '3. Par defaut quantite = 1 sauf si un nombre est explicitement mentionne.\n\n' +
     'CATALOGUE :\n' + catalogueStr + '\n\n' +
     'TRANSCRIPTION : "' + state.transcription + '"\n\n' +
     'Reponds UNIQUEMENT avec du JSON valide, aucun texte avant ou apres, aucun markdown :\n' +
     '{"description_globale":"...","lignes":[{"catalogue_id":0,"libelle":"...","quantite":1,"unite":"forfait","prix_unitaire":950,"cout_achat":420,"depuis_catalogue":true}]}';
-
   try {
     var resp = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1500,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:1500, messages:[{role:'user',content:prompt}] })
     });
-
-    if (!resp.ok) {
-      var errText = '';
-      try { errText = await resp.text(); } catch(e2){}
-      throw new Error('HTTP ' + resp.status + ' ' + errText.substring(0, 80));
-    }
-
+    if (!resp.ok) { var errText=''; try{errText=await resp.text();}catch(e2){} throw new Error('HTTP '+resp.status+' '+errText.substring(0,80)); }
     var data = await resp.json();
     if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-
     var text = '';
-    if (data.content && Array.isArray(data.content)) {
-      data.content.forEach(function(block) {
-        if (block.type === 'text') text += block.text;
-      });
-    }
+    if (data.content && Array.isArray(data.content)) data.content.forEach(function(block){ if (block.type==='text') text += block.text; });
     text = text.trim();
     if (!text) throw new Error('Reponse vide du modele');
-
-    // Nettoyer les éventuels blocs markdown et trouver le JSON
-    var clean = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
-    var jsonStart = clean.indexOf('{');
-    var jsonEnd = clean.lastIndexOf('}');
-    if (jsonStart < 0 || jsonEnd < 0) throw new Error('Pas de JSON dans la reponse : ' + clean.substring(0, 80));
-    clean = clean.substring(jsonStart, jsonEnd + 1);
-
-    var parsed;
-    try { parsed = JSON.parse(clean); }
-    catch(pe) { throw new Error('JSON invalide : ' + pe.message); }
-
+    var clean = text.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/\s*```$/i,'').trim();
+    var jsonStart = clean.indexOf('{'), jsonEnd = clean.lastIndexOf('}');
+    if (jsonStart < 0 || jsonEnd < 0) throw new Error('Pas de JSON dans la reponse : ' + clean.substring(0,80));
+    clean = clean.substring(jsonStart, jsonEnd+1);
+    var parsed; try { parsed = JSON.parse(clean); } catch(pe) { throw new Error('JSON invalide : ' + pe.message); }
     clearInterval(stepInt);
-
-    var lignes = (parsed.lignes || []).map(function(l) {
+    var lignes = (parsed.lignes||[]).map(function(l) {
       var cid = l.catalogue_id;
       if (cid !== null && cid !== undefined && cid !== '') {
         var idx = parseInt(cid, 10);
         if (!isNaN(idx) && state.catalogue[idx]) {
           var cat = state.catalogue[idx];
-          return {
-            libelle: cat.nom,
-            quantite: parseFloat(l.quantite) || 1,
-            unite: cat.unite,
-            prix_unitaire: cat.prix,
-            cout_achat: cat.cout_achat || 0,
-            depuis_catalogue: true
-          };
+          return { libelle:cat.nom, quantite:parseFloat(l.quantite)||1, unite:cat.unite, prix_unitaire:cat.prix, cout_achat:cat.cout_achat||0, depuis_catalogue:true };
         }
       }
-      return {
-        libelle: l.libelle || 'Prestation',
-        quantite: parseFloat(l.quantite) || 1,
-        unite: l.unite || 'forfait',
-        prix_unitaire: parseFloat(l.prix_unitaire) || 0,
-        cout_achat: parseFloat(l.cout_achat) || 0,
-        depuis_catalogue: false
-      };
+      return { libelle:l.libelle||'Prestation', quantite:parseFloat(l.quantite)||1, unite:l.unite||'forfait', prix_unitaire:parseFloat(l.prix_unitaire)||0, cout_achat:parseFloat(l.cout_achat)||0, depuis_catalogue:false };
     });
-
     if (lignes.length === 0) throw new Error('Aucune ligne generee');
-
     state.lignes = lignes;
-    state.descGlobale = parsed.description_globale || state.transcription.substring(0, 80);
+    state.descGlobale = parsed.description_globale || state.transcription.substring(0,80);
     buildDevisScreen();
-
   } catch(e) {
     clearInterval(stepInt);
     goTo('screen-vocal');
     document.getElementById('gen-btn').disabled = false;
-    var msg = e.message || String(e);
-    console.error('[Devizy] generateDevis:', msg, e);
-    // Afficher l'erreur complète dans le transcript pour debug
-    document.getElementById('transcript-text').innerHTML =
-      '<div style="color:var(--red);font-size:12px;line-height:1.5;padding:4px 0;">' +
-      '<strong>Erreur :</strong> ' + msg + '</div>';
-    showToast('Erreur — voir détail ci-dessus');
+    console.error('[Devizy] generateDevis:', e.message);
+    document.getElementById('transcript-text').innerHTML = '<div style="color:var(--red);font-size:12px;line-height:1.5;padding:4px 0;"><strong>Erreur :</strong> ' + e.message + '</div>';
+    showToast('Erreur — voir detail ci-dessus');
   }
 }
-
 
 function buildDevisScreen() {
   document.getElementById('devis-title').textContent = state.devisNum;
@@ -1690,74 +1352,50 @@ function buildDevisScreen() {
   var ref = document.getElementById('transcrit-ref');
   if (state.transcription) {
     ref.style.display = 'block';
-    document.getElementById('tr-text').textContent = '"' + state.transcription.substring(0, 120) + (state.transcription.length > 120 ? '...' : '"');
+    document.getElementById('tr-text').textContent = '"' + state.transcription.substring(0,120) + (state.transcription.length>120?'...' :'"');
   }
-  renderPrestas();
-  updateTotaux();
-  goTo('screen-devis');
+  renderPrestas(); updateTotaux(); goTo('screen-devis');
 }
 
 function renderPrestas() {
   var html = '';
   state.lignes.forEach(function(l, i) {
     var total = Math.round(l.quantite * l.prix_unitaire);
-    var sourceTag = l.depuis_catalogue
-      ? '<div class="pi-source"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg> Depuis votre catalogue</div>'
-      : '';
+    var sourceTag = l.depuis_catalogue ? '<div class="pi-source"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg> Depuis votre catalogue</div>' : '';
     html += '<div class="presta-item">' +
-      '<div class="pi-top"><span class="pi-name">' + l.libelle + '</span>' +
-      '<span class="pi-remove" onclick="removePresta(' + i + ')">×</span></div>' +
+      '<div class="pi-top"><span class="pi-name">'+l.libelle+'</span><span class="pi-remove" onclick="removePresta('+i+')">×</span></div>' +
       '<div class="pi-detail">' +
-      '<input class="pi-input" type="number" value="' + l.quantite + '" min="0.5" step="0.5" oninput="updateQte(' + i + ',this.value)">' +
-      '<span class="pi-unit">' + l.unite + '</span>' +
-      '<span class="pi-price-u">× ' + l.prix_unitaire + ' €</span>' +
-      '<span class="pi-total" id="pi-total-' + i + '">' + fmt(total) + '</span>' +
-      '</div>' +
-      sourceTag +
-      '</div>';
+      '<input class="pi-input" type="number" value="'+l.quantite+'" min="0.5" step="0.5" oninput="updateQte('+i+',this.value)">' +
+      '<span class="pi-unit">'+l.unite+'</span>' +
+      '<span class="pi-price-u">× '+l.prix_unitaire+' €</span>' +
+      '<span class="pi-total" id="pi-total-'+i+'">'+fmt(total)+'</span>' +
+      '</div>' + sourceTag + '</div>';
   });
   document.getElementById('presta-list').innerHTML = html;
 }
 
 function updateQte(idx, val) {
   state.lignes[idx].quantite = parseFloat(val) || 0;
-  var total = state.lignes[idx].quantite * state.lignes[idx].prix_unitaire;
-  document.getElementById('pi-total-' + idx).textContent = fmt(total);
+  document.getElementById('pi-total-'+idx).textContent = fmt(state.lignes[idx].quantite * state.lignes[idx].prix_unitaire);
   updateTotaux();
 }
-
-function removePresta(idx) {
-  state.lignes.splice(idx, 1);
-  renderPrestas();
-  updateTotaux();
-}
+function removePresta(idx) { state.lignes.splice(idx,1); renderPrestas(); updateTotaux(); }
 
 function updateTotaux() {
-  var ht = state.lignes.reduce(function(a,l){ return a + l.quantite * l.prix_unitaire; }, 0);
-  var cout = state.lignes.reduce(function(a,l){ return a + l.quantite * (l.cout_achat || 0); }, 0);
-
-  // ── TVA depuis le profil (bug corrigé) ──
-  var tvaRate = parseFloat(state.profil.tva || 10) / 100;
-  var tva = ht * tvaRate;
-  var ttc = ht + tva;
-
-  // ── Marge sans fallback aléatoire ──
-  var marge = (ht > 0 && cout > 0) ? Math.round((ht - cout) / ht * 100) : null;
-  var margeDisplay = marge !== null ? marge + '%' : '—';
-  var col = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
-
+  var ht = state.lignes.reduce(function(a,l){ return a+l.quantite*l.prix_unitaire; }, 0);
+  var cout = state.lignes.reduce(function(a,l){ return a+l.quantite*(l.cout_achat||0); }, 0);
+  var tvaRate = parseFloat(state.profil.tva||10)/100;
+  var tva = ht*tvaRate, ttc = ht+tva;
+  var marge = (ht>0&&cout>0) ? Math.round((ht-cout)/ht*100) : null;
+  var margeDisplay = marge !== null ? marge+'%' : '—';
+  var col = marge !== null ? (marge>=30?'#0F6E56':marge>=20?'#B45309':'#DC2626') : '#9CA3AF';
   document.getElementById('total-ht').textContent = fmt(ht);
   document.getElementById('total-tva').textContent = fmt(tva);
-  document.getElementById('tva-label').textContent = state.profil.tva || '10';
+  document.getElementById('tva-label').textContent = state.profil.tva||'10';
   document.getElementById('total-ttc').textContent = fmt(ttc);
   document.getElementById('rent-pct').textContent = margeDisplay;
   document.getElementById('rent-pct').style.color = col;
-  if (marge !== null) {
-    document.getElementById('rent-bar').style.width = Math.min(marge, 100) + '%';
-    document.getElementById('rent-bar').style.background = col;
-  }
-
-  // Mise à jour écran signature
+  if (marge !== null) { document.getElementById('rent-bar').style.width = Math.min(marge,100)+'%'; document.getElementById('rent-bar').style.background = col; }
   document.getElementById('sig-num').textContent = state.devisNum + ' — ' + fmt(ttc);
   document.getElementById('sig-ht').textContent = fmt(ht);
   document.getElementById('sig-tva').textContent = fmt(tva);
@@ -1776,15 +1414,14 @@ function filterCatalog(query) {
   var q = query.trim().toLowerCase();
   var html = '';
   state.catalogue.forEach(function(c, i) {
-    var nom = c.nom.toLowerCase();
-    if (!q || nom.includes(q)) {
-      html += '<div class="cat-item" onclick="addFromCatalog(' + i + ')">' +
-        '<div><div class="cat-name">' + c.nom + '</div><div class="cat-price">' + c.prix + ' €/' + c.unite + '</div></div>' +
+    if (!q || c.nom.toLowerCase().includes(q)) {
+      html += '<div class="cat-item" onclick="addFromCatalog('+i+')">' +
+        '<div><div class="cat-name">'+c.nom+'</div><div class="cat-price">'+c.prix+' €/'+c.unite+'</div></div>' +
         '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
         '</div>';
     }
   });
-  document.getElementById('catalog-items').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun résultat</div>';
+  document.getElementById('catalog-items').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun resultat</div>';
 }
 function closeCatalog() {
   document.getElementById('sheet-overlay').classList.remove('open');
@@ -1792,52 +1429,49 @@ function closeCatalog() {
 }
 function addFromCatalog(idx) {
   var c = state.catalogue[idx];
-  state.lignes.push({ libelle:c.nom, quantite:1, unite:c.unite, prix_unitaire:c.prix, cout_achat:c.cout_achat, depuis_catalogue:true });
-  closeCatalog();
-  renderPrestas();
-  updateTotaux();
-  showToast(c.nom + ' ajouté');
+  state.lignes.push({ libelle:c.nom, quantite:1, unite:c.unite, prix_unitaire:c.prix, cout_achat:c.cout_achat||0, depuis_catalogue:true });
+  closeCatalog(); renderPrestas(); updateTotaux();
+  showToast(c.nom + ' ajoute');
 }
 
 // ═══════════════════════════════ EXPORT PDF ═══════════════════════════════
 function exportPDF() {
-  showToast('PDF généré — ouverture...');
+  showToast('PDF genere — ouverture...');
   var w = window.open('');
   if (!w) { showToast('Autorisez les popups'); return; }
   var lignesHTML = state.lignes.map(function(l) {
-    return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">' + l.libelle + '</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">' + l.quantite + ' ' + l.unite + '</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">' + l.prix_unitaire + ' €</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">' + fmt(l.quantite * l.prix_unitaire) + '</td></tr>';
+    return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">'+l.libelle+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+l.quantite+' '+l.unite+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+l.prix_unitaire+' €</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+fmt(l.quantite*l.prix_unitaire)+'</td></tr>';
   }).join('');
-  var ht = state._ht || 0, tva = state._tva || 0, ttc = state._ttc || 0;
-  var tvaRate = state.profil.tva || '10';
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + state.devisNum + '</title>' +
+  var ht=state._ht||0, tva=state._tva||0, ttc=state._ttc||0, tvaRate=state.profil.tva||'10';
+  var siret = state.profil.siret ? '<br>SIRET : ' + state.profil.siret : '';
+  var rcpro = state.profil.rcpro ? '<br>RC Pro : ' + state.profil.rcpro : '';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+state.devisNum+'</title>' +
     '<style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;color:#1a1a1a;padding:20px;}' +
     '.header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:20px;border-bottom:3px solid #1A3A2A;}' +
-    '.brand{font-size:28px;font-weight:700;color:#1A3A2A;}' +
-    '.devis-num{font-size:22px;font-weight:600;color:#0F6E56;text-align:right;}' +
-    'table{width:100%;border-collapse:collapse;margin:20px 0;}' +
-    'th{background:#1A3A2A;color:#fff;padding:10px 12px;text-align:left;}' +
+    '.brand{font-size:28px;font-weight:700;color:#1A3A2A;}.devis-num{font-size:22px;font-weight:600;color:#0F6E56;text-align:right;}' +
+    'table{width:100%;border-collapse:collapse;margin:20px 0;}th{background:#1A3A2A;color:#fff;padding:10px 12px;text-align:left;}' +
     'th:nth-child(2){text-align:center;}th:nth-child(3),th:nth-child(4){text-align:right;}' +
-    '.total-box{margin-top:20px;text-align:right;}' +
-    '.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
+    '.total-box{margin-top:20px;text-align:right;}.total-line{display:flex;justify-content:flex-end;gap:40px;padding:4px 0;font-size:14px;}' +
     '.total-ttc{font-size:20px;font-weight:700;color:#1A3A2A;border-top:2px solid #1A3A2A;margin-top:8px;padding-top:8px;}' +
     '.sig-zone{margin-top:60px;border:2px dashed #9FE1CB;border-radius:12px;padding:30px;text-align:center;color:#0F6E56;}' +
-    '</style></head><body>' +
-    '<div class="header"><div><div class="brand">' + (state.profil.entreprise || 'Devizy') + '</div>' +
-    '<div style="font-size:14px;color:#666;margin-top:4px;">' + state.profil.prenom + ' ' + state.profil.nom + '</div>' +
-    '<div style="font-size:13px;color:#666;margin-top:2px;">' + (state.profil.email || '') + '</div></div>' +
-    '<div class="devis-num"><div>' + state.devisNum + '</div><div style="font-size:14px;color:#666;margin-top:4px;">' + new Date().toLocaleDateString('fr-FR') + '</div></div></div>' +
-    '<div style="margin-bottom:24px;"><strong>Client :</strong> ' + state.client.prenom + ' ' + state.client.nom + '<br>' +
-    '<strong>Adresse :</strong> ' + state.client.adresse + '</div>' +
-    '<p style="color:#666;margin-bottom:16px;font-style:italic;">' + (state.descGlobale || '') + '</p>' +
-    '<table><thead><tr><th>Prestation</th><th>Quantité</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>' + lignesHTML + '</tbody></table>' +
-    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>' + fmt(ht) + '</span></div>' +
-    '<div class="total-line"><span>TVA ' + tvaRate + '%</span><span>' + fmt(tva) + '</span></div>' +
-    '<div class="total-line total-ttc"><span>Total TTC</span><span>' + fmt(ttc) + '</span></div></div>' +
-    '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Signature électronique</div>' +
-    '<div style="font-size:13px;">Ce devis est valable 30 jours à compter de sa date d\'émission.</div></div>' +
+    '.footer{margin-top:40px;font-size:11px;color:#999;border-top:1px solid #eee;padding-top:12px;}</style></head><body>' +
+    '<div class="header"><div><div class="brand">'+(state.profil.entreprise||'Devizy')+'</div>' +
+    '<div style="font-size:14px;color:#666;margin-top:4px;">'+state.profil.prenom+' '+state.profil.nom+'</div>' +
+    '<div style="font-size:13px;color:#666;margin-top:2px;">'+(state.profil.email||'')+'</div></div>' +
+    '<div class="devis-num"><div>'+state.devisNum+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
+    '<div style="margin-bottom:24px;"><strong>Client :</strong> '+state.client.prenom+' '+state.client.nom+'<br>' +
+    '<strong>Adresse :</strong> '+state.client.adresse+'</div>' +
+    '<p style="color:#666;margin-bottom:16px;font-style:italic;">'+(state.descGlobale||'')+'</p>' +
+    '<table><thead><tr><th>Prestation</th><th>Quantite</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>'+lignesHTML+'</tbody></table>' +
+    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>'+fmt(ht)+'</span></div>' +
+    '<div class="total-line"><span>TVA '+tvaRate+'%</span><span>'+fmt(tva)+'</span></div>' +
+    '<div class="total-line total-ttc"><span>Total TTC</span><span>'+fmt(ttc)+'</span></div></div>' +
+    '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Signature electronique</div>' +
+    '<div style="font-size:13px;">Ce devis est valable 30 jours a compter de sa date d\'emission.</div></div>' +
+    '<div class="footer">'+state.profil.entreprise+siret+rcpro+'</div>' +
     '</body></html>');
   w.document.close();
   setTimeout(function(){ w.print(); }, 500);
@@ -1845,36 +1479,25 @@ function exportPDF() {
 
 // ═══════════════════════════════ SEND ═══════════════════════════════
 function selectCh(ch) {
-  ['email','sms','wa','pdf'].forEach(function(c) {
-    document.getElementById('ch-' + c).style.border = '1px solid var(--border-med)';
-  });
-  document.getElementById('ch-' + ch).style.border = '1.5px solid var(--g-med)';
+  ['email','sms','wa','pdf'].forEach(function(c){ document.getElementById('ch-'+c).style.border = '1px solid var(--border-med)'; });
+  document.getElementById('ch-'+ch).style.border = '1.5px solid var(--g-med)';
   state.selectedCh = ch;
 }
+
 function sendDevis() {
   if (!state.lignes || state.lignes.length === 0) { showToast('Aucune prestation dans le devis'); return; }
-  if (Math.round(state._ttc || 0) === 0) { showToast('Le montant du devis est à 0 euros'); return; }
+  if (Math.round(state._ttc||0) === 0) { showToast('Le montant du devis est a 0 euros'); return; }
   var n = state.client.prenom + ' ' + state.client.nom;
-  document.getElementById('send-avatar').textContent = ((state.client.prenom[0]||'?') + (state.client.nom[0]||'')).toUpperCase();
+  document.getElementById('send-avatar').textContent = ((state.client.prenom[0]||'?')+(state.client.nom[0]||'')).toUpperCase();
   document.getElementById('send-name').textContent = n;
-  document.getElementById('send-contact').textContent = state.client.email || state.client.tel || 'Non renseigné';
-  document.getElementById('sent-sub').textContent = n + ' a reçu le devis\navec un lien de signature sécurisé.';
-  document.getElementById('track-time').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('send-contact').textContent = state.client.email || state.client.tel || 'Non renseigne';
+  document.getElementById('sent-sub').textContent = n + ' a recu le devis\navec un lien de signature securise.';
+  document.getElementById('track-time').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
   document.getElementById('sig-client').textContent = n;
   document.getElementById('sig-addr').textContent = state.client.adresse;
   document.getElementById('sig-travaux').textContent = state.descGlobale || 'Travaux';
-  // Sauvegarder le devis dans Supabase
-  saveDevis({ statut: 'envoye' }).then(function(saved) {
-    var devisEntry = {
-      id: saved ? saved.id : Date.now(),
-      client: n,
-      desc: state.descGlobale || 'Devis vocal',
-      montant: Math.round(state._ttc || 0),
-      marge: null,
-      statut: 'envoye',
-      date: new Date().toLocaleDateString('fr-FR', {day:'numeric', month:'long'})
-    };
-    state.devisList.unshift(devisEntry);
+  saveDevis({ statut:'envoye' }).then(function(saved) {
+    state.devisList.unshift({ id:saved?saved.id:Date.now(), client:n, desc:state.descGlobale||'Devis vocal', montant:Math.round(state._ttc||0), marge:null, statut:'envoye', date:new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long'}) });
     state._lastDevisId = saved ? saved.id : null;
     renderHome();
   });
@@ -1883,80 +1506,42 @@ function sendDevis() {
 
 // ═══════════════════════════════ SIGNATURE ═══════════════════════════════
 var drawing = false, lastX = 0, lastY = 0;
-function toggleCgv() {
-  state.cgvChecked = !state.cgvChecked;
-  var el = document.getElementById('cgv-chk');
-  el.classList.toggle('checked', state.cgvChecked);
-  checkSignBtn();
-}
-function checkSignBtn() {
-  document.getElementById('sign-btn').disabled = !(state.cgvChecked && state.hasSig);
-}
-function clearCanvas() {
-  var c = document.getElementById('sig-canvas');
-  var ctx = c.getContext('2d');
-  ctx.clearRect(0, 0, c.width, c.height);
-  state.hasSig = false; checkSignBtn();
-}
+function toggleCgv() { state.cgvChecked=!state.cgvChecked; document.getElementById('cgv-chk').classList.toggle('checked',state.cgvChecked); checkSignBtn(); }
+function checkSignBtn() { document.getElementById('sign-btn').disabled = !(state.cgvChecked && state.hasSig); }
+function clearCanvas() { var c=document.getElementById('sig-canvas'); c.getContext('2d').clearRect(0,0,c.width,c.height); state.hasSig=false; checkSignBtn(); }
 function initCanvas() {
   var canvas = document.getElementById('sig-canvas');
-  canvas.width = canvas.offsetWidth * window.devicePixelRatio || canvas.offsetWidth;
-  canvas.height = 130 * window.devicePixelRatio || 130;
+  canvas.width = canvas.offsetWidth*window.devicePixelRatio||canvas.offsetWidth;
+  canvas.height = 130*window.devicePixelRatio||130;
   canvas.style.height = '130px';
   var ctx = canvas.getContext('2d');
-  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
-  ctx.strokeStyle = '#1A3A2A'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  function pos(e) {
-    var r = canvas.getBoundingClientRect();
-    var src = e.touches ? e.touches[0] : e;
-    return { x: src.clientX - r.left, y: src.clientY - r.top };
-  }
-  function start(e) { e.preventDefault(); drawing = true; var p = pos(e); lastX = p.x; lastY = p.y; }
-  function move(e) {
-    e.preventDefault(); if (!drawing) return;
-    var p = pos(e);
-    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
-    lastX = p.x; lastY = p.y; state.hasSig = true; checkSignBtn();
-  }
-  function end() { drawing = false; }
-  canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
-  canvas.addEventListener('touchstart', start, {passive:false}); canvas.addEventListener('touchmove', move, {passive:false}); canvas.addEventListener('touchend', end);
+  ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+  ctx.strokeStyle='#1A3A2A'; ctx.lineWidth=2.5; ctx.lineCap='round'; ctx.lineJoin='round';
+  function pos(e) { var r=canvas.getBoundingClientRect(),src=e.touches?e.touches[0]:e; return {x:src.clientX-r.left,y:src.clientY-r.top}; }
+  function start(e) { e.preventDefault(); drawing=true; var p=pos(e); lastX=p.x; lastY=p.y; }
+  function move(e) { e.preventDefault(); if(!drawing)return; var p=pos(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(p.x,p.y); ctx.stroke(); lastX=p.x; lastY=p.y; state.hasSig=true; checkSignBtn(); }
+  function end() { drawing=false; }
+  canvas.addEventListener('mousedown',start); canvas.addEventListener('mousemove',move); canvas.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false}); canvas.addEventListener('touchmove',move,{passive:false}); canvas.addEventListener('touchend',end);
 }
 function doSign() {
-  if (state.devisList[0]) {
-    state.devisList[0].statut = 'signe';
-    if (state._lastDevisId) {
-      updateDevisStatut(state._lastDevisId, 'signe');
-    }
-  }
-  renderHome();
-  showToast('Devis signé ! ✓');
-  state.cgvChecked = false;
-  document.getElementById('cgv-chk').classList.remove('checked');
-  clearCanvas();
-  goTo('screen-home');
+  if (state.devisList[0]) { state.devisList[0].statut='signe'; if (state._lastDevisId) updateDevisStatut(state._lastDevisId,'signe'); }
+  renderHome(); showToast('Devis signe !'); state.cgvChecked=false;
+  document.getElementById('cgv-chk').classList.remove('checked'); clearCanvas(); goTo('screen-home');
 }
 
 // ═══════════════════════════════ INIT ═══════════════════════════════
-
 document.addEventListener('DOMContentLoaded', async function() {
   initCanvas();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(function(){});
-    // Forcer le SW à se mettre à jour immédiatement
-    navigator.serviceWorker.getRegistrations().then(function(regs) {
-      regs.forEach(function(reg) { reg.update(); });
-    });
+    navigator.serviceWorker.getRegistrations().then(function(regs){ regs.forEach(function(reg){ reg.update(); }); });
   }
-  // Initialiser le catalogue par défaut si vide
-  if (!state.catalogue || state.catalogue.length === 0) {
-    state.catalogue = defaultCatalogue();
-  }
-  // Vérifier session Supabase existante
   try {
-    var { data: { session } } = await sb.auth.getSession();
+    var sessionData = await sb.auth.getSession();
+    var session = sessionData.data.session;
     if (session && session.user) {
-      await loginAfterAuth(false);
+      await loginAfterAuth(false, null);
     } else {
       showScreen('screen-login');
     }
@@ -1970,13 +1555,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 function renderCatalogueScreen() {
   var list = state.catalogue;
   document.getElementById('cat-count').textContent = list.length;
-  if (list.length === 0) {
-    document.getElementById('cat-list-display').innerHTML = '<div class="cat-empty">Aucune prestation.</div>';
-    return;
-  }
+  if (list.length === 0) { document.getElementById('cat-list-display').innerHTML = '<div class="cat-empty">Aucune prestation.</div>'; return; }
   var groups = {};
   list.forEach(function(c, i) {
-    var cat = c.categorie || 'Autre';
+    var cat = c.categorie||'Autre';
     if (!groups[cat]) groups[cat] = [];
     groups[cat].push({item:c, idx:i});
   });
@@ -1984,240 +1566,147 @@ function renderCatalogueScreen() {
   Object.keys(groups).sort().forEach(function(cat) {
     html += '<div class="cat-group-title">' + cat + '</div>';
     groups[cat].forEach(function(entry) {
-      var c = entry.item, i = entry.idx;
-      var marge = (c.cout_achat > 0) ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
-      var mc = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
-      html += '<div class="cat-card">' +
-        '<div class="cat-card-left">' +
-        '<div class="cat-card-name">' + c.nom + '</div>' +
+      var c=entry.item, i=entry.idx;
+      var marge = c.cout_achat>0 ? Math.round((c.prix-c.cout_achat)/c.prix*100) : null;
+      var mc = marge!==null ? (marge>=30?'#0F6E56':marge>=20?'#B45309':'#DC2626') : '#9CA3AF';
+      html += '<div class="cat-card"><div class="cat-card-left">' +
+        '<div class="cat-card-name">'+c.nom+'</div>' +
         '<div class="cat-card-prices">' +
-        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' €/' + c.unite + '</strong></div>' +
-        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' €</strong></div>' : '') +
-        (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + mc + '">' + marge + '%</strong></div>' : '') +
-        '</div></div>' +
-        '<div class="cat-card-right"><span class="cat-delete" onclick="supprimerPrestation(' + i + ')">×</span></div></div>';
+        '<div class="cat-price-item">Vente : <strong>'+c.prix+' €/'+c.unite+'</strong></div>' +
+        (c.cout_achat?'<div class="cat-price-item">Achat : <strong>'+c.cout_achat+' €</strong></div>':'') +
+        (marge!==null?'<div class="cat-price-item">Marge : <strong style="color:'+mc+'">'+marge+'%</strong></div>':'') +
+        '</div></div><div class="cat-card-right"><span class="cat-delete" onclick="supprimerPrestation('+i+')">×</span></div></div>';
     });
   });
   document.getElementById('cat-list-display').innerHTML = html;
 }
 
 function ajouterPrestation() {
-  var nom = document.getElementById('cat-nom').value.trim();
-  var prix = parseFloat(document.getElementById('cat-prix-vente').value);
-  var achat = parseFloat(document.getElementById('cat-prix-achat').value) || 0;
-  var unite = document.getElementById('cat-unite').value;
-  var categorie = document.getElementById('cat-categorie').value;
+  var nom=document.getElementById('cat-nom').value.trim();
+  var prix=parseFloat(document.getElementById('cat-prix-vente').value);
+  var achat=parseFloat(document.getElementById('cat-prix-achat').value)||0;
+  var unite=document.getElementById('cat-unite').value;
+  var categorie=document.getElementById('cat-categorie').value;
   if (!nom) { showToast('Entrez un nom'); return; }
-  if (!prix || prix <= 0) { showToast('Entrez un prix valide'); return; }
-  state.catalogue.push({ nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie });
-  document.getElementById('cat-nom').value = '';
-  document.getElementById('cat-prix-vente').value = '';
-  document.getElementById('cat-prix-achat').value = '';
-  sb.auth.getUser().then(function(r) {
-    if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
-  });
-  renderCatalogueScreen();
-  showToast(nom + ' ajouté');
+  if (!prix||prix<=0) { showToast('Entrez un prix valide'); return; }
+  state.catalogue.push({nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie});
+  document.getElementById('cat-nom').value=''; document.getElementById('cat-prix-vente').value=''; document.getElementById('cat-prix-achat').value='';
+  sb.auth.getUser().then(function(r){ if(r.data&&r.data.user) sauvegarderCatalogueSupabase(r.data.user.id); });
+  renderCatalogueScreen(); showToast(nom+' ajoute');
 }
 
 function supprimerPrestation(idx) {
-  var nom = state.catalogue[idx].nom;
-  state.catalogue.splice(idx, 1);
-  sb.auth.getUser().then(function(r) {
-    if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
-  });
-  renderCatalogueScreen();
-  showToast(nom + ' supprimé');
+  var nom=state.catalogue[idx].nom;
+  state.catalogue.splice(idx,1);
+  sb.auth.getUser().then(function(r){ if(r.data&&r.data.user) sauvegarderCatalogueSupabase(r.data.user.id); });
+  renderCatalogueScreen(); showToast(nom+' supprime');
 }
 
 function importerCSV(input) {
-  var file = input.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var lines = e.target.result.split('\n');
-    var added = 0;
-    lines.forEach(function(line, i) {
-      if (i === 0) return;
-      var cols = line.split(/[;,]/);
-      if (cols.length < 2) return;
-      var nom = (cols[0]||'').trim().replace(/"/g,'');
-      var prix = parseFloat((cols[1]||'0').replace(',','.'));
-      var achat = parseFloat((cols[2]||'0').replace(',','.')) || 0;
-      var unite = (cols[3]||'forfait').trim().replace(/"/g,'') || 'forfait';
-      var categorie = (cols[4]||'Autre').trim().replace(/"/g,'') || 'Autre';
-      if (nom && prix > 0) { state.catalogue.push({nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie}); added++; }
+  var file=input.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(e) {
+    var lines=e.target.result.split('\n'), added=0;
+    lines.forEach(function(line,i) {
+      if(i===0) return;
+      var cols=line.split(/[;,]/); if(cols.length<2) return;
+      var nom=(cols[0]||'').trim().replace(/"/g,'');
+      var prix=parseFloat((cols[1]||'0').replace(',','.'));
+      var achat=parseFloat((cols[2]||'0').replace(',','.'))||0;
+      var unite=(cols[3]||'forfait').trim().replace(/"/g,'')||'forfait';
+      var categorie=(cols[4]||'Autre').trim().replace(/"/g,'')||'Autre';
+      if(nom&&prix>0){ state.catalogue.push({nom:nom,prix:prix,cout_achat:achat,unite:unite,categorie:categorie}); added++; }
     });
-    sb.auth.getUser().then(function(r) {
-      if (r.data && r.data.user) sauvegarderCatalogueSupabase(r.data.user.id);
-    });
-    renderCatalogueScreen();
-    showToast(added + ' prestation(s) importée(s)');
-    input.value = '';
+    sb.auth.getUser().then(function(r){ if(r.data&&r.data.user) sauvegarderCatalogueSupabase(r.data.user.id); });
+    renderCatalogueScreen(); showToast(added+' prestation(s) importee(s)'); input.value='';
   };
-  reader.readAsText(file, 'UTF-8');
+  reader.readAsText(file,'UTF-8');
 }
 
 // ═══════════════════════════════ PROFIL ═══════════════════════════════
 function ouvrirProfil() {
-  var p = state.profil;
-  document.getElementById('profil-prenom').value = p.prenom || '';
-  document.getElementById('profil-nom').value = p.nom || '';
-  document.getElementById('profil-email').value = p.email || '';
-  document.getElementById('profil-tel').value = p.telephone || '';
-  document.getElementById('profil-entreprise').value = p.entreprise || '';
-  document.getElementById('profil-siret').value = p.siret || '';
-  document.getElementById('profil-adresse').value = p.adresse || '';
-  document.getElementById('profil-taux').value = p.taux_horaire || '';
-  document.getElementById('profil-rcpro').value = p.rcpro || '';
-  var ms = document.getElementById('profil-metier');
-  for (var i = 0; i < ms.options.length; i++) { if (ms.options[i].value === p.metier) { ms.selectedIndex = i; break; } }
-  var ts = document.getElementById('profil-tva');
-  for (var i = 0; i < ts.options.length; i++) { if (ts.options[i].value === String(p.tva)) { ts.selectedIndex = i; break; } }
-  var ini = ((p.prenom||'')[0]||'') + ((p.nom||'')[0]||'');
-  document.getElementById('profil-avatar-big').textContent = ini.toUpperCase() || 'ML';
-  document.getElementById('profil-name-big').textContent = (p.prenom||'') + ' ' + (p.nom||'');
-  document.getElementById('profil-metier-display').textContent = p.metier || '';
+  var p=state.profil;
+  document.getElementById('profil-prenom').value=p.prenom||'';
+  document.getElementById('profil-nom').value=p.nom||'';
+  document.getElementById('profil-email').value=p.email||'';
+  document.getElementById('profil-tel').value=p.telephone||'';
+  document.getElementById('profil-entreprise').value=p.entreprise||'';
+  document.getElementById('profil-siret').value=p.siret||'';
+  document.getElementById('profil-adresse').value=p.adresse||'';
+  document.getElementById('profil-taux').value=p.taux_horaire||'';
+  document.getElementById('profil-rcpro').value=p.rcpro||'';
+  var ms=document.getElementById('profil-metier');
+  for(var i=0;i<ms.options.length;i++){ if(ms.options[i].value===p.metier){ms.selectedIndex=i;break;} }
+  var ts=document.getElementById('profil-tva');
+  for(var i=0;i<ts.options.length;i++){ if(ts.options[i].value===String(p.tva)){ts.selectedIndex=i;break;} }
+  var ini=((p.prenom||'')[0]||'')+((p.nom||'')[0]||'');
+  document.getElementById('profil-avatar-big').textContent=ini.toUpperCase()||'?';
+  document.getElementById('profil-name-big').textContent=(p.prenom||'')+' '+(p.nom||'');
+  document.getElementById('profil-metier-display').textContent=p.metier||'';
 }
 
 function sauvegarderProfil() {
-  state.profil.prenom = document.getElementById('profil-prenom').value.trim();
-  state.profil.nom = document.getElementById('profil-nom').value.trim();
-  state.profil.email = document.getElementById('profil-email').value.trim();
-  state.profil.telephone = document.getElementById('profil-tel').value.trim();
-  state.profil.entreprise = document.getElementById('profil-entreprise').value.trim();
-  state.profil.siret = document.getElementById('profil-siret').value.trim();
-  state.profil.adresse = document.getElementById('profil-adresse').value.trim();
-  state.profil.taux_horaire = parseFloat(document.getElementById('profil-taux').value) || 65;
-  state.profil.metier = document.getElementById('profil-metier').value;
-  state.profil.tva = document.getElementById('profil-tva').value;
-  state.profil.rcpro = document.getElementById('profil-rcpro').value.trim();
-  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
-  document.querySelector('.brand').textContent = state.profil.entreprise || 'Devizy';
-  document.querySelector('.greeting').textContent = 'Bonjour, ' + (state.profil.prenom||'Marc') + ' !';
-  document.querySelector('.avatar').textContent = ini.toUpperCase() || 'ML';
-  var ini = ((state.profil.prenom||'')[0]||'') + ((state.profil.nom||'')[0]||'');
-  var brand = document.querySelector('.brand');
-  var greeting = document.querySelector('.greeting');
-  var avatar = document.querySelector('.avatar');
-  if (brand) brand.textContent = state.profil.entreprise || 'Devizy';
-  if (greeting) greeting.textContent = 'Bonjour, ' + (state.profil.prenom || '') + ' 👋';
-  if (avatar) avatar.textContent = ini.toUpperCase() || '?';
-  // Sauvegarder dans Supabase
-  sb.auth.getUser().then(function(r) {
-    if (r.data && r.data.user) sauvegarderProfilSupabase(r.data.user.id);
-  });
-  showToast('Profil enregistré ✓');
-  showScreen('screen-home');
-  renderHome();
+  state.profil.prenom=document.getElementById('profil-prenom').value.trim();
+  state.profil.nom=document.getElementById('profil-nom').value.trim();
+  state.profil.email=document.getElementById('profil-email').value.trim();
+  state.profil.telephone=document.getElementById('profil-tel').value.trim();
+  state.profil.entreprise=document.getElementById('profil-entreprise').value.trim();
+  state.profil.siret=document.getElementById('profil-siret').value.trim();
+  state.profil.adresse=document.getElementById('profil-adresse').value.trim();
+  state.profil.taux_horaire=parseFloat(document.getElementById('profil-taux').value)||65;
+  state.profil.metier=document.getElementById('profil-metier').value;
+  state.profil.tva=document.getElementById('profil-tva').value;
+  state.profil.rcpro=document.getElementById('profil-rcpro').value.trim();
+  updateHeaderUI();
+  sb.auth.getUser().then(function(r){ if(r.data&&r.data.user) sauvegarderProfilSupabase(r.data.user.id); });
+  showToast('Profil enregistre');
+  showScreen('screen-home'); renderHome();
 }
 
-// ═══════════════════════════════ PERSISTANCE ═══════════════════════════════
-// ═══════════════════════════════ PERSISTANCE — SUPABASE ═══════════════════════════════
-
-async function sauvegarderDonnees() {
-  var user = (await sb.auth.getUser()).data.user;
-  if (!user) return;
-  await sauvegarderProfilSupabase(user.id);
-  await sauvegarderCatalogueSupabase(user.id);
-  // Les devis sont sauvegardés individuellement dans saveDevis()
-}
-
-async function chargerDonnees() {
-  // Appelé uniquement si session active — voir DOMContentLoaded
-  var user = (await sb.auth.getUser()).data.user;
-  if (!user) return;
-  await chargerDonneesSupabase(user.id);
-// Forcer le métier depuis user_metadata si nouveau compte
-if (isNew && user.user_metadata && user.user_metadata.metier) {
-  state.profil.metier = user.user_metadata.metier;
-  // Sauvegarder immédiatement dans Supabase
-  await sauvegarderProfilSupabase(user.id);
-}
-}
-
+// ═══════════════════════════════ PERSISTANCE SUPABASE ═══════════════════════════════
 async function chargerDonneesSupabase(userId) {
   try {
-    // Profil
-    var { data: profil } = await sb
-      .from('profiles').select('*').eq('id', userId).single();
+    var res = await sb.from('profiles').select('*').eq('id', userId).single();
+    var profil = res.data;
     if (profil && profil.prenom) {
       state.profil = {
-        prenom: profil.prenom || '', nom: profil.nom || '',
-        entreprise: profil.entreprise || '', siret: profil.siret || '',
-        email: profil.email || '', telephone: profil.telephone || '',
-        metier: profil.metier || 'Climatisation',
-        taux_horaire: profil.taux_horaire || 65,
-        adresse: profil.adresse || '', tva: profil.tva || '10',
-        rcpro: profil.rcpro || ''
+        prenom:profil.prenom||'', nom:profil.nom||'', entreprise:profil.entreprise||'',
+        siret:profil.siret||'', email:profil.email||'', telephone:profil.telephone||'',
+        metier:profil.metier||'Climatisation', taux_horaire:profil.taux_horaire||65,
+        adresse:profil.adresse||'', tva:profil.tva||'10', rcpro:profil.rcpro||''
       };
     }
-
-    // Catalogue
-    var { data: catItems } = await sb
-      .from('catalogue_items').select('*').eq('user_id', userId).order('created_at');
-    if (catItems && catItems.length > 0) {
-      state.catalogue = catItems.map(function(c) {
-        return { nom:c.nom, prix:c.prix, cout_achat:c.cout_achat||0,
-                 unite:c.unite, categorie:c.categorie, _id:c.id };
+    var catRes = await sb.from('catalogue_items').select('*').eq('user_id', userId).order('created_at');
+    if (catRes.data && catRes.data.length > 0) {
+      state.catalogue = catRes.data.map(function(c){ return {nom:c.nom,prix:c.prix,cout_achat:c.cout_achat||0,unite:c.unite,categorie:c.categorie,_id:c.id}; });
+    }
+    var quotesRes = await sb.from('quotes').select('*').eq('user_id', userId).order('created_at',{ascending:false}).limit(50);
+    if (quotesRes.data && quotesRes.data.length > 0) {
+      state.devisList = quotesRes.data.map(function(q){
+        return { id:q.id, client:(q.client_prenom||'')+' '+(q.client_nom||''), desc:q.description||'', montant:Math.round(q.montant_ttc||0), marge:Math.round(q.marge_pct||0), statut:q.statut||'brouillon', date:new Date(q.created_at).toLocaleDateString('fr-FR',{day:'numeric',month:'long'}) };
       });
     }
-
-    // Devis (50 derniers)
-    var { data: quotes } = await sb
-      .from('quotes').select('*').eq('user_id', userId)
-      .order('created_at', { ascending: false }).limit(50);
-    if (quotes && quotes.length > 0) {
-      state.devisList = quotes.map(function(q) {
-        return {
-          id: q.id,
-          client: (q.client_prenom || '') + ' ' + (q.client_nom || ''),
-          desc: q.description || '',
-          montant: Math.round(q.montant_ttc || 0),
-          marge: Math.round(q.marge_pct || 0),
-          statut: q.statut || 'brouillon',
-          date: new Date(q.created_at).toLocaleDateString('fr-FR', {day:'numeric', month:'long'}),
-          _raw: q
-        };
-      });
-    }
-  } catch(e) {
-    console.error('[Devizy] chargerDonneesSupabase:', e);
-  }
+  } catch(e) { console.error('[Devizy] chargerDonneesSupabase:', e); }
 }
 
 async function sauvegarderProfilSupabase(userId) {
   try {
     await sb.from('profiles').upsert({
-      id: userId,
-      prenom: state.profil.prenom,
-      nom: state.profil.nom,
-      entreprise: state.profil.entreprise,
-      siret: state.profil.siret,
-      email: state.profil.email,
-      telephone: state.profil.telephone,
-      metier: state.profil.metier,
-      taux_horaire: state.profil.taux_horaire,
-      adresse: state.profil.adresse,
-      tva: state.profil.tva,
-      rcpro: state.profil.rcpro,
-      updated_at: new Date().toISOString()
+      id:userId, prenom:state.profil.prenom, nom:state.profil.nom,
+      entreprise:state.profil.entreprise, siret:state.profil.siret,
+      email:state.profil.email, telephone:state.profil.telephone,
+      metier:state.profil.metier, taux_horaire:state.profil.taux_horaire,
+      adresse:state.profil.adresse, tva:state.profil.tva, rcpro:state.profil.rcpro,
+      updated_at:new Date().toISOString()
     });
   } catch(e) { console.error('[Devizy] sauvegarderProfil:', e); }
 }
 
 async function sauvegarderCatalogueSupabase(userId) {
   try {
-    // Supprimer tout puis réinsérer (catalogue complet)
     await sb.from('catalogue_items').delete().eq('user_id', userId);
-    var items = state.catalogue.map(function(c) {
-      return { user_id: userId, nom: c.nom, prix: c.prix,
-               cout_achat: c.cout_achat || 0, unite: c.unite,
-               categorie: c.categorie || 'Autre' };
-    });
-    if (items.length > 0) {
-      await sb.from('catalogue_items').insert(items);
-    }
+    var items = state.catalogue.map(function(c){ return {user_id:userId,nom:c.nom,prix:c.prix,cout_achat:c.cout_achat||0,unite:c.unite,categorie:c.categorie||'Autre'}; });
+    if (items.length > 0) await sb.from('catalogue_items').insert(items);
   } catch(e) { console.error('[Devizy] sauvegarderCatalogue:', e); }
 }
 
@@ -2225,102 +1714,90 @@ async function saveDevis(devisData) {
   var user = (await sb.auth.getUser()).data.user;
   if (!user) return null;
   try {
-    var ht = state._ht || 0, ttc = state._ttc || 0, tva = state._tva || 0;
-    var cout = state.lignes.reduce(function(a,l){ return a + l.quantite*(l.cout_achat||0); }, 0);
-    var marge = (ht > 0 && cout > 0) ? Math.round((ht - cout) / ht * 100) : null;
+    var ht=state._ht||0, ttc=state._ttc||0;
+    var cout=state.lignes.reduce(function(a,l){ return a+l.quantite*(l.cout_achat||0); },0);
+    var marge=(ht>0&&cout>0)?Math.round((ht-cout)/ht*100):null;
     var payload = {
-      user_id: user.id,
-      numero: state.devisNum,
-      client_prenom: state.client.prenom,
-      client_nom: state.client.nom,
-      client_adresse: state.client.adresse,
-      client_email: state.client.email,
-      client_tel: state.client.tel,
-      description: state.descGlobale || '',
-      transcription: state.transcription || '',
-      statut: devisData.statut || 'brouillon',
-      montant_ht: ht,
-      montant_ttc: ttc,
-      tva_taux: parseFloat(state.profil.tva || 10),
-      marge_pct: marge,
-      lignes: state.lignes,
-      updated_at: new Date().toISOString()
+      user_id:user.id, numero:state.devisNum,
+      client_prenom:state.client.prenom, client_nom:state.client.nom,
+      client_adresse:state.client.adresse, client_email:state.client.email, client_tel:state.client.tel,
+      description:state.descGlobale||'', transcription:state.transcription||'',
+      statut:devisData.statut||'brouillon', montant_ht:ht, montant_ttc:ttc,
+      tva_taux:parseFloat(state.profil.tva||10), marge_pct:marge, lignes:state.lignes,
+      updated_at:new Date().toISOString()
     };
-    var { data, error } = await sb.from('quotes').insert(payload).select().single();
-    if (error) throw error;
-    return data;
-  } catch(e) {
-    console.error('[Devizy] saveDevis:', e);
-    return null;
-  }
+    var res = await sb.from('quotes').insert(payload).select().single();
+    if (res.error) throw res.error;
+    return res.data;
+  } catch(e) { console.error('[Devizy] saveDevis:', e); return null; }
 }
 
 async function updateDevisStatut(devisId, statut) {
-  try {
-    await sb.from('quotes').update({ statut: statut, updated_at: new Date().toISOString() })
-      .eq('id', devisId);
-  } catch(e) { console.error('[Devizy] updateStatut:', e); }
+  try { await sb.from('quotes').update({statut:statut,updated_at:new Date().toISOString()}).eq('id',devisId); }
+  catch(e) { console.error('[Devizy] updateStatut:', e); }
 }
 
+// ═══════════════════════════════ CATALOGUES PAR DEFAUT ═══════════════════════════════
 function defaultCatalogue(metier) {
   metier = metier || 'Climatisation';
   if (metier === 'Plomberie') return [
-    { nom:'Remplacement robinet mitigeur', prix:120, cout_achat:35, unite:'u', categorie:'Robinetterie' },
-    { nom:'Remplacement chauffe-eau electrique 200L', prix:850, cout_achat:350, unite:'forfait', categorie:'Chauffe-eau' },
-    { nom:'Remplacement chauffe-eau thermodynamique', prix:1800, cout_achat:750, unite:'forfait', categorie:'Chauffe-eau' },
-    { nom:'Installation douche italienne', prix:1200, cout_achat:450, unite:'forfait', categorie:'Sanitaire' },
-    { nom:'Remplacement baignoire', prix:900, cout_achat:380, unite:'forfait', categorie:'Sanitaire' },
-    { nom:'Remplacement WC suspendu', prix:650, cout_achat:250, unite:'forfait', categorie:'Sanitaire' },
-    { nom:'Debouchage canalisation', prix:180, cout_achat:30, unite:'forfait', categorie:'Depannage' },
-    { nom:'Recherche fuite', prix:150, cout_achat:20, unite:'forfait', categorie:'Depannage' },
-    { nom:'Remplacement joint + cartouche', prix:85, cout_achat:15, unite:'u', categorie:'Robinetterie' },
-    { nom:'Installation lave-vaisselle + raccordement', prix:180, cout_achat:20, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Installation lave-linge + raccordement', prix:160, cout_achat:20, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Remplacement colonne de douche', prix:320, cout_achat:120, unite:'forfait', categorie:'Sanitaire' },
-    { nom:'Pose radiateur seche-serviette', prix:450, cout_achat:180, unite:'forfait', categorie:'Chauffage' },
-    { nom:'Remplacement pompe de circulation', prix:380, cout_achat:150, unite:'forfait', categorie:'Chauffage' },
-    { nom:'Entretien chaudiere gaz', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Depannage chaudiere gaz', prix:180, cout_achat:30, unite:'forfait', categorie:'Maintenance' },
+    {nom:'Remplacement robinet mitigeur',prix:120,cout_achat:35,unite:'u',categorie:'Robinetterie'},
+    {nom:'Remplacement chauffe-eau electrique 200L',prix:850,cout_achat:350,unite:'forfait',categorie:'Chauffe-eau'},
+    {nom:'Remplacement chauffe-eau thermodynamique',prix:1800,cout_achat:750,unite:'forfait',categorie:'Chauffe-eau'},
+    {nom:'Installation douche italienne',prix:1200,cout_achat:450,unite:'forfait',categorie:'Sanitaire'},
+    {nom:'Remplacement baignoire',prix:900,cout_achat:380,unite:'forfait',categorie:'Sanitaire'},
+    {nom:'Remplacement WC suspendu',prix:650,cout_achat:250,unite:'forfait',categorie:'Sanitaire'},
+    {nom:'Debouchage canalisation',prix:180,cout_achat:30,unite:'forfait',categorie:'Depannage'},
+    {nom:'Recherche fuite',prix:150,cout_achat:20,unite:'forfait',categorie:'Depannage'},
+    {nom:'Remplacement joint + cartouche',prix:85,cout_achat:15,unite:'u',categorie:'Robinetterie'},
+    {nom:'Installation lave-vaisselle + raccordement',prix:180,cout_achat:20,unite:'forfait',categorie:'Raccordement'},
+    {nom:'Installation lave-linge + raccordement',prix:160,cout_achat:20,unite:'forfait',categorie:'Raccordement'},
+    {nom:'Remplacement colonne de douche',prix:320,cout_achat:120,unite:'forfait',categorie:'Sanitaire'},
+    {nom:'Pose radiateur seche-serviette',prix:450,cout_achat:180,unite:'forfait',categorie:'Chauffage'},
+    {nom:'Remplacement pompe de circulation',prix:380,cout_achat:150,unite:'forfait',categorie:'Chauffage'},
+    {nom:'Entretien chaudiere gaz',prix:150,cout_achat:40,unite:'forfait',categorie:'Maintenance'},
+    {nom:'Depannage chaudiere gaz',prix:180,cout_achat:30,unite:'forfait',categorie:'Maintenance'},
   ];
   if (metier === 'Electricite') return [
-    { nom:'Tableau electrique 1 rangee', prix:850, cout_achat:320, unite:'forfait', categorie:'Tableau' },
-    { nom:'Tableau electrique 2 rangees', prix:1400, cout_achat:550, unite:'forfait', categorie:'Tableau' },
-    { nom:'Point electrique prise', prix:65, cout_achat:18, unite:'point', categorie:'Appareillage' },
-    { nom:'Point electrique interrupteur', prix:55, cout_achat:15, unite:'point', categorie:'Appareillage' },
-    { nom:'Point electrique luminaire', prix:75, cout_achat:20, unite:'point', categorie:'Appareillage' },
-    { nom:'Mise en securite installation', prix:1200, cout_achat:400, unite:'forfait', categorie:'Mise aux normes' },
-    { nom:'Installation VMC simple flux', prix:450, cout_achat:180, unite:'forfait', categorie:'VMC' },
-    { nom:'Installation VMC double flux', prix:1800, cout_achat:750, unite:'forfait', categorie:'VMC' },
-    { nom:'Installation borne de recharge vehicule', prix:950, cout_achat:380, unite:'forfait', categorie:'IRVE' },
-    { nom:'Mise a la terre', prix:380, cout_achat:120, unite:'forfait', categorie:'Mise aux normes' },
-    { nom:'Remplacement disjoncteur', prix:120, cout_achat:35, unite:'u', categorie:'Tableau' },
-    { nom:'Installation detecteur fumee', prix:85, cout_achat:25, unite:'u', categorie:'Securite' },
-    { nom:'Passage de gaine', prix:25, cout_achat:8, unite:'ml', categorie:'Gaine' },
-    { nom:'Diagnostic electrique NF C 15-100', prix:250, cout_achat:0, unite:'forfait', categorie:'Diagnostic' },
-    { nom:'Depannage panne electrique', prix:150, cout_achat:20, unite:'forfait', categorie:'Depannage' },
+    {nom:'Tableau electrique 1 rangee',prix:850,cout_achat:320,unite:'forfait',categorie:'Tableau'},
+    {nom:'Tableau electrique 2 rangees',prix:1400,cout_achat:550,unite:'forfait',categorie:'Tableau'},
+    {nom:'Point electrique prise',prix:65,cout_achat:18,unite:'point',categorie:'Appareillage'},
+    {nom:'Point electrique interrupteur',prix:55,cout_achat:15,unite:'point',categorie:'Appareillage'},
+    {nom:'Point electrique luminaire',prix:75,cout_achat:20,unite:'point',categorie:'Appareillage'},
+    {nom:'Mise en securite installation',prix:1200,cout_achat:400,unite:'forfait',categorie:'Mise aux normes'},
+    {nom:'Installation VMC simple flux',prix:450,cout_achat:180,unite:'forfait',categorie:'VMC'},
+    {nom:'Installation VMC double flux',prix:1800,cout_achat:750,unite:'forfait',categorie:'VMC'},
+    {nom:'Installation borne de recharge vehicule',prix:950,cout_achat:380,unite:'forfait',categorie:'IRVE'},
+    {nom:'Mise a la terre',prix:380,cout_achat:120,unite:'forfait',categorie:'Mise aux normes'},
+    {nom:'Remplacement disjoncteur',prix:120,cout_achat:35,unite:'u',categorie:'Tableau'},
+    {nom:'Installation detecteur fumee',prix:85,cout_achat:25,unite:'u',categorie:'Securite'},
+    {nom:'Passage de gaine',prix:25,cout_achat:8,unite:'ml',categorie:'Gaine'},
+    {nom:'Diagnostic electrique NF C 15-100',prix:250,cout_achat:0,unite:'forfait',categorie:'Diagnostic'},
+    {nom:'Depannage panne electrique',prix:150,cout_achat:20,unite:'forfait',categorie:'Depannage'},
   ];
+  // Climatisation (defaut)
   return [
-    { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur trisplit - Pose complete', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur gainable - Pose complete', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
-    { nom:'Unite interieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Unite exterieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Clim reversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
-    { nom:'Liaison frigorifique cuivre', prix:28, cout_achat:12, unite:'ml', categorie:'Raccordement' },
-    { nom:'Goulotte PVC passage cable', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
-    { nom:'Raccordement electrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Percage mur beton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
-    { nom:'Support mural unite exterieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
-    { nom:'Mise en service + verification etancheite', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Mise sous vide circuit frigorifique', prix:95, cout_achat:15, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Charge fluide frigorigene R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
-    { nom:'Depose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
-    { nom:'Recuperation fluide frigorigene F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
-    { nom:'Contrat entretien annuel monosplit', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Nettoyage filtres + verification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Deplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' },
+    {nom:'Climatiseur monosplit - Pose complete',prix:950,cout_achat:420,unite:'forfait',categorie:'Installation'},
+    {nom:'Climatiseur bisplit - Pose complete',prix:1600,cout_achat:680,unite:'forfait',categorie:'Installation'},
+    {nom:'Climatiseur trisplit - Pose complete',prix:2200,cout_achat:950,unite:'forfait',categorie:'Installation'},
+    {nom:'Climatiseur gainable - Pose complete',prix:4500,cout_achat:1800,unite:'forfait',categorie:'Installation'},
+    {nom:'Unite interieure murale - Fourniture',prix:650,cout_achat:380,unite:'u',categorie:'Fourniture materiel'},
+    {nom:'Unite exterieure - Fourniture',prix:850,cout_achat:490,unite:'u',categorie:'Fourniture materiel'},
+    {nom:'Clim reversible monosplit - Fourniture + pose',prix:1850,cout_achat:820,unite:'forfait',categorie:'Fourniture materiel'},
+    {nom:'Liaison frigorifique cuivre',prix:28,cout_achat:12,unite:'ml',categorie:'Raccordement'},
+    {nom:'Goulotte PVC passage cable',prix:18,cout_achat:7,unite:'ml',categorie:'Raccordement'},
+    {nom:'Raccordement electrique tableau',prix:180,cout_achat:45,unite:'forfait',categorie:'Raccordement'},
+    {nom:'Percage mur beton',prix:85,cout_achat:15,unite:'u',categorie:'Raccordement'},
+    {nom:'Support mural unite exterieure',prix:120,cout_achat:35,unite:'u',categorie:'Raccordement'},
+    {nom:'Mise en service + verification etancheite',prix:220,cout_achat:30,unite:'forfait',categorie:'Mise en service'},
+    {nom:'Mise sous vide circuit frigorifique',prix:95,cout_achat:15,unite:'forfait',categorie:'Mise en service'},
+    {nom:'Charge fluide frigorigene R32',prix:75,cout_achat:25,unite:'u',categorie:'Mise en service'},
+    {nom:'Depose ancienne climatisation',prix:180,cout_achat:20,unite:'forfait',categorie:'Depose'},
+    {nom:'Recuperation fluide frigorigene F-Gaz',prix:95,cout_achat:25,unite:'forfait',categorie:'Depose'},
+    {nom:'Contrat entretien annuel monosplit',prix:150,cout_achat:40,unite:'forfait',categorie:'Maintenance'},
+    {nom:'Nettoyage filtres + verification',prix:90,cout_achat:15,unite:'forfait',categorie:'Maintenance'},
+    {nom:'Deplacement + diagnostic panne',prix:95,cout_achat:20,unite:'forfait',categorie:'Maintenance'},
+    {nom:'Bilan thermique logement',prix:150,cout_achat:0,unite:'forfait',categorie:'Etude'},
   ];
 }
 </script>
