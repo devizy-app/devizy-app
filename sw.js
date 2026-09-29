@@ -1,33 +1,57 @@
-const CACHE = 'devizy-v3';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+// sw.js — Service Worker Devizy
+// Cache v4 : version renommée pour invalider les anciens caches,
+// stratégie network-first sur les navigations (l'app se met à jour dès qu'on est en ligne).
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
-  self.skipWaiting();
-});
+const CACHE = 'devizy-v6';
+const PRECACHE = ['/'];
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting())
   );
-  self.clients.claim();
 });
 
-self.addEventListener('fetch', e => {
-  // Ne pas cacher les appels API
-  if (e.request.url.includes('/api/') ||
-      e.request.url.includes('anthropic.com') ||
-      e.request.url.includes('supabase.co')) return;
-  // Pour index.html : toujours aller chercher le réseau d'abord
-  if (e.request.mode === 'navigate') {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Jamais de cache sur l'API
+  if (url.pathname.startsWith('/api/')) return;
+
+  // Navigations (index.html) : réseau d'abord, cache en secours hors-ligne
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((resp) => {
+          const copy = resp.clone();
+          caches.open(CACHE).then((c) => c.put('/', copy));
+          return resp;
+        })
+        .catch(() => caches.match('/'))
     );
     return;
   }
-  e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
-  );
+
+  // Assets statiques : cache d'abord, réseau en secours
+  if (event.request.method === 'GET') {
+    event.respondWith(
+      caches.match(event.request).then((hit) => {
+        if (hit) return hit;
+        return fetch(event.request).then((resp) => {
+          if (resp.ok && url.origin === self.location.origin) {
+            const copy = resp.clone();
+            caches.open(CACHE).then((c) => c.put(event.request, copy));
+          }
+          return resp;
+        });
+      })
+    );
+  }
 });
