@@ -90,10 +90,15 @@ export default async function handler(req, res) {
       '{"description_globale": "résumé en moins de 12 mots", "lignes": [{"ref": 0, "quantite": 1}, {"ref": null, "libelle": "...", "quantite": 2, "unite": "m2", "prix_unitaire": 45, "cout_achat": 0}]}\n\n' +
       'CATALOGUE DE L\'ARTISAN :\n' + (catalogueTexte || '(catalogue vide)');
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    // trim() : une clé collée avec un espace ou un retour à la ligne fait planter l'en-tête HTTP
+    const apiKey = (process.env.ANTHROPIC_API_KEY || '').trim();
     if (!apiKey) {
-      console.error('ANTHROPIC_API_KEY manquante');
-      return res.status(500).json({ ok: false, error: 'Configuration serveur incomplète' });
+      console.error('ANTHROPIC_API_KEY manquante (variable absente de cet environnement ou déploiement non relancé)');
+      return res.status(500).json({ ok: false, error: 'Clé API absente côté serveur (ANTHROPIC_API_KEY)' });
+    }
+    if (!apiKey.startsWith('sk-ant-')) {
+      console.error('ANTHROPIC_API_KEY invalide : elle doit commencer par sk-ant-');
+      return res.status(500).json({ ok: false, error: 'Clé API invalide côté serveur (elle doit commencer par sk-ant-)' });
     }
 
     // Timeout dur : évite qu'une génération lente ne dépasse la limite Vercel en 504 brut
