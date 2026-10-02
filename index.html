@@ -320,6 +320,14 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <body>
 <div id="app">
 
+<!-- ═══════════ SCREEN: BOOT (synchronisation au démarrage) ═══════════ -->
+<div class="screen" id="screen-boot">
+  <div class="processing">
+    <div class="spinner"></div>
+    <div class="proc-label" id="boot-label">Synchronisation de vos données...</div>
+  </div>
+</div>
+
 <!-- ═══════════ SCREEN: AUTH (lien magique) ═══════════ -->
 <div class="screen" id="screen-auth">
   <div class="onb-wrap">
@@ -819,7 +827,9 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     </div>
     <div class="profil-section" id="profil-compte" style="display:none;">
       <div class="profil-section-title">Compte</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Connecté avec <strong id="compte-email" style="color:var(--text);">–</strong></div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">Connecté avec <strong id="compte-email" style="color:var(--text);">–</strong></div>
+      <div id="sync-status" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">–</div>
+      <button class="btn btn-outline" style="width:100%;margin-bottom:8px;" onclick="synchroniserMaintenant()">Synchroniser maintenant</button>
       <button class="btn btn-outline" style="width:100%;" onclick="seDeconnecter()">Se déconnecter</button>
     </div>
     <div class="profil-section">
@@ -993,6 +1003,7 @@ var state = {
   compteur: { annee: new Date().getFullYear(), n: 0 },
   profil: null,
   user: null,
+  sync: syncParDefaut(),
   _ht: 0, _tva: 0, _ttc: 0, _marge: null
 };
 
@@ -1003,7 +1014,14 @@ function esc(s) {
     .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' \u20AC'; }
-function uid() { return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function uid() {
+  // UUID v4 : les tables Supabase (catalogue_items, quotes) ont des ids de type uuid
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+    var r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+}
 function tvaRate() { return state.profil ? (parseFloat(state.profil.tva) || 0) : 10; }
 function showToast(msg) {
   var t = document.getElementById('toast');
@@ -1424,8 +1442,16 @@ function generateDevis() {
     })
   })
   .then(function(resp){
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return resp.json();
+    // On lit toujours le corps : le serveur y explique la cause (origine, clé, quota, délai...)
+    return resp.json().catch(function(){ return null; }).then(function(data){
+      if (!resp.ok || !data || !data.ok) {
+        var e = new Error((data && data.error) || ('HTTP ' + resp.status));
+        e.status = resp.status;
+        e.serveur = !!(data && data.error);
+        throw e;
+      }
+      return data;
+    });
   })
   .then(function(data){
     clearInterval(stepInt);
@@ -1454,8 +1480,9 @@ function generateDevis() {
     console.error('Generation devis:', err);
     document.getElementById('proc-loading').style.display = 'none';
     document.getElementById('proc-error').style.display = 'flex';
-    document.getElementById('proc-error-text').textContent =
-      'La g\u00E9n\u00E9ration du devis a \u00E9chou\u00E9. V\u00E9rifiez votre connexion internet, puis r\u00E9essayez. Votre dict\u00E9e est conserv\u00E9e.';
+    document.getElementById('proc-error-text').textContent = err && err.serveur
+      ? 'La g\u00E9n\u00E9ration a \u00E9chou\u00E9 : ' + err.message + ' (code ' + err.status + '). Votre dict\u00E9e est conserv\u00E9e.'
+      : 'La g\u00E9n\u00E9ration du devis a \u00E9chou\u00E9' + (err && err.status ? ' (code ' + err.status + ')' : '. V\u00E9rifiez votre connexion internet') + '. R\u00E9essayez. Votre dict\u00E9e est conserv\u00E9e.';
   });
 }
 function numOk(v, def) {
@@ -1593,6 +1620,8 @@ function enregistrerDevis(toast) {
   record.desc = state.descGlobale || 'Devis';
   record.lignes = state.lignes.map(function(l){ return { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; });
   record.montant = Math.round(state._ttc || 0);
+  record.ht = state._ht || 0;
+  record.tvaMontant = state._tva || 0;
   record.marge = state._marge;
   record.transcription = state.transcription;
   record.date = new Date(record.dateISO).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
@@ -2056,6 +2085,7 @@ function ouvrirProfil() {
   if (compte) {
     compte.style.display = state.user ? 'block' : 'none';
     if (state.user) document.getElementById('compte-email').textContent = state.user.email || '\u2013';
+    majStatutSync(syncStatut);
   }
   var ini = ((p.prenom||'')[0]||'') + ((p.nom||'')[0]||'');
   document.getElementById('profil-avatar-big').textContent = ini.toUpperCase() || '\u2013';
@@ -2125,15 +2155,21 @@ function appliquerProfil() {
 }
 
 // ═══════════════════════════════ PERSISTANCE ═══════════════════════════════
-var LS = { profil:'devizy_v2_profil', catalogues:'devizy_v2_catalogues', devis:'devizy_v2_devis', compteur:'devizy_v2_compteur' };
+var LS = { profil:'devizy_v2_profil', catalogues:'devizy_v2_catalogues', devis:'devizy_v2_devis', compteur:'devizy_v2_compteur', sync:'devizy_v2_sync' };
 
-function sauvegarderDonnees() {
+// Écriture locale seule (utilisée aussi par la synchro, sans redéclencher de cycle)
+function ecrireLocal() {
   try {
     localStorage.setItem(LS.profil, JSON.stringify(state.profil));
     localStorage.setItem(LS.catalogues, JSON.stringify(state.catalogues));
     localStorage.setItem(LS.devis, JSON.stringify(state.devisList));
     localStorage.setItem(LS.compteur, JSON.stringify(state.compteur));
   } catch(e) { console.error('Sauvegarde locale impossible:', e); }
+}
+// Sauvegarde appelée après chaque modification : écrit en local puis planifie l'envoi au serveur
+function sauvegarderDonnees() {
+  ecrireLocal();
+  planifierSync();
 }
 
 function lireCle(cle, defaut) {
@@ -2155,6 +2191,7 @@ function chargerDonnees() {
     state.catalogues = lireCle(LS.catalogues, {}) || {};
     state.devisList = lireCle(LS.devis, []) || [];
     state.compteur = lireCle(LS.compteur, state.compteur);
+    state.sync = fusionnerSync(lireCle(LS.sync, null));
     // Migration depuis l'ancienne version (catalogue unique + profil v1).
     // Les anciens devis de démonstration ne sont pas repris.
     if (!state.profil) {
@@ -2212,7 +2249,7 @@ function importerDonnees(input) {
     try { paquet = JSON.parse(e.target.result); }
     catch(err) { showToast('Fichier illisible'); input.value = ''; return; }
     if (!paquet || paquet._app !== 'devizy') { showToast('Fichier non reconnu'); input.value = ''; return; }
-    askConfirm('Restaurer la sauvegarde', 'Vos donn\u00E9es actuelles (profil, catalogue, devis) seront remplac\u00E9es par le contenu du fichier. Continuer ?', 'Restaurer', function(){
+    askConfirm('Restaurer la sauvegarde', 'Vos donn\u00E9es actuelles (profil, catalogue, devis) seront remplac\u00E9es par le contenu du fichier.' + (state.user ? ' Elles seront aussi synchronis\u00E9es avec votre compte.' : '') + ' Continuer ?', 'Restaurer', function(){
       if (paquet.profil) state.profil = paquet.profil;
       if (paquet.catalogues) state.catalogues = paquet.catalogues || {};
       if (paquet.devis) state.devisList = paquet.devis || [];
@@ -2220,6 +2257,7 @@ function importerDonnees(input) {
       for (var m in state.catalogues) {
         state.catalogues[m].forEach(function(it){ if (!it.id) it.id = uid(); });
       }
+      normaliserIds();
       sauvegarderDonnees();
       appliquerProfil();
       renderHome();
@@ -2330,9 +2368,7 @@ function nettoyerUrlAuth() {
 }
 
 // Démarre l'app : onboarding au premier lancement, sinon accueil
-function lancerApp() {
-  if (appLancee) return;
-  appLancee = true;
+function routerDemarrage() {
   if (!state.profil) {
     montrerEcran('screen-onboarding');
   } else {
@@ -2343,9 +2379,76 @@ function lancerApp() {
   }
 }
 
+function lancerApp() {
+  if (appLancee) return;
+  appLancee = true;
+  // Compte connecté mais aucun profil sur cet appareil (nouvel appareil) : on synchronise AVANT
+  // de choisir l'écran, pour ne pas refaire l'onboarding d'un compte existant.
+  if (sb && state.user && !state.profil && navigator.onLine !== false) {
+    var bl = document.getElementById('boot-label');
+    if (bl) bl.textContent = 'Synchronisation de vos donn\u00E9es...';
+    montrerEcran('screen-boot');
+    var fait = false;
+    var aller = function(){ if (fait) return; fait = true; routerDemarrage(); };
+    synchroniser().then(aller, aller);
+    setTimeout(aller, 8000);
+    return;
+  }
+  routerDemarrage();
+  if (sb && state.user) planifierSync(300);
+}
+
+// Connexion établie : vérifie que les données locales appartiennent bien à ce compte
+var conflitOuvert = false;
+function apresConnexion(user) {
+  state.user = user;
+  nettoyerUrlAuth();
+  var owner = state.sync.owner;
+  if (owner && owner !== user.id) { conflitProprietaire(user); return; }
+  if (!owner) { state.sync.owner = user.id; ecrireSync(); }
+  lancerApp();
+}
+
+function viderDonneesLocales() {
+  state.profil = null;
+  state.catalogues = {};
+  state.devisList = [];
+  state.compteur = { annee: new Date().getFullYear(), n: 0 };
+  state.currentDevisId = null;
+  state.sync = syncParDefaut();
+  ecrireLocal();
+  ecrireSync();
+}
+
+function conflitProprietaire(user) {
+  if (conflitOuvert) return;
+  conflitOuvert = true;
+  var bl = document.getElementById('boot-label');
+  if (bl) bl.textContent = 'V\u00E9rification du compte...';
+  montrerEcran('screen-boot');
+  askConfirm('Autre compte d\u00E9tect\u00E9',
+    'Cet appareil contient les donn\u00E9es d\u2019un autre compte. Pour ouvrir celui-ci, elles seront remplac\u00E9es par les donn\u00E9es de ce compte. Une sauvegarde JSON des donn\u00E9es actuelles va d\u2019abord \u00EAtre t\u00E9l\u00E9charg\u00E9e.',
+    'Continuer', function(){
+      conflitOuvert = false;
+      try { exporterDonnees(); } catch(e) { console.error('Sauvegarde avant remplacement:', e); }
+      viderDonneesLocales();
+      state.sync.owner = user.id;
+      ecrireSync();
+      lancerApp();
+    }, true, function(){
+      conflitOuvert = false;
+      state.user = null;
+      if (sb) sb.auth.signOut().catch(function(err){ console.error('D\u00E9connexion:', err); });
+    });
+}
+
 // Porte d'entrée : sans config => mode local ; avec config => connexion requise
 function demarrerApp() {
   if (!authConfiguree()) { lancerApp(); return; }
+  // Écran de chargement immédiat pendant que la librairie de connexion se télécharge
+  var bl0 = document.getElementById('boot-label');
+  if (bl0) bl0.textContent = 'Chargement...';
+  montrerEcran('screen-boot');
   chargerSupabase(function(ok){
     if (!ok) {
       // Réseau ou CDN indisponible : on laisse entrer un utilisateur déjà installé (hors-ligne)
@@ -2367,17 +2470,15 @@ function demarrerApp() {
         state.user = null;
         afficherAuth('');
       } else if (session && session.user && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED')) {
-        state.user = session.user;
-        nettoyerUrlAuth();
-        lancerApp();
+        if (appLancee) { state.user = session.user; }   // simple rafraîchissement de jeton
+        else { apresConnexion(session.user); }
       }
     });
     sb.auth.getSession().then(function(res){
       var session = res && res.data ? res.data.session : null;
       if (session && session.user) {
-        state.user = session.user;
-        nettoyerUrlAuth();
-        lancerApp();
+        if (!appLancee) apresConnexion(session.user);
+        else state.user = session.user;
       } else if (!appLancee) {
         // Pas de session : hors-ligne avec données locales => on laisse entrer, sinon connexion
         if (navigator.onLine === false && state.profil) lancerApp(); else afficherAuth('');
@@ -2389,10 +2490,358 @@ function demarrerApp() {
   });
 }
 
+// ═══════════════════════════════ SYNCHRONISATION (offline-first) ═══════════════════════════════
+// Principe : localStorage reste la référence de l'interface (l'app marche hors-ligne).
+// Chaque cycle : 1) lecture du serveur, 2) fusion à 3 voies avec le dernier état synchronisé
+// (state.sync.snap), 3) envoi des seuls écarts locaux. Modifications et suppressions sont
+// détectées par comparaison d'empreintes : aucun point de l'app n'a besoin d'être instrumenté.
+// Conflit (même élément modifié sur deux appareils) : le dernier appareil qui synchronise l'emporte.
+var PROFIL_CHAMPS = ['prenom','nom','entreprise','siret','email','telephone','metier','taux_horaire','adresse','tva','rcpro','assureur','decennale','couverture'];
+var syncEnCours = false, syncRelance = false, syncTimer = null, syncRetry = 0, syncStatut = 'idle', syncInstalle = false, syncUid = null;
+
+function syncParDefaut() {
+  return { owner: null, snap: { profil: null, cat: {}, q: {} }, lastPull: null, lastOk: null };
+}
+function fusionnerSync(saved) {
+  var base = syncParDefaut();
+  if (saved && typeof saved === 'object') {
+    base.owner = saved.owner || null;
+    base.lastPull = saved.lastPull || null;
+    base.lastOk = saved.lastOk || null;
+    if (saved.snap) {
+      base.snap.profil = saved.snap.profil == null ? null : saved.snap.profil;
+      base.snap.cat = saved.snap.cat || {};
+      base.snap.q = saved.snap.q || {};
+    }
+  }
+  return base;
+}
+function ecrireSync() {
+  try { localStorage.setItem(LS.sync, JSON.stringify(state.sync)); }
+  catch(e) { console.error('Sauvegarde \u00E9tat de synchro impossible:', e); }
+}
+
+// ── Utilitaires ──
+function estUuid(v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || '')); }
+function stable(v) {
+  // JSON à clés triées : insensible à l'ordre des clés (jsonb de Postgres les réordonne)
+  if (v === null || v === undefined) return 'null';
+  if (typeof v !== 'object') return JSON.stringify(v);
+  if (Array.isArray(v)) return '[' + v.map(stable).join(',') + ']';
+  return '{' + Object.keys(v).sort().map(function(k){ return JSON.stringify(k) + ':' + stable(v[k]); }).join(',') + '}';
+}
+function empreinte(str) {
+  var x = 5381;
+  for (var i = 0; i < str.length; i++) { x = ((x << 5) + x + str.charCodeAt(i)) | 0; }
+  return str.length + ':' + (x >>> 0).toString(36);
+}
+function morceaux(arr, n) {
+  var out = [];
+  for (var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n));
+  return out;
+}
+
+// ── Formes canoniques (pour comparer local et serveur) ──
+function canonProfil(p) {
+  return stable(PROFIL_CHAMPS.map(function(k){
+    var v = p[k];
+    if (k === 'taux_horaire') return Number(v) || 0;
+    return v == null ? '' : String(v);
+  }));
+}
+function canonItem(it, metier) {
+  return stable([metier || '', it.nom || '', Number(it.prix) || 0, Number(it.cout_achat) || 0, it.unite || 'forfait', it.categorie || 'Autre']);
+}
+function canonQuote(q) {
+  return stable([q.num || '', q.clientInfo || {}, q.desc || '', q.lignes || [], Number(q.montant) || 0,
+    q.marge == null ? null : q.marge, q.statut || '', q.transcription || '', q.signature || null]);
+}
+
+// ── Local <-> serveur ──
+function profilRow() {
+  var r = { id: syncUid };
+  PROFIL_CHAMPS.forEach(function(k){
+    var v = state.profil[k];
+    r[k] = k === 'taux_horaire' ? (Number(v) || 0) : (v == null ? '' : String(v));
+  });
+  return r;
+}
+function appliquerProfilDistant(r) {
+  if (!state.profil) state.profil = {};
+  PROFIL_CHAMPS.forEach(function(k){
+    if (k === 'taux_horaire') state.profil[k] = Number(r[k]) || 65;
+    else state.profil[k] = r[k] == null ? '' : String(r[k]);
+  });
+  if (!state.profil.tva) state.profil.tva = '10';
+  if (!state.profil.metier) state.profil.metier = 'Climatisation';
+  appliquerProfil();
+}
+function itemRow(it, metier) {
+  return { id: it.id, user_id: syncUid, metier: metier, nom: it.nom, prix: Number(it.prix) || 0,
+    cout_achat: Number(it.cout_achat) || 0, unite: it.unite || 'forfait', categorie: it.categorie || 'Autre' };
+}
+function quoteRow(q) {
+  var ht = q.ht != null ? Number(q.ht) : (q.lignes || []).reduce(function(a, l){ return a + (Number(l.quantite) || 0) * (Number(l.prix_unitaire) || 0); }, 0);
+  var ttc = Number(q.montant) || 0;
+  var tva = q.tvaMontant != null ? Number(q.tvaMontant) : Math.max(0, ttc - ht);
+  return { id: q.id, user_id: syncUid, numero: q.num || '', client: q.clientInfo || {}, description: q.desc || '',
+    lignes: q.lignes || [], montant_ht: ht, montant_tva: tva, montant_ttc: ttc,
+    marge: q.marge == null ? null : q.marge, statut: q.statut || 'brouillon', transcription: q.transcription || '',
+    signature: q.signature || null, created_at: q.dateISO || new Date().toISOString() };
+}
+function rowToQuote(r) {
+  var ci = r.client || {};
+  return { id: r.id, num: r.numero, client: ((ci.prenom || '') + ' ' + (ci.nom || '')).trim() || 'Client',
+    clientInfo: ci, desc: r.description || '', lignes: r.lignes || [],
+    montant: Math.round(Number(r.montant_ttc) || 0), ht: Number(r.montant_ht) || 0, tvaMontant: Number(r.montant_tva) || 0,
+    marge: r.marge == null ? null : r.marge, statut: r.statut || 'brouillon', transcription: r.transcription || '',
+    signature: r.signature || undefined, dateISO: r.created_at,
+    date: new Date(r.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) };
+}
+
+// ── Catalogue : accès à plat ──
+function aplatirCatalogue() {
+  var out = {};
+  for (var m in state.catalogues) {
+    state.catalogues[m].forEach(function(it){ out[it.id] = { item: it, metier: m }; });
+  }
+  return out;
+}
+function retirerItemLocal(id) {
+  for (var m in state.catalogues) {
+    var a = state.catalogues[m];
+    for (var i = 0; i < a.length; i++) { if (a[i].id === id) { a.splice(i, 1); return; } }
+  }
+}
+function poserItemLocal(r) {
+  retirerItemLocal(r.id);
+  var m = r.metier || 'Autre';
+  if (!state.catalogues[m]) state.catalogues[m] = [];
+  state.catalogues[m].push({ id: r.id, nom: r.nom, prix: Number(r.prix) || 0, cout_achat: Number(r.cout_achat) || 0,
+    unite: r.unite || 'forfait', categorie: r.categorie || 'Autre' });
+}
+
+// Ids hérités de l'ancienne version (non-UUID) : remplacés une fois, avant toute synchro
+function normaliserIds() {
+  var change = false;
+  for (var m in state.catalogues) {
+    state.catalogues[m].forEach(function(it){ if (!estUuid(it.id)) { it.id = uid(); change = true; } });
+  }
+  state.devisList.forEach(function(d){ if (!estUuid(d.id)) { d.id = uid(); change = true; } });
+  if (change) ecrireLocal();
+}
+
+// ── Pilotage ──
+function planifierSync(delai) {
+  if (!sb || !state.user) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(function(){ synchroniser(); }, delai == null ? 1500 : delai);
+}
+function programmerRetry() {
+  if (syncRetry >= 5) return;
+  syncRetry++;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(function(){ synchroniser(); }, Math.min(30000 * syncRetry, 300000));
+}
+function installerSync() {
+  if (syncInstalle) return;
+  syncInstalle = true;
+  window.addEventListener('online', function(){ planifierSync(500); });
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'visible') planifierSync(500);
+  });
+}
+function majStatutSync(st) {
+  syncStatut = st;
+  var el = document.getElementById('sync-status');
+  if (!el) return;
+  var txt;
+  if (st === 'sync') txt = 'Synchronisation en cours...';
+  else if (st === 'ok') {
+    var d = state.sync.lastOk ? new Date(state.sync.lastOk) : null;
+    txt = 'Synchronis\u00E9' + (d ? ' \u00E0 ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '');
+  }
+  else if (st === 'erreur') txt = '\u00C9chec de la synchronisation. Nouvelle tentative automatique.';
+  else if (st === 'offline') txt = 'Hors-ligne : vos modifications seront envoy\u00E9es au retour du r\u00E9seau.';
+  else txt = state.sync.lastOk ? 'Derni\u00E8re synchronisation r\u00E9ussie.' : 'Pas encore synchronis\u00E9.';
+  el.textContent = txt;
+}
+function synchroniserMaintenant() {
+  if (navigator.onLine === false) { showToast('Hors-ligne'); return; }
+  synchroniser().then(function(ok){ showToast(ok ? 'Synchronis\u00E9' : '\u00C9chec de la synchronisation'); });
+}
+
+async function synchroniser() {
+  if (!sb || !state.user) return false;
+  if (navigator.onLine === false) { majStatutSync('offline'); return false; }
+  if (syncEnCours) { syncRelance = true; return false; }
+  syncEnCours = true;
+  majStatutSync('sync');
+  var ok = false;
+  try { await cycleSync(); ok = true; }
+  catch (e) { console.error('Synchronisation:', e); }
+  syncEnCours = false;
+  if (ok) { state.sync.lastOk = new Date().toISOString(); syncRetry = 0; }
+  ecrireSync();
+  majStatutSync(ok ? 'ok' : 'erreur');
+  if (!ok) programmerRetry();
+  if (syncRelance) { syncRelance = false; planifierSync(500); }
+  return ok;
+}
+
+function verifier(res) { if (res && res.error) throw res.error; return res; }
+
+async function cycleSync() {
+  syncUid = state.user.id;
+  var snap = state.sync.snap;
+
+  // ═══ 1) PROFIL ═══
+  var rp = verifier(await sb.from('profiles').select('*').eq('id', syncUid).maybeSingle());
+  var remoteP = rp.data;
+  var remoteVide = !remoteP || (!remoteP.prenom && !remoteP.entreprise);
+  var hl = state.profil ? empreinte(canonProfil(state.profil)) : null;
+  var pousserProfil = false;
+  if (state.profil) {
+    if (remoteVide) pousserProfil = true;                                   // premier envoi (migration)
+    else if (snap.profil == null) {                                         // 1re synchro sur cet appareil : le compte fait foi
+      appliquerProfilDistant(remoteP);
+      snap.profil = empreinte(canonProfil(state.profil));
+    }
+    else if (hl !== snap.profil) pousserProfil = true;                      // modifié localement
+    else {
+      var hr = empreinte(canonProfil(remoteP));
+      if (hr !== hl) { appliquerProfilDistant(remoteP); snap.profil = hr; } // modifié sur un autre appareil
+    }
+  } else if (!remoteVide) {                                                 // nouvel appareil : on adopte le compte
+    appliquerProfilDistant(remoteP);
+    snap.profil = empreinte(canonProfil(state.profil));
+  }
+  if (pousserProfil) {
+    verifier(await sb.from('profiles').upsert(profilRow()));
+    snap.profil = hl;
+  }
+
+  // ═══ 2) CATALOGUE (petit volume : lecture complète) ═══
+  var rc = verifier(await sb.from('catalogue_items').select('*').eq('user_id', syncUid));
+  var R = {};
+  (rc.data || []).forEach(function(r){ R[r.id] = r; });
+  var L = aplatirCatalogue();
+  var upC = [], delC = [];
+  var idsC = {};
+  Object.keys(L).forEach(function(k){ idsC[k] = 1; });
+  Object.keys(R).forEach(function(k){ idsC[k] = 1; });
+  Object.keys(idsC).forEach(function(id){
+    var l = L[id], r = R[id], s = snap.cat[id];
+    var hL = l ? empreinte(canonItem(l.item, l.metier)) : null;
+    var hR = r ? empreinte(canonItem(r, r.metier)) : null;
+    if (l && r) {
+      if (s !== undefined && hL !== s) upC.push({ id: id, hash: hL, row: itemRow(l.item, l.metier) });   // modifié localement
+      else { if (hR !== hL) poserItemLocal(r); snap.cat[id] = hR; }                                       // modifié ailleurs ou identique
+    } else if (l && !r) {
+      if (s === undefined || hL !== s) upC.push({ id: id, hash: hL, row: itemRow(l.item, l.metier) });   // nouveau, ou modifié après suppression distante
+      else { retirerItemLocal(id); delete snap.cat[id]; }                                                 // supprimé sur un autre appareil
+    } else if (!l && r) {
+      if (s !== undefined) delC.push(id);                                                                 // supprimé localement
+      else { poserItemLocal(r); snap.cat[id] = hR; }                                                      // nouveau venu d'un autre appareil
+    }
+  });
+  var lotC = morceaux(upC, 100);
+  for (var a = 0; a < lotC.length; a++) {
+    verifier(await sb.from('catalogue_items').upsert(lotC[a].map(function(x){ return x.row; })));
+    lotC[a].forEach(function(x){ snap.cat[x.id] = x.hash; });
+  }
+  var lotD = morceaux(delC, 50);
+  for (var b = 0; b < lotD.length; b++) {
+    verifier(await sb.from('catalogue_items').delete().in('id', lotD[b]));
+    lotD[b].forEach(function(id){ delete snap.cat[id]; });
+  }
+
+  // ═══ 3) DEVIS (lecture allégée : liste des ids + lignes modifiées depuis la dernière synchro) ═══
+  var ri = verifier(await sb.from('quotes').select('id').eq('user_id', syncUid));
+  var remoteIds = {};
+  (ri.data || []).forEach(function(r){ remoteIds[r.id] = true; });
+  var qb = sb.from('quotes').select('*').eq('user_id', syncUid);
+  if (state.sync.lastPull) qb = qb.gt('updated_at', state.sync.lastPull);
+  var rq = verifier(await qb);
+  var RR = {};
+  var maxUp = null;
+  (rq.data || []).forEach(function(r){
+    RR[r.id] = r;
+    if (r.updated_at && (!maxUp || r.updated_at > maxUp)) maxUp = r.updated_at;
+  });
+  // Devis jamais vus sur cet appareil et absents du lot : on va les chercher explicitement
+  var manque = Object.keys(remoteIds).filter(function(id){ return snap.q[id] === undefined && !RR[id]; });
+  var lotM = morceaux(manque, 50);
+  for (var c = 0; c < lotM.length; c++) {
+    var rm = verifier(await sb.from('quotes').select('*').eq('user_id', syncUid).in('id', lotM[c]));
+    (rm.data || []).forEach(function(r){ RR[r.id] = r; });
+  }
+  var LQ = {};
+  state.devisList.forEach(function(d){ LQ[d.id] = d; });
+  var upQ = [], delQ = [];
+  var idsQ = {};
+  Object.keys(LQ).forEach(function(k){ idsQ[k] = 1; });
+  Object.keys(remoteIds).forEach(function(k){ idsQ[k] = 1; });
+  Object.keys(idsQ).forEach(function(id){
+    var l = LQ[id], inR = !!remoteIds[id], r = RR[id], s = snap.q[id];
+    var hL = l ? empreinte(canonQuote(l)) : null;
+    if (l && inR) {
+      if (s !== undefined && hL !== s) upQ.push({ id: id, hash: hL, row: quoteRow(l) });
+      else if (r) {
+        var lr = rowToQuote(r), hR = empreinte(canonQuote(lr));
+        if (hR !== hL) { state.devisList[state.devisList.indexOf(l)] = lr; }
+        snap.q[id] = hR;
+      }
+      else if (s === undefined) snap.q[id] = hL;
+    } else if (l && !inR) {
+      if (s === undefined || hL !== s) upQ.push({ id: id, hash: hL, row: quoteRow(l) });
+      else { state.devisList.splice(state.devisList.indexOf(l), 1); delete snap.q[id]; }
+    } else if (!l && inR) {
+      if (s !== undefined) delQ.push(id);
+      else if (r) { var nq = rowToQuote(r); state.devisList.push(nq); snap.q[id] = empreinte(canonQuote(nq)); }
+    }
+  });
+  var lotQ = morceaux(upQ, 10);
+  for (var d = 0; d < lotQ.length; d++) {
+    verifier(await sb.from('quotes').upsert(lotQ[d].map(function(x){ return x.row; })));
+    lotQ[d].forEach(function(x){ snap.q[x.id] = x.hash; });
+  }
+  var lotDQ = morceaux(delQ, 50);
+  for (var e = 0; e < lotDQ.length; e++) {
+    verifier(await sb.from('quotes').delete().in('id', lotDQ[e]));
+    lotDQ[e].forEach(function(id){ delete snap.q[id]; });
+  }
+  if (maxUp) state.sync.lastPull = new Date(new Date(maxUp).getTime() - 5000).toISOString();
+
+  // ═══ 4) Finalisation ═══
+  state.devisList.sort(function(x, y){ return String(y.dateISO || '').localeCompare(String(x.dateISO || '')); });
+  // Compteur local aligné sur les devis vus (évite les doublons de numéro en attendant la numérotation serveur)
+  state.devisList.forEach(function(q){
+    var mm = /^DEV-(\d{4})-(\d+)$/.exec(q.num || '');
+    if (mm && parseInt(mm[1], 10) === state.compteur.annee && parseInt(mm[2], 10) > state.compteur.n) state.compteur.n = parseInt(mm[2], 10);
+  });
+  ecrireLocal();
+  rafraichirApresSync();
+}
+
+function rafraichirApresSync() {
+  if (state.currentScreen === 'screen-onboarding' && state.profil) {
+    chargerCatalogueDefaut(state.profil.metier);
+    appliquerProfil();
+    montrerEcran('screen-home');
+    renderHome();
+    return;
+  }
+  if (state.currentScreen === 'screen-home') renderHome();
+  if (state.currentScreen === 'screen-catalogue') renderCatalogueScreen();
+}
+
 // ═══════════════════════════════ INIT ═══════════════════════════════
 document.addEventListener('DOMContentLoaded', function(){
   installerCaptureErreurs();
   chargerDonnees();
+  normaliserIds();
+  installerSync();
   demarrerApp();
   // Service Worker = amélioration progressive (hors-ligne). Son absence n'est pas une erreur :
   // dans un aperçu sans backend, /sw.js renvoie 404, l'app fonctionne sans. Échec silencieux.
