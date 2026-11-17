@@ -318,6 +318,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .cat-edit svg { width: 16px; height: 16px; stroke: var(--text-light); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .cat-card.editing { outline: 2px solid var(--g-mid); }
 .cat-card-cat { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+.cat-maj { margin: 0 0 12px; padding: 12px; background: var(--g-light); border: 1px solid var(--g-border); border-radius: var(--radius-sm); font-size: 12px; color: #065F46; line-height: 1.5; }
 .cat-others-head { display: flex; justify-content: space-between; align-items: center; margin: 18px 0 6px; padding: 12px 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; }
 .cat-others-hint { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0 2px 8px; }
 .sheet-group { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 8px 0 2px; }
@@ -781,7 +782,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
             <option value="Raccordement">Raccordement</option><option value="Mise en service">Mise en service</option>
             <option value="Depose">Dépose</option><option value="Maintenance">Maintenance</option>
             <option value="Maconnerie">Maçonnerie</option><option value="Plomberie">Plomberie</option>
-            <option value="Electricite">Électricité</option><option value="Etude">Étude</option><option value="Autre">Autre</option>
+            <option value="Electricite">Électricité</option><option value="Mise en conformite">Mise en conformité</option><option value="Depannage">Dépannage</option><option value="Courants faibles">Courants faibles</option><option value="Etude">Étude</option><option value="Autre">Autre</option>
           </select>
         </div>
         <div><label class="field-label" for="cat-unite">Unité</label>
@@ -1002,28 +1003,63 @@ var CATALOGUES_DEFAUT = {
     { nom:'Dépose sanitaire existant', prix:120, cout_achat:15, unite:'u', categorie:'Depose' }
   ],
   'Electricite': [
-    { nom:'Mise en sécurité tableau électrique', prix:980, cout_achat:380, unite:'forfait', categorie:'Installation' },
-    { nom:'Remplacement tableau complet 13 modules', prix:1450, cout_achat:520, unite:'forfait', categorie:'Installation' },
-    { nom:'Pose point lumineux DCL', prix:95, cout_achat:22, unite:'point', categorie:'Installation' },
+    // Prix HT indicatifs (province, 2026), fourniture standard et pose comprises sauf mention
+    // Installation courante
     { nom:'Pose prise 16A', prix:75, cout_achat:18, unite:'point', categorie:'Installation' },
-    { nom:'Pose prise RJ45', prix:95, cout_achat:22, unite:'point', categorie:'Installation' },
+    { nom:'Pose prise 16A double', prix:95, cout_achat:25, unite:'point', categorie:'Installation' },
+    { nom:'Pose prise 16A extérieure étanche', prix:110, cout_achat:30, unite:'point', categorie:'Installation' },
     { nom:'Pose interrupteur simple', prix:65, cout_achat:12, unite:'point', categorie:'Installation' },
     { nom:'Pose interrupteur va-et-vient', prix:85, cout_achat:20, unite:'point', categorie:'Installation' },
+    { nom:'Pose point lumineux DCL', prix:95, cout_achat:22, unite:'point', categorie:'Installation' },
+    { nom:'Pose spot LED encastré', prix:55, cout_achat:15, unite:'u', categorie:'Installation' },
+    { nom:'Pose luminaire fourni par le client', prix:60, cout_achat:8, unite:'u', categorie:'Installation' },
+    { nom:'Pose détecteur de fumée', prix:45, cout_achat:15, unite:'u', categorie:'Installation' },
     { nom:'Ligne spécialisée 32A (plaque cuisson)', prix:180, cout_achat:55, unite:'forfait', categorie:'Installation' },
     { nom:'Ligne spécialisée 20A (lave-linge, four)', prix:150, cout_achat:40, unite:'forfait', categorie:'Installation' },
-    { nom:'Pose radiateur électrique à inertie', prix:320, cout_achat:140, unite:'u', categorie:'Installation' },
+    { nom:'Création d’un circuit supplémentaire (protection + câblage)', prix:220, cout_achat:60, unite:'forfait', categorie:'Installation' },
+    { nom:'Fourniture + pose radiateur à inertie 1500 W', prix:690, cout_achat:380, unite:'u', categorie:'Installation' },
+    { nom:'Fourniture + pose sèche-serviettes électrique', prix:450, cout_achat:230, unite:'u', categorie:'Installation' },
     { nom:'Pose VMC simple flux', prix:480, cout_achat:180, unite:'forfait', categorie:'Installation' },
-    { nom:'Pose luminaire fourni par le client', prix:60, cout_achat:8, unite:'u', categorie:'Installation' },
-    { nom:'Pose spot LED encastré', prix:55, cout_achat:15, unite:'u', categorie:'Installation' },
-    { nom:'Pose détecteur de fumée', prix:45, cout_achat:15, unite:'u', categorie:'Installation' },
-    { nom:'Pose sonnette / carillon', prix:110, cout_achat:35, unite:'u', categorie:'Installation' },
-    { nom:'Pose borne de recharge véhicule électrique 7 kW', prix:1350, cout_achat:750, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose sonnette / carillon', prix:130, cout_achat:45, unite:'u', categorie:'Installation' },
+    { nom:'Pose borne de recharge 7 kW (installateur IRVE)', prix:1350, cout_achat:750, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose prise renforcée véhicule électrique', prix:340, cout_achat:140, unite:'u', categorie:'Installation' },
+    // Mise en conformité (NF C 15-100)
+    { nom:'Mise en sécurité tableau électrique', prix:850, cout_achat:300, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Remplacement tableau 2 rangées (appartement T2-T3)', prix:1050, cout_achat:380, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Remplacement tableau 3 rangées (maison 80-100 m²)', prix:1450, cout_achat:520, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Remplacement tableau 4 rangées (grande maison)', prix:1900, cout_achat:700, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Remplacement interrupteur différentiel 30 mA type A', prix:230, cout_achat:85, unite:'u', categorie:'Mise en conformite' },
+    { nom:'Ajout disjoncteur divisionnaire', prix:65, cout_achat:18, unite:'u', categorie:'Mise en conformite' },
+    { nom:'Pose parafoudre', prix:290, cout_achat:120, unite:'u', categorie:'Mise en conformite' },
+    { nom:'Mise à la terre installation', prix:550, cout_achat:150, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Liaisons équipotentielles salle de bain', prix:180, cout_achat:30, unite:'forfait', categorie:'Mise en conformite' },
+    { nom:'Pose gaine technique logement (GTL)', prix:280, cout_achat:120, unite:'forfait', categorie:'Mise en conformite' },
+    // Courants faibles
+    { nom:'Pose prise RJ45', prix:95, cout_achat:22, unite:'point', categorie:'Courants faibles' },
+    { nom:'Pose prise TV', prix:80, cout_achat:18, unite:'point', categorie:'Courants faibles' },
+    { nom:'Pose coffret de communication', prix:320, cout_achat:150, unite:'forfait', categorie:'Courants faibles' },
+    { nom:'Pose interphone audio', prix:260, cout_achat:90, unite:'u', categorie:'Courants faibles' },
+    { nom:'Pose visiophone', prix:420, cout_achat:180, unite:'u', categorie:'Courants faibles' },
+    // Câblage et raccordement
     { nom:'Saignée + rebouchage', prix:28, cout_achat:6, unite:'ml', categorie:'Raccordement' },
     { nom:'Passage gaine ICTA', prix:12, cout_achat:4, unite:'ml', categorie:'Raccordement' },
     { nom:'Tirage de câble sous goulotte', prix:14, cout_achat:4, unite:'ml', categorie:'Raccordement' },
-    { nom:'Mise à la terre installation', prix:350, cout_achat:90, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Remplacement interrupteur différentiel 30mA', prix:190, cout_achat:70, unite:'u', categorie:'Maintenance' },
-    { nom:'Diagnostic panne électrique', prix:90, cout_achat:10, unite:'forfait', categorie:'Maintenance' }
+    { nom:'Tirage de câble dans gaine existante', prix:9, cout_achat:3, unite:'ml', categorie:'Raccordement' },
+    // Dépannage
+    { nom:'Déplacement 15 à 30 km', prix:40, cout_achat:0, unite:'forfait', categorie:'Depannage' },
+    { nom:'Déplacement plus de 30 km', prix:70, cout_achat:0, unite:'forfait', categorie:'Depannage' },
+    { nom:'Diagnostic panne électrique', prix:90, cout_achat:10, unite:'forfait', categorie:'Depannage' },
+    { nom:'Recherche et réparation panne partielle (éclairage, prises)', prix:150, cout_achat:15, unite:'forfait', categorie:'Depannage' },
+    { nom:'Recherche et réparation panne totale', prix:180, cout_achat:20, unite:'forfait', categorie:'Depannage' },
+    { nom:'Remplacement disjoncteur défectueux', prix:85, cout_achat:18, unite:'u', categorie:'Depannage' },
+    { nom:'Remplacement prise ou interrupteur défectueux', prix:55, cout_achat:10, unite:'u', categorie:'Depannage' },
+    { nom:'Main d’œuvre électricien', prix:65, cout_achat:0, unite:'heure', categorie:'Depannage' },
+    { nom:'Majoration intervention urgente (soir, week-end)', prix:90, cout_achat:0, unite:'forfait', categorie:'Depannage' },
+    // Contrôle et dépose
+    { nom:'Diagnostic de l’installation électrique (rapport)', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' },
+    { nom:'Dossier Consuel + attestation de conformité', prix:260, cout_achat:150, unite:'forfait', categorie:'Etude' },
+    { nom:'Dépose ancien appareillage (prise, interrupteur)', prix:8, cout_achat:0, unite:'u', categorie:'Depose' },
+    { nom:'Dépose ancien tableau électrique', prix:120, cout_achat:0, unite:'forfait', categorie:'Depose' }
   ],
   'Maconnerie': [
     { nom:'Ouverture mur porteur + pose IPN', prix:2800, cout_achat:900, unite:'forfait', categorie:'Installation' },
@@ -1339,7 +1375,7 @@ function clonerDefaut(metier) {
 var METIER_LABELS = { 'Electricite': 'Électricité', 'Maconnerie': 'Maçonnerie', 'Multi-metiers': 'Multi-métiers' };
 function metierLabel(m) { return METIER_LABELS[m] || m || ''; }
 function bucketLabel(m) { return m === 'Multi-metiers' ? 'Commun à tous les métiers' : metierLabel(m); }
-var CATEGORIE_LABELS = { 'Fourniture materiel': 'Fourniture matériel', 'Depose': 'Dépose', 'Etude': 'Étude', 'Maconnerie': 'Maçonnerie', 'Electricite': 'Électricité' };
+var CATEGORIE_LABELS = { 'Mise en conformite': 'Mise en conformité', 'Depannage': 'Dépannage', 'Fourniture materiel': 'Fourniture matériel', 'Depose': 'Dépose', 'Etude': 'Étude', 'Maconnerie': 'Maçonnerie', 'Electricite': 'Électricité' };
 function categorieLabel(c) { return CATEGORIE_LABELS[c] || c || 'Autre'; }
 var UNITE_LABELS = { 'm2': 'm²', 'm3': 'm³' };
 function uniteLabel(u) { return UNITE_LABELS[u] || u || ''; }
@@ -1539,7 +1575,7 @@ var LS_DICTEE = 'devizy_v2_dictee';
 var EXEMPLES_DICTEE = {
   'Climatisation': 'Pose d’un climatiseur monosplit, 5 mètres de liaison frigorifique et mise en service.',
   'Plomberie': 'Remplacement d’un WC complet au sol, pose d’un meuble vasque et remplacement de 2 mitigeurs lavabo.',
-  'Electricite': 'Remplacement du tableau complet 13 modules, pose de 6 prises 16 ampères et de 4 points lumineux.',
+  'Electricite': 'Remplacement du tableau électrique 3 rangées, pose de 6 prises 16 ampères, 4 points lumineux et mise à la terre.',
   'Maconnerie': 'Cloison placo sur 12 mètres carrés, pose de carrelage au sol sur 20 mètres carrés et évacuation des gravats.',
   'Peinture': 'Peinture des murs en 2 couches sur 45 mètres carrés, plafond sur 18 mètres carrés et préparation des supports.',
   'Menuiserie': 'Pose de 3 fenêtres PVC double vitrage, 2 portes intérieures et 25 mètres carrés de parquet flottant.',
@@ -2661,7 +2697,9 @@ function renderCatalogueScreen() {
   var vusP = mots.length ? propres.filter(garde) : propres;
   var vusA = mots.length ? autres.filter(garde) : autres;
   document.getElementById('cat-count').textContent = mots.length ? vusP.length + ' sur ' + propres.length : propres.length;
-  var html = '<div id="cat-own">';
+  var nbMaj = multi ? 0 : majTypesDisponibles(bucketActif()).length;
+  var html = nbMaj ? '<div class="cat-maj">Prestations types mises à jour : ' + nbMaj + ' de vos prestations peuvent recevoir un nom ou un prix indicatif plus juste.' + '<button class="btn btn-primary" style="margin-top:8px;width:100%;" onclick="ajouterPrestationsTypes()">Voir la mise à jour</button></div>' : '';
+  html += '<div id="cat-own">';
   if (propres.length === 0) {
     html += '<div class="cat-empty">Aucune prestation dans ce catalogue.<br>Ajoutez-en ci-dessus, importez un CSV ou partez des prestations types.' +
       '<button class="btn btn-primary" style="display:inline-flex;margin-top:14px;padding:12px 18px;" onclick="ajouterPrestationsTypes()">Charger les prestations types</button></div>';
@@ -2776,27 +2814,68 @@ function supprimerPrestation(id) {
   }, true);
 }
 
-// Ajoute les prestations types qui manquent, sans toucher aux prestations existantes
+// Anciennes prestations types remplacées par une nouvelle version : [nom, prix, coût] d'origine → nouveau nom.
+// Une prestation n'est mise à jour que si l'artisan n'a modifié ni son nom, ni son prix, ni son coût.
+var MAJ_TYPES = {
+  'Electricite': [
+    ['Mise en sécurité tableau électrique', 980, 380, 'Mise en sécurité tableau électrique'],
+    ['Remplacement tableau complet 13 modules', 1450, 520, 'Remplacement tableau 3 rangées (maison 80-100 m²)'],
+    ['Pose prise RJ45', 95, 22, 'Pose prise RJ45'],
+    ['Pose radiateur électrique à inertie', 320, 140, 'Fourniture + pose radiateur à inertie 1500 W'],
+    ['Pose sonnette / carillon', 110, 35, 'Pose sonnette / carillon'],
+    ['Pose borne de recharge véhicule électrique 7 kW', 1350, 750, 'Pose borne de recharge 7 kW (installateur IRVE)'],
+    ['Mise à la terre installation', 350, 90, 'Mise à la terre installation'],
+    ['Remplacement interrupteur différentiel 30mA', 190, 70, 'Remplacement interrupteur différentiel 30 mA type A'],
+    ['Diagnostic panne électrique', 90, 10, 'Diagnostic panne électrique']
+  ]
+};
+function majTypesDisponibles(m) {
+  var out = [];
+  (MAJ_TYPES[m] || []).forEach(function(r){
+    var neuf = null;
+    (CATALOGUES_DEFAUT[m] || []).forEach(function(c){ if (!neuf && c.nom === r[3]) neuf = c; });
+    if (!neuf) return;
+    (state.catalogues[m] || []).forEach(function(it){
+      if (normTexte(it.nom) === normTexte(r[0]) && Number(it.prix) === r[1] && Number(it.cout_achat) === r[2]) {
+        var change = it.nom !== neuf.nom || it.prix !== neuf.prix || it.cout_achat !== neuf.cout_achat || it.unite !== neuf.unite || it.categorie !== neuf.categorie;
+        if (change) out.push({ it: it, c: neuf });
+      }
+    });
+  });
+  return out;
+}
+
+// Ajoute les prestations types qui manquent et met à jour celles restées d'origine, sans toucher aux autres
 function ajouterPrestationsTypes() {
   var metiers = estMulti() ? METIERS.filter(function(m){ return m !== 'Multi-metiers'; }) : [bucketActif()];
-  var manquantes = [];
+  var manquantes = [], majs = [];
   metiers.forEach(function(m){
+    var maj = majTypesDisponibles(m);
     var deja = {};
     (state.catalogues[m] || []).forEach(function(it){ deja[normTexte(it.nom)] = 1; });
+    maj.forEach(function(x){ deja[normTexte(x.c.nom)] = 1; majs.push(x); });
     (CATALOGUES_DEFAUT[m] || []).forEach(function(c){ if (!deja[normTexte(c.nom)]) manquantes.push({ m: m, c: c }); });
   });
-  if (!manquantes.length) { showToast('Toutes les prestations types sont déjà dans votre catalogue'); return; }
-  var nb = manquantes.length;
-  askConfirm('Ajouter les prestations types',
-    nb + ' prestation' + (nb > 1 ? 's types seront ajoutées' : ' type sera ajoutée') + ' à votre catalogue. Vos prestations actuelles ne changent pas. Les prix sont indicatifs : adaptez-les à vos tarifs.',
-    'Ajouter', function(){
+  if (!manquantes.length && !majs.length) { showToast('Toutes les prestations types sont déjà dans votre catalogue'); return; }
+  var nb = manquantes.length, nm = majs.length, parts = [];
+  if (nb) parts.push(nb + ' prestation' + (nb > 1 ? 's types seront ajoutées' : ' type sera ajoutée'));
+  if (nm) parts.push(nm + ' prestation' + (nm > 1 ? 's types seront mises à jour (nouveau nom ou nouveau prix indicatif)' : ' type sera mise à jour (nouveau nom ou nouveau prix indicatif)'));
+  askConfirm(nm ? 'Mettre à jour les prestations types' : 'Ajouter les prestations types',
+    parts.join(' et ') + '. Les prestations que vous avez modifiées ne changent pas, ni les devis déjà créés. Les prix sont indicatifs : adaptez-les à vos tarifs.',
+    nm ? 'Mettre à jour' : 'Ajouter', function(){
+      majs.forEach(function(x){
+        x.it.nom = x.c.nom; x.it.prix = x.c.prix; x.it.cout_achat = x.c.cout_achat; x.it.unite = x.c.unite; x.it.categorie = x.c.categorie;
+      });
       manquantes.forEach(function(x){
         if (!state.catalogues[x.m]) state.catalogues[x.m] = [];
         state.catalogues[x.m].push({ id: uid(), nom: x.c.nom, prix: x.c.prix, cout_achat: x.c.cout_achat, unite: x.c.unite, categorie: x.c.categorie });
       });
       sauvegarderDonnees();
       renderCatalogueScreen();
-      showToast(nb + ' prestation' + (nb > 1 ? 's ajoutées' : ' ajoutée'));
+      var bilan = [];
+      if (nb) bilan.push(nb + ' ajoutée' + (nb > 1 ? 's' : ''));
+      if (nm) bilan.push(nm + ' mise' + (nm > 1 ? 's' : '') + ' à jour');
+      showToast('Prestations types : ' + bilan.join(', '));
     }, false);
 }
 
