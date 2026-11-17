@@ -2,7 +2,7 @@
 // Cache v4 : version renommée pour invalider les anciens caches,
 // stratégie network-first sur les navigations (l'app se met à jour dès qu'on est en ligne).
 
-const CACHE = 'devizy-v12';
+const CACHE = 'devizy-v13';
 const PRECACHE = ['/'];
 
 self.addEventListener('install', (event) => {
