@@ -441,29 +441,6 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     </div>
     <div class="devis-list" id="devis-list"></div>
   </div>
-  <div class="navbar">
-    <div class="nav-item active" id="nav-home" onclick="switchTab('screen-home')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span class="nav-lbl">Accueil</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('screen-home'); resetFilter();">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-      <span class="nav-lbl">Devis</span>
-    </div>
-    <div class="fab-wrap">
-      <button class="fab" onclick="nouveauDevis()">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
-    </div>
-    <div class="nav-item" onclick="switchTab('screen-catalogue')">
-      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <span class="nav-lbl">Catalogue</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('screen-profil')">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="nav-lbl">Profil</span>
-    </div>
-  </div>
 </div>
 
 <!-- ═══════════ SCREEN: NEW CLIENT ═══════════ -->
@@ -607,7 +584,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       </div>
     </div>
     <div class="action-row">
-      <button class="btn btn-outline" onclick="exportPDF()">
+      <button class="btn btn-outline" onclick="exporterPDFDevis()">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
         Export PDF
       </button>
@@ -683,30 +660,26 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <div class="sent-header">
       <div class="sent-icon"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div>
       <div class="sent-title">Devis envoyé</div>
-      <div class="sent-sub" id="sent-sub">Le client a reçu le devis avec un lien de signature.</div>
+      <div class="sent-sub" id="sent-sub">Le devis est prêt à partir.</div>
     </div>
     <div class="tracking-card">
-      <div class="track-title">Suivi en temps réel</div>
+      <div class="track-title">Suivi du devis</div>
       <div class="track-step">
         <div class="track-col"><div class="track-dot done"><svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg></div><div class="track-line done"></div></div>
-        <div class="track-content"><div class="track-lbl">Devis envoyé</div><div class="track-time" id="track-time">Maintenant</div></div>
+        <div class="track-content"><div class="track-lbl">Devis préparé dans votre messagerie</div><div class="track-time" id="track-time">Maintenant</div></div>
       </div>
       <div class="track-step">
         <div class="track-col"><div class="track-dot active"><div class="inner"></div></div><div class="track-line pending"></div></div>
-        <div class="track-content"><div class="track-lbl">Ouvert par le client</div><div class="track-time">En attente...</div></div>
-      </div>
-      <div class="track-step">
-        <div class="track-col"><div class="track-dot pending"></div><div class="track-line pending"></div></div>
-        <div class="track-content"><div class="track-lbl">Devis signé</div><div class="track-time">En attente...</div></div>
+        <div class="track-content"><div class="track-lbl">Réponse du client</div><div class="track-time">Vérifiez que le message est bien parti, puis attendez son accord</div></div>
       </div>
       <div class="track-step">
         <div class="track-col"><div class="track-dot pending"></div></div>
-        <div class="track-content"><div class="track-lbl">Acompte reçu</div><div class="track-time">En attente...</div></div>
+        <div class="track-content"><div class="track-lbl">Signature</div><div class="track-time">Faites-le signer ici, ou marquez-le refusé depuis l’écran de signature</div></div>
       </div>
     </div>
     <div class="notif-card">
       <div class="notif-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
-      <div class="notif-text"><strong>Astuce</strong> — Quand le client vous confirme son accord, ouvrez le devis et faites-le signer ici même. Le suivi automatique arrive bientôt.</div>
+      <div class="notif-text"><strong>À savoir</strong> — Devizy ne voit pas encore si le client a ouvert le devis. La signature à distance et le suivi automatique arriveront avec l’envoi par email.</div>
     </div>
     <div style="margin:12px 16px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
       <button class="btn btn-outline" onclick="goTo('screen-signature')">Faire signer ici</button>
@@ -894,6 +867,31 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <button class="profil-save-btn" onclick="sauvegarderProfil()">Enregistrer mon profil</button>
   </div>
 </div>
+
+<!-- BARRE DE NAVIGATION (accueil, catalogue, profil) -->
+  <div class="navbar" id="navbar">
+    <div class="nav-item active" id="nav-home" onclick="switchTab('screen-home')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span class="nav-lbl">Accueil</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('screen-home'); resetFilter();">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      <span class="nav-lbl">Devis</span>
+    </div>
+    <div class="fab-wrap">
+      <button class="fab" onclick="nouveauDevis()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="nav-item" onclick="switchTab('screen-catalogue')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="nav-lbl">Catalogue</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('screen-profil')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-lbl">Profil</span>
+    </div>
+  </div>
 
 <!-- SHEET CATALOGUE -->
 <div class="sheet-overlay" id="sheet-overlay" onclick="closeCatalog()"></div>
@@ -1169,6 +1167,40 @@ function uid() {
   });
 }
 function tvaRate() { return state.profil ? (parseFloat(state.profil.tva) || 0) : 10; }
+// ── Contrôles de saisie ──
+function emailValide(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e || '').trim()); }
+function telValide(t) { var d = String(t || '').replace(/[^\d]/g, ''); return d.length >= 10 && d.length <= 15; }
+// SIRET : 14 chiffres et clé de Luhn (exception connue : établissements de La Poste)
+function siretValide(v) {
+  var d = String(v || '').replace(/\s/g, '');
+  if (!/^\d{14}$/.test(d)) return false;
+  if (d.indexOf('356000000') === 0) return true;
+  var somme = 0;
+  for (var i = 0; i < 14; i++) {
+    var c = parseInt(d.charAt(13 - i), 10);
+    if (i % 2 === 1) { c *= 2; if (c > 9) c -= 9; }
+    somme += c;
+  }
+  return somme % 10 === 0;
+}
+function formaterSiret(v) {
+  var d = String(v || '').replace(/\s/g, '');
+  return /^\d{14}$/.test(d) ? d.slice(0, 3) + ' ' + d.slice(3, 6) + ' ' + d.slice(6, 9) + ' ' + d.slice(9) : String(v || '').trim();
+}
+// Mentions obligatoires d'un devis de travaux absentes du profil
+function mentionsManquantes() {
+  var p = state.profil || {}, m = [];
+  if (!siretValide(p.siret)) m.push('SIRET');
+  if (!p.assureur || !p.decennale) m.push('assurance décennale (assureur et n° de contrat)');
+  return m;
+}
+function verifierMentions(suite) {
+  var m = mentionsManquantes();
+  if (!m.length) { suite(); return; }
+  askConfirm('Mentions obligatoires manquantes',
+    'Votre profil ne contient pas : ' + m.join(', ') + '. Un devis de travaux doit les indiquer. Vous pouvez les ajouter dans votre profil maintenant.',
+    'Compléter mon profil', function(){ switchTab('screen-profil'); }, false, suite, 'Continuer quand même');
+}
 // ── Montants : tout est calculé au centime, par une seule fonction, pour que l'écran,
 // le PDF, la signature, l'accueil et les données enregistrées affichent les mêmes chiffres ──
 function arrondi2(n) { return Math.round(((Number(n) || 0) + Number.EPSILON) * 100) / 100; }
@@ -1301,12 +1333,14 @@ function goTo(id, push) {
   if (push) state.history.push(state.currentScreen);
   state.currentScreen = id;
   document.getElementById(id).classList.add('active');
-  if (id === 'screen-catalogue') renderCatalogueScreen();
+  if (id === 'screen-catalogue') { if (catEditId) annulerEditionPrestation(); else renderCatalogueScreen(); }
   if (id === 'screen-profil') ouvrirProfil();
   if (id === 'screen-signature') preparerSignature();
+  majNavVisible();
 }
 function switchTab(id) {
   // Navigation par onglet : pile vidée, pas d'empilement infini
+  var venant = state.currentScreen;
   state.history = [];
   if (id !== state.currentScreen) {
     document.getElementById(state.currentScreen).classList.remove('active');
@@ -1314,9 +1348,17 @@ function switchTab(id) {
     document.getElementById(id).classList.add('active');
   }
   if (id === 'screen-home') renderHome();
-  if (id === 'screen-catalogue') renderCatalogueScreen();
+  if (id === 'screen-catalogue') { if (venant !== id && catEditId) annulerEditionPrestation(); else renderCatalogueScreen(); }
   if (id === 'screen-profil') ouvrirProfil();
-  majNavbar(id);
+  majNavVisible();
+}
+var ECRANS_ONGLETS = ['screen-home', 'screen-catalogue', 'screen-profil'];
+function majNavVisible() {
+  var nb = document.getElementById('navbar');
+  if (!nb) return;
+  var visible = ECRANS_ONGLETS.indexOf(state.currentScreen) > -1;
+  nb.style.display = visible ? 'flex' : 'none';
+  if (visible) majNavbar(state.currentScreen);
 }
 function majNavbar(id) {
   var items = document.querySelectorAll('.navbar .nav-item');
@@ -1331,6 +1373,7 @@ function goBack() {
   var prev = state.history.pop();
   state.currentScreen = prev;
   document.getElementById(prev).classList.add('active');
+  majNavVisible();
 }
 
 // ═══════════════════════════════ ONBOARDING ═══════════════════════════════
@@ -1640,6 +1683,9 @@ function goToVocal() {
   var prenom = document.getElementById('client-prenom').value.trim();
   var nom = document.getElementById('client-nom').value.trim();
   if (!prenom && !nom) { showToast('Indiquez le nom du client'); return; }
+  var emailC = document.getElementById('client-email').value.trim(), telC = document.getElementById('client-tel').value.trim();
+  if (emailC && !emailValide(emailC)) { showToast('Email du client invalide'); document.getElementById('client-email').focus(); return; }
+  if (telC && !telValide(telC)) { showToast('Téléphone du client invalide'); document.getElementById('client-tel').focus(); return; }
   state.client.prenom = prenom || '';
   state.client.nom = nom || '';
   state.client.adresse = document.getElementById('client-adresse').value.trim();
@@ -2075,16 +2121,21 @@ function numOk(v, def) {
 }
 
 // ═══════════════════════════════ ECRAN DEVIS ═══════════════════════════════
+function formatNumero(annee, n) { return 'DEV-' + annee + '-' + (n < 100 ? ('00' + n).slice(-3) : n); }
+// Numéro que recevra le prochain devis enregistré (ne consomme rien)
+function prochainNumero() {
+  var annee = new Date().getFullYear();
+  return formatNumero(annee, (state.compteur.annee === annee ? state.compteur.n : 0) + 1);
+}
 function attribuerNumero() {
   var annee = new Date().getFullYear();
   if (state.compteur.annee !== annee) { state.compteur.annee = annee; state.compteur.n = 0; }
   state.compteur.n++;
-  var n = state.compteur.n;
-  return 'DEV-' + annee + '-' + (n < 100 ? ('00' + n).slice(-3) : n);
+  return formatNumero(annee, state.compteur.n);
 }
 
 function buildDevisScreen(statut) {
-  if (!state.currentNum) state.currentNum = attribuerNumero();
+  if (!state.currentNum) state.currentNum = state.currentDevisId ? attribuerNumero() : prochainNumero();
   document.getElementById('devis-title').textContent = state.currentNum;
   document.getElementById('dh-numero').textContent = state.currentNum;
   document.getElementById('dh-badge').textContent = statut === 'brouillon' || !statut ? 'G\u00E9n\u00E9r\u00E9 par IA' : ({signe:'Sign\u00E9',envoye:'Envoy\u00E9',refuse:'Refus\u00E9'}[statut] || 'Devis');
@@ -2227,6 +2278,12 @@ function enregistrerDevis(toast) {
   var existant = null;
   for (var i=0; i<state.devisList.length; i++) { if (state.devisList[i].id === state.currentDevisId) { existant = state.devisList[i]; break; } }
   if (existant && existant.statut === 'signe') { if (toast) showToast('Devis signé : il n’est plus modifiable'); return existant; }
+  if (!existant) {
+    // Premier enregistrement : le numéro est attribué maintenant, un devis abandonné ne laisse pas de trou
+    state.currentNum = attribuerNumero();
+    document.getElementById('devis-title').textContent = state.currentNum;
+    document.getElementById('dh-numero').textContent = state.currentNum;
+  }
   var record = existant || { id: uid(), statut: 'brouillon', dateISO: new Date().toISOString() };
   record.num = state.currentNum;
   record.client = nomClient;
@@ -2447,12 +2504,21 @@ function ouvrirEnvoi() {
   if (nbEst > 0) {
     askConfirm('Prix \u00E0 v\u00E9rifier',
       nbEst + ' ligne' + (nbEst > 1 ? 's ont' : ' a') + ' un prix estim\u00E9 par l\u2019IA et non v\u00E9rifi\u00E9. Corrigez les montants ou touchez l\u2019\u00E9tiquette orange pour les valider avant d\u2019envoyer.',
-      'Envoyer quand m\u00EAme', function(){ ouvrirEnvoiSuite(); }, false);
+      'Envoyer quand m\u00EAme', function(){ verifierMentions(ouvrirEnvoiSuite); }, false);
     return;
   }
-  ouvrirEnvoiSuite();
+  verifierMentions(ouvrirEnvoiSuite);
+}
+// Bouton « Export PDF » : contrôle des mentions, puis enregistrement (le PDF porte un vrai numéro)
+function exporterPDFDevis() {
+  if (state.lignes.length === 0) { showToast('Aucune prestation à exporter'); return; }
+  verifierMentions(function(){
+    if (state.currentDevisId === null && !enregistrerDevis(false)) return;
+    exportPDF();
+  });
 }
 function ouvrirEnvoiSuite() {
+  if (state.currentDevisId === null && !enregistrerDevis(false)) return;   // un devis envoyé reçoit son numéro définitif
   var n = ((state.client.prenom||'') + ' ' + (state.client.nom||'')).trim();
   document.getElementById('send-avatar').textContent = (((state.client.prenom||'?')[0]||'?')+((state.client.nom||'')[0]||'')).toUpperCase();
   document.getElementById('send-name').textContent = n;
@@ -3069,6 +3135,12 @@ function ouvrirProfil() {
 }
 
 function sauvegarderProfil() {
+  var emailP = document.getElementById('profil-email').value.trim();
+  var telP = document.getElementById('profil-tel').value.trim();
+  var siretP = document.getElementById('profil-siret').value.trim();
+  if (emailP && !emailValide(emailP)) { showToast('Email invalide'); document.getElementById('profil-email').focus(); return; }
+  if (telP && !telValide(telP)) { showToast('Téléphone invalide'); document.getElementById('profil-tel').focus(); return; }
+  if (siretP && !siretValide(siretP)) { showToast('SIRET invalide : 14 chiffres attendus'); document.getElementById('profil-siret').focus(); return; }
   var nouveauMetier = document.getElementById('profil-metier').value;
   var ancienMetier = state.profil ? state.profil.metier : nouveauMetier;
 
@@ -3078,7 +3150,7 @@ function sauvegarderProfil() {
     state.profil.email = document.getElementById('profil-email').value.trim();
     state.profil.telephone = document.getElementById('profil-tel').value.trim();
     state.profil.entreprise = document.getElementById('profil-entreprise').value.trim();
-    state.profil.siret = document.getElementById('profil-siret').value.trim();
+    state.profil.siret = formaterSiret(document.getElementById('profil-siret').value);
     state.profil.adresse = document.getElementById('profil-adresse').value.trim();
     state.profil.taux_horaire = parseFloat(document.getElementById('profil-taux').value) || 65;
     state.profil.tva = document.getElementById('profil-tva').value;
@@ -3279,6 +3351,7 @@ function montrerEcran(id) {
   document.getElementById(id).classList.add('active');
   state.currentScreen = id;
   state.history = [];
+  majNavVisible();
 }
 
 function afficherAuth(message) {
