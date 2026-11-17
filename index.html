@@ -189,7 +189,16 @@ input, textarea, select { font-size: 16px !important; }
 .add-btn { margin: 6px 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); cursor: pointer; color: var(--g-med); font-size: 13px; background: transparent; width: calc(100% - 32px); }
 .add-btn svg { width: 16px; height: 16px; stroke: var(--g-med); fill: none; stroke-width: 2.5; stroke-linecap: round; }
 .totaux { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
-.total-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+.total-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 3px 0; }
+.tva-select { padding: 2px 6px; border: 1px solid var(--border-med); border-radius: 6px; background: var(--card); color: var(--text); margin-left: 4px; }
+.tva-select:disabled { border-color: transparent; background: transparent; color: var(--text-muted); opacity: 1; }
+.pi-input { -moz-appearance: textfield; appearance: textfield; padding: 5px 4px; }
+.pi-input::-webkit-outer-spin-button, .pi-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pi-input:disabled { background: transparent; border-color: transparent; color: var(--text); -webkit-text-fill-color: var(--text); opacity: 1; }
+.devis-signe { margin: 8px 16px 0; padding: 12px; background: var(--g-light); border: 1px solid var(--g-border); border-radius: 10px; }
+.ds-title { font-size: 13px; font-weight: 600; color: #065F46; }
+.ds-text { font-size: 12px; color: #065F46; line-height: 1.5; margin-top: 2px; }
+.ds-img { display: block; width: 100%; height: 80px; object-fit: contain; background: #fff; border-radius: 8px; margin-top: 8px; }
 .total-row .lbl { color: var(--text-muted); }
 .total-div { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
 .total-main { display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; }
@@ -571,20 +580,21 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="tr-label">Extrait de votre dictée</div>
       <div class="tr-text" id="tr-text"></div>
     </div>
+    <div id="devis-signe" class="devis-signe" style="display:none;"></div>
     <div id="devis-notice" style="display:none;margin:8px 16px 0;padding:10px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;font-size:12px;color:#92400E;line-height:1.5;"></div>
     <div style="padding:14px 16px 0;"><span style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Prestations</span></div>
     <div class="presta-list" id="presta-list"></div>
-    <button class="add-btn" onclick="openCatalog()">
+    <button class="add-btn" id="add-cat-btn" onclick="openCatalog()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Ajouter depuis le catalogue
     </button>
-    <button class="add-btn" onclick="completerALaVoix()">
+    <button class="add-btn" id="add-voice-btn" onclick="completerALaVoix()">
       <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
       Compléter à la voix
     </button>
     <div class="totaux">
       <div class="total-row"><span class="lbl">Sous-total HT</span><span id="total-ht">0 €</span></div>
-      <div class="total-row"><span class="lbl" id="tva-label">TVA</span><span id="total-tva">0 €</span></div>
+      <div class="total-row"><span class="lbl"><span id="tva-label">TVA</span> <select id="devis-tva" class="tva-select" aria-label="Taux de TVA du devis" onchange="changerTvaDevis(this.value)"><option value="20">20 %</option><option value="10">10 %</option><option value="5.5">5,5 %</option><option value="0">0 %</option></select></span><span id="total-tva">0 €</span></div>
       <hr class="total-div">
       <div class="total-main"><span>Total TTC</span><span id="total-ttc">0 €</span></div>
       <div class="rent-wrap">
@@ -600,7 +610,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
         Export PDF
       </button>
-      <button class="btn btn-outline" onclick="enregistrerDevis(true)">
+      <button class="btn btn-outline" id="save-devis-btn" onclick="enregistrerDevis(true)">
         <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
         Enregistrer
       </button>
@@ -1100,6 +1110,9 @@ var state = {
   profil: null,
   user: null,
   genNotice: '',
+  tauxTva: null,
+  devisVerrouille: false,
+  devisRef: null,
   sync: syncParDefaut(),
   _ht: 0, _tva: 0, _ttc: 0, _marge: null
 };
@@ -1120,6 +1133,98 @@ function uid() {
   });
 }
 function tvaRate() { return state.profil ? (parseFloat(state.profil.tva) || 0) : 10; }
+// ── Montants : tout est calculé au centime, par une seule fonction, pour que l'écran,
+// le PDF, la signature, l'accueil et les données enregistrées affichent les mêmes chiffres ──
+function arrondi2(n) { return Math.round(((Number(n) || 0) + Number.EPSILON) * 100) / 100; }
+function fmtEur(n) { return arrondi2(n).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'; }
+var TAUX_TVA = [20, 10, 5.5, 0];
+function libelleTva(t) { return 'TVA ' + String(t).replace('.', ',') + ' %'; }
+// Taux du devis ouvert : figé sur le devis, il ne suit plus le profil une fois le devis créé
+function devisTva() { return state.tauxTva != null ? state.tauxTva : tvaRate(); }
+// Taux d'un devis enregistré (les anciens devis n'ont pas le champ : on le retrouve depuis HT et TVA)
+function tauxDuDevis(d) {
+  if (d && d.tauxTva != null && !isNaN(parseFloat(d.tauxTva))) return parseFloat(d.tauxTva);
+  if (d && Number(d.ht) > 0 && d.tvaMontant != null) {
+    var r = Number(d.tvaMontant) / Number(d.ht) * 100, best = TAUX_TVA[0];
+    TAUX_TVA.forEach(function(t){ if (Math.abs(t - r) < Math.abs(best - r)) best = t; });
+    return best;
+  }
+  return tvaRate();
+}
+// Ligne : prix unitaire au centime × quantité, arrondi au centime. HT = somme des lignes affichées.
+function totalLigne(l) { return arrondi2((Number(l.quantite) || 0) * arrondi2(l.prix_unitaire)); }
+function calculDevis(lignes, taux) {
+  var totaux = lignes.map(totalLigne);
+  var ht = arrondi2(totaux.reduce(function(a, b){ return a + b; }, 0));
+  var tva = arrondi2(ht * (Number(taux) || 0) / 100);
+  var ttc = arrondi2(ht + tva);
+  // Marge calculée seulement sur les lignes dont le coût d'achat est connu (jamais inventée)
+  var htC = 0, cout = 0, nbC = 0;
+  lignes.forEach(function(l, i){
+    if (Number(l.cout_achat) > 0) { nbC++; htC += totaux[i]; cout += (Number(l.quantite) || 0) * Number(l.cout_achat); }
+  });
+  var marge = htC > 0 ? Math.round((htC - cout) / htC * 100) : null;
+  return { totaux: totaux, ht: ht, tva: tva, ttc: ttc, marge: marge, margeLignes: nbC, nbLignes: lignes.length };
+}
+// Empreinte de ce qui est modifiable sur un devis : sert à savoir s'il reste des changements non enregistrés
+function empreinteEdition() {
+  return JSON.stringify({
+    l: state.lignes.map(function(l){ return [l.libelle, Number(l.quantite), l.unite, arrondi2(l.prix_unitaire), Number(l.cout_achat) || 0]; }),
+    t: devisTva(),
+    c: [state.client.prenom || '', state.client.nom || '', state.client.adresse || '', state.client.email || '', state.client.tel || '']
+  });
+}
+function devisCourant() {
+  for (var i = 0; i < state.devisList.length; i++) { if (state.devisList[i].id === state.currentDevisId) return state.devisList[i]; }
+  return null;
+}
+function changerTvaDevis(v) {
+  if (state.devisVerrouille) return;
+  var t = parseFloat(v);
+  if (isNaN(t)) return;
+  state.tauxTva = t;
+  updateTotaux();
+}
+// Devis signé : les montants signés ne doivent plus bouger
+function appliquerVerrouDevis() {
+  var lock = !!state.devisVerrouille;
+  ['add-cat-btn', 'add-voice-btn', 'save-devis-btn'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.style.display = lock ? 'none' : '';
+  });
+  document.getElementById('devis-tva').disabled = lock;
+  var box = document.getElementById('devis-signe');
+  var rec = devisCourant();
+  if (lock && rec) {
+    var s = rec.signature || {};
+    var quand = s.dateISO ? new Date(s.dateISO) : null;
+    var img = (s.image && /^data:image\/png;base64,[A-Za-z0-9+\/=]+$/.test(s.image)) ? s.image : '';
+    box.innerHTML = '<div class="ds-title">Devis signé' + (quand ? ' le ' + quand.toLocaleDateString('fr-FR') + ' à ' + quand.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : '') + '</div>' +
+      '<div class="ds-text">Les prestations et les montants ne sont plus modifiables. Pour changer quelque chose, créez un nouveau devis.</div>' +
+      (img ? '<img class="ds-img" alt="Signature du client" src="' + img + '">' : '');
+    box.style.display = 'block';
+    document.getElementById('devis-notice').style.display = 'none';   // plus rien à vérifier sur un devis signé
+  } else {
+    box.style.display = 'none';
+    box.innerHTML = '';
+  }
+}
+
+// Zone de signature du PDF : la signature du client y figure quand le devis est signé
+function zoneSignaturePdf(rec) {
+  var s = (rec && rec.statut === 'signe') ? (rec.signature || {}) : null;
+  var img = (s && s.image && /^data:image\/png;base64,[A-Za-z0-9+\/=]+$/.test(s.image)) ? s.image : '';
+  if (s && (img || s.dateISO)) {
+    var q = s.dateISO ? new Date(s.dateISO) : null;
+    return '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Bon pour accord — signé par le client</div>' +
+      (img ? '<img src="' + img + '" alt="Signature du client" style="max-width:260px;height:auto;display:block;margin:8px auto;">' : '') +
+      (q ? '<div style="font-size:13px;">Signé électroniquement le ' + q.toLocaleDateString('fr-FR') + ' à ' + q.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + (s.cgvAcceptees ? ', conditions générales acceptées' : '') + '</div>' : '') +
+      '</div>';
+  }
+  return '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Bon pour accord — Signature du client</div>' +
+    '<div style="font-size:13px;">Date et mention « bon pour accord »</div></div>';
+}
+
 function showToast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -1129,12 +1234,13 @@ function showToast(msg) {
 
 // Modal de confirmation reutilisable
 var modalCb = null;
-function askConfirm(title, text, confirmLabel, cb, danger, cancelCb) {
+function askConfirm(title, text, confirmLabel, cb, danger, cancelCb, cancelLabel) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-text').textContent = text;
   var btn = document.getElementById('modal-confirm');
   btn.textContent = confirmLabel || 'Confirmer';
   btn.classList.toggle('danger', !!danger);
+  document.getElementById('modal-cancel').textContent = cancelLabel || 'Annuler';
   modalCb = { ok: cb, cancel: cancelCb || null };
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -1380,7 +1486,7 @@ function renderDevisList(filter) {
     html += '<div class="dcard" onclick="viewDevis(\''+d.id+'\')">' +
       '<div class="dc-top"><span class="dc-client">'+esc(d.client)+'</span><span class="dc-date">'+esc(d.date)+'</span></div>' +
       '<div class="dc-desc">'+esc(d.desc)+'</div>' +
-      '<div class="dc-bottom"><div><div class="dc-amount">'+fmt(d.montant)+'</div>' + margeHtml + '</div>' +
+      '<div class="dc-bottom"><div><div class="dc-amount">'+fmtEur(d.montant)+'</div>' + margeHtml + '</div>' +
       '<div class="badge '+d.statut+'">'+ ({signe:'Sign\u00E9',envoye:'Envoy\u00E9',brouillon:'Brouillon',refuse:'Refus\u00E9'}[d.statut] || d.statut) +'</div></div></div>';
   });
   document.getElementById('devis-list').innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">Aucun devis dans ce filtre</div>';
@@ -1411,6 +1517,8 @@ function viewDevis(id) {
   state.lignes = (d.lignes || []).map(function(l){ var o = { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; if (l.estime) o.estime = true; if (l.horsCat) o.horsCat = true; return o; });
   state.descGlobale = d.desc || '';
   state.transcription = d.transcription || '';
+  state.tauxTva = tauxDuDevis(d);
+  state.devisRef = empreinteEdition();
   buildDevisScreen(d.statut);
 }
 
@@ -1475,6 +1583,7 @@ function nouveauDevis() {
         state.client = { prenom: d.client.prenom || '', nom: d.client.nom || '', adresse: d.client.adresse || '', email: d.client.email || '', tel: d.client.tel || '' };
         state.currentDevisId = null;
         state.currentNum = '';
+  state.tauxTva = null;
         ouvrirVocal('nouveau', d.texte, d.elapsed || 0);
       }, false, function(){
         effacerDicteeSauvee();
@@ -1502,6 +1611,7 @@ function goToVocal() {
   state.client.tel = document.getElementById('client-tel').value.trim();
   state.currentDevisId = null; // nouveau devis
   state.currentNum = '';
+  state.tauxTva = null;
   ouvrirVocal('nouveau', '', 0);
 }
 
@@ -1950,12 +2060,16 @@ function buildDevisScreen(statut) {
   } else {
     ref.style.display = 'none';
   }
+  if (state.tauxTva == null) state.tauxTva = tvaRate();
+  state.devisVerrouille = statut === 'signe';
+  choisirOption('devis-tva', String(state.tauxTva), String(state.tauxTva).replace('.', ',') + ' %');
   renderPrestas();
   updateTotaux();
   majBandeauEstimes();
   state.genNotice = '';
   var delWrap = document.getElementById('devis-delete-wrap');
   if (delWrap) delWrap.style.display = state.currentDevisId ? 'block' : 'none';
+  appliquerVerrouDevis();
   goTo('screen-devis');
 }
 
@@ -1975,34 +2089,35 @@ function supprimerDevisCourant() {
 }
 
 function quitterDevis() {
-  // Propose d'enregistrer si le devis n'existe pas encore en liste
-  if (state.currentDevisId === null && state.lignes.length > 0) {
-    askConfirm('Quitter sans enregistrer ?',
-      'Ce devis n\u2019est pas encore enregistr\u00E9. Vous pouvez l\u2019enregistrer en brouillon pour le retrouver plus tard.',
-      'Enregistrer', function(){ enregistrerDevis(false); switchTab('screen-home'); },
-      false,
-      function(){ switchTab('screen-home'); });
+  var neuf = state.currentDevisId === null;
+  var modifie = !neuf && !state.devisVerrouille && state.devisRef !== null && empreinteEdition() !== state.devisRef;
+  if ((neuf && state.lignes.length > 0) || modifie) {
+    askConfirm(neuf ? 'Quitter sans enregistrer ?' : 'Enregistrer les modifications ?',
+      neuf ? 'Ce devis n’est pas encore enregistré. Vous pouvez l’enregistrer en brouillon pour le retrouver plus tard.'
+           : 'Vous avez modifié ce devis (prestations, prix, quantités ou TVA). Sans enregistrement, ces changements seront perdus.',
+      'Enregistrer', function(){ if (enregistrerDevis(false)) switchTab('screen-home'); },
+      false, function(){ switchTab('screen-home'); }, 'Ne pas enregistrer');
     return;
   }
   switchTab('screen-home');
 }
 
 function renderPrestas() {
+  var lock = !!state.devisVerrouille;
   var html = '';
   state.lignes.forEach(function(l, i) {
-    var total = Math.round(l.quantite * l.prix_unitaire);
     html += '<div class="presta-item">' +
-      '<div class="pi-top"><span class="pi-name">'+esc(l.libelle)+'</span><span class="pi-remove" onclick="removePresta('+i+')">\u00D7</span></div>' +
+      '<div class="pi-top"><span class="pi-name">'+esc(l.libelle)+'</span>' + (lock ? '' : '<span class="pi-remove" role="button" aria-label="Retirer la ligne" onclick="removePresta('+i+')">×</span>') + '</div>' +
       '<div class="pi-detail">' +
-      '<input class="pi-input" type="number" value="'+l.quantite+'" min="0.5" step="0.5" inputmode="decimal" onchange="updateQte('+i+',this)">' +
+      '<input class="pi-input" type="number" value="'+l.quantite+'" min="0" step="any" inputmode="decimal" aria-label="Quantité"' + (lock ? ' disabled' : '') + ' onchange="updateQte('+i+',this)">' +
       '<span class="pi-unit">'+esc(uniteLabel(l.unite))+'</span>' +
-      '<span class="pi-price-u">\u00D7</span>' +
-      '<input class="pi-input" style="width:76px;" type="number" value="'+l.prix_unitaire+'" min="0" step="0.5" inputmode="decimal" onchange="updatePrix('+i+',this)">' +
-      '<span class="pi-price-u">\u20AC</span>' +
-      '<span class="pi-total" id="pi-total-'+i+'">'+fmt(total)+'</span>' +
+      '<span class="pi-price-u">×</span>' +
+      '<input class="pi-input" style="width:80px;" type="number" value="'+arrondi2(l.prix_unitaire)+'" min="0" step="0.01" inputmode="decimal" aria-label="Prix unitaire HT"' + (lock ? ' disabled' : '') + ' onchange="updatePrix('+i+',this)">' +
+      '<span class="pi-price-u">€</span>' +
+      '<span class="pi-total" id="pi-total-'+i+'">'+fmtEur(totalLigne(l))+'</span>' +
       '</div>' +
-      (l.estime ? '<span class="pi-tag estime" onclick="validerPrix('+i+')">Prix estim\u00E9 par l\u2019IA \u00B7 v\u00E9rifier (toucher pour valider)</span>' : '') +
-      (l.horsCat && !dansCatalogue(l.libelle) ? '<span class="pi-tag cat" style="cursor:pointer;margin-left:6px;" onclick="ajouterLigneAuCatalogue('+i+')">+ Ajouter à mon catalogue</span>' : '') +
+      (!lock && l.estime ? '<span class="pi-tag estime" onclick="validerPrix('+i+')">Prix estimé par l’IA · vérifier (toucher pour valider)</span>' : '') +
+      (!lock && l.horsCat && !dansCatalogue(l.libelle) ? '<span class="pi-tag cat" style="cursor:pointer;margin-left:6px;" onclick="ajouterLigneAuCatalogue('+i+')">+ Ajouter à mon catalogue</span>' : '') +
       '</div>';
   });
   document.getElementById('presta-list').innerHTML = html || '<div style="padding:14px;text-align:center;color:var(--text-muted);font-size:13px;">Aucune prestation. Ajoutez-en depuis le catalogue.</div>';
@@ -2011,7 +2126,7 @@ function renderPrestas() {
 function updatePrix(idx, input) {
   var v = parseFloat(input.value);
   if (isNaN(v) || v < 0) { input.value = state.lignes[idx].prix_unitaire; return; }
-  state.lignes[idx].prix_unitaire = v;
+  state.lignes[idx].prix_unitaire = arrondi2(v);
   state.lignes[idx].estime = false;   // prix saisi par l'artisan = vérifié
   renderPrestas();
   updateTotaux();
@@ -2036,7 +2151,6 @@ function updateQte(idx, input) {
   var v = parseFloat(input.value);
   if (isNaN(v) || v <= 0) { input.value = state.lignes[idx].quantite; return; }
   state.lignes[idx].quantite = v;
-  document.getElementById('pi-total-'+idx).textContent = fmt(v * state.lignes[idx].prix_unitaire);
   updateTotaux();
 }
 
@@ -2047,23 +2161,17 @@ function removePresta(idx) {
 }
 
 function updateTotaux() {
-  var ht = state.lignes.reduce(function(a,l){ return a + l.quantite*l.prix_unitaire; }, 0);
-  var lignesAvecCout = state.lignes.filter(function(l){ return l.cout_achat > 0; });
-  var cout = state.lignes.reduce(function(a,l){ return a + l.quantite*(l.cout_achat||0); }, 0);
-  var rate = tvaRate();
-  var tva = ht * rate / 100, ttc = ht + tva;
-  document.getElementById('tva-label').textContent = 'TVA ' + String(rate).replace('.',',') + '%';
-  document.getElementById('total-ht').textContent = fmt(ht);
-  document.getElementById('total-tva').textContent = fmt(tva);
-  document.getElementById('total-ttc').textContent = fmt(ttc);
-
-  // Marge : affichée seulement si les coûts d'achat sont renseignés. Jamais inventée.
-  var marge = null;
-  if (ht > 0 && lignesAvecCout.length > 0) {
-    marge = Math.round((ht - cout) / ht * 100);
-  }
+  var c = calculDevis(state.lignes, devisTva());
+  document.getElementById('total-ht').textContent = fmtEur(c.ht);
+  document.getElementById('total-tva').textContent = fmtEur(c.tva);
+  document.getElementById('total-ttc').textContent = fmtEur(c.ttc);
+  c.totaux.forEach(function(t, i){ var el = document.getElementById('pi-total-' + i); if (el) el.textContent = fmtEur(t); });
+  var titre = document.querySelector('#screen-devis .rent-title');
+  if (titre) titre.textContent = 'Rentabilité estimée' + (c.marge !== null && c.margeLignes < c.nbLignes
+    ? ' (sur ' + c.margeLignes + ' ligne' + (c.margeLignes > 1 ? 's' : '') + ' sur ' + c.nbLignes + ')' : '');
+  var marge = c.marge;
   if (marge === null) {
-    document.getElementById('rent-pct').textContent = '\u2014';
+    document.getElementById('rent-pct').textContent = '—';
     document.getElementById('rent-pct').style.color = '#9CA3AF';
     document.getElementById('rent-bar').style.width = '0%';
   } else {
@@ -2073,7 +2181,7 @@ function updateTotaux() {
     document.getElementById('rent-bar').style.width = Math.max(0, Math.min(marge,100))+'%';
     document.getElementById('rent-bar').style.background = col;
   }
-  state._ttc = ttc; state._ht = ht; state._tva = tva; state._marge = marge;
+  state._ttc = c.ttc; state._ht = c.ht; state._tva = c.tva; state._marge = marge;
 }
 
 // Enregistrement (création ou mise à jour) — le bouton fait vraiment ce qu'il dit
@@ -2082,16 +2190,19 @@ function enregistrerDevis(toast) {
   var nomClient = ((state.client.prenom||'') + ' ' + (state.client.nom||'')).trim() || 'Client';
   var existant = null;
   for (var i=0; i<state.devisList.length; i++) { if (state.devisList[i].id === state.currentDevisId) { existant = state.devisList[i]; break; } }
+  if (existant && existant.statut === 'signe') { if (toast) showToast('Devis signé : il n’est plus modifiable'); return existant; }
   var record = existant || { id: uid(), statut: 'brouillon', dateISO: new Date().toISOString() };
   record.num = state.currentNum;
   record.client = nomClient;
   record.clientInfo = { prenom:state.client.prenom, nom:state.client.nom, adresse:state.client.adresse, email:state.client.email, tel:state.client.tel };
   record.desc = state.descGlobale || 'Devis';
   record.lignes = state.lignes.map(function(l){ var o = { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; if (l.estime) o.estime = true; if (l.horsCat) o.horsCat = true; return o; });
-  record.montant = Math.round(state._ttc || 0);
-  record.ht = state._ht || 0;
-  record.tvaMontant = state._tva || 0;
-  record.marge = state._marge;
+  var calc = calculDevis(state.lignes, devisTva());
+  record.montant = calc.ttc;
+  record.ht = calc.ht;
+  record.tvaMontant = calc.tva;
+  record.tauxTva = devisTva();
+  record.marge = calc.marge;
   record.transcription = state.transcription;
   record.date = new Date(record.dateISO).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
   if (!existant) {
@@ -2099,6 +2210,7 @@ function enregistrerDevis(toast) {
     state.currentDevisId = record.id;
   }
   sauvegarderDonnees();
+  state.devisRef = empreinteEdition();
   renderHome();
   var delWrap = document.getElementById('devis-delete-wrap');
   if (delWrap) delWrap.style.display = state.currentDevisId ? 'block' : 'none';
@@ -2169,7 +2281,7 @@ function creerDepuisDevis() {
     var b = bucketActif();
     if (!state.catalogues[b]) state.catalogues[b] = [];
     id = uid();
-    state.catalogues[b].push({ id: id, nom: nom, prix: prix, cout_achat: 0, unite: document.getElementById('sc-unite').value, categorie: 'Autre' });
+    state.catalogues[b].push({ id: id, nom: nom, prix: arrondi2(prix), cout_achat: 0, unite: document.getElementById('sc-unite').value, categorie: 'Autre' });
     sauvegarderDonnees();
   }
   addFromCatalog(id);
@@ -2226,14 +2338,17 @@ function imprimerDocument(html) {
 function exportPDF() {
   if (state.lignes.length === 0) { showToast('Aucune prestation \u00E0 exporter'); return; }
   var p = state.profil || {};
-  var rate = tvaRate();
+  var rate = devisTva();
+  var calc = calculDevis(state.lignes, rate);
+  var recPdf = devisCourant();
+  var dateDevisPdf = new Date(recPdf && recPdf.dateISO ? recPdf.dateISO : Date.now()).toLocaleDateString('fr-FR');
   var lignesHTML = state.lignes.map(function(l){
     return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">'+esc(l.libelle)+'</td>' +
       '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+fmtPrix(l.quantite)+' '+esc(uniteLabel(l.unite))+'</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+fmtPrix(l.prix_unitaire)+' €</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+ fmt(l.quantite*l.prix_unitaire)+'</td></tr>';
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+fmtEur(l.prix_unitaire)+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+ fmtEur(totalLigne(l))+'</td></tr>';
   }).join('');
-  var ht = state._ht||0, tva = state._tva||0, ttc = state._ttc||0;
+  var ht = calc.ht, tva = calc.tva, ttc = calc.ttc;
   var coordonnees = [];
   if (p.adresse) coordonnees.push(esc(p.adresse));
   if (p.email) coordonnees.push(esc(p.email));
@@ -2267,16 +2382,15 @@ function exportPDF() {
     '<div style="font-size:14px;color:#666;margin-top:4px;">'+esc(((p.prenom||'')+' '+(p.nom||'')).trim())+(p.metier ? ' \u00B7 '+esc(metierLabel(p.metier)) : '')+'</div>' +
     (coordonnees.length ? '<div style="font-size:12px;color:#666;margin-top:2px;">'+coordonnees.join(' \u00B7 ')+'</div>' : '') +
     '</div>' +
-    '<div class="devis-num"><div>'+esc(state.currentNum)+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
+    '<div class="devis-num"><div>'+esc(state.currentNum)+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+dateDevisPdf+'</div></div></div>' +
     '<div style="margin-bottom:24px;"><strong>Client :</strong> '+esc(((state.client.prenom||'')+' '+(state.client.nom||'')).trim())+'<br>' +
-    '<strong>Adresse du chantier :</strong> '+esc(state.client.adresse || 'Non renseign\u00E9e')+'</div>' +
+    '<strong>Adresse du chantier :</strong> '+esc(state.client.adresse || 'Non renseign\u00E9e')+((state.client.email || state.client.tel) ? '<br><strong>Contact :</strong> '+esc([state.client.email, state.client.tel].filter(Boolean).join(' · ')) : '')+'</div>' +
     (state.descGlobale ? '<p style="color:#666;margin-bottom:16px;font-style:italic;">'+esc(state.descGlobale)+'</p>' : '') +
     '<table><thead><tr><th>Prestation</th><th>Quantit\u00E9</th><th>P.U. HT</th><th>Total HT</th></tr></thead><tbody>'+lignesHTML+'</tbody></table>' +
-    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>'+fmt(ht)+'</span></div>' +
-    '<div class="total-line"><span>TVA '+String(rate).replace('.',',')+'%</span><span>'+fmt(tva)+'</span></div>' +
-    '<div class="total-line total-ttc"><span>Total TTC</span><span>'+fmt(ttc)+'</span></div></div>' +
-    '<div class="sig-zone"><div style="font-size:16px;font-weight:600;margin-bottom:8px;">Bon pour accord \u2014 Signature du client</div>' +
-    '<div style="font-size:13px;">Date et mention \u00AB bon pour accord \u00BB</div></div>' +
+    '<div class="total-box"><div class="total-line"><span>Sous-total HT</span><span>'+fmtEur(ht)+'</span></div>' +
+    '<div class="total-line"><span>TVA '+String(rate).replace('.',',')+'%</span><span>'+fmtEur(tva)+'</span></div>' +
+    '<div class="total-line total-ttc"><span>Total TTC</span><span>'+fmtEur(ttc)+'</span></div></div>' +
+    zoneSignaturePdf(recPdf) +
     '<div class="mentions">' +
     (legales.length ? legales.join(' \u2014 ') + '<br>' : '') +
     (decennale ? decennale + '<br>' : '') +
@@ -2349,7 +2463,7 @@ function sendDevis() {
   } else if (state.selectedCh === 'wa') {
     lien = 'https://wa.me/' + telInternational(state.client.tel) + '?text=' + encodeURIComponent(msg);
   }
-  record.statut = 'envoye';
+  if (record.statut !== 'signe') record.statut = 'envoye';   // un devis signé reste signé
   sauvegarderDonnees();
   renderHome();
   try {
@@ -2368,15 +2482,15 @@ var drawing=false, lastX=0, lastY=0, canvasInit=false;
 
 function preparerSignature() {
   var p = state.profil || {};
-  document.getElementById('sig-num').textContent = state.currentNum + ' \u2014 ' + fmt(state._ttc || 0);
+  document.getElementById('sig-num').textContent = state.currentNum + ' \u2014 ' + fmtEur(state._ttc || 0) + ' TTC';
   document.getElementById('sig-artisan').textContent = (((p.prenom||'')+' '+(p.nom||'')).trim() || 'Artisan') + (p.entreprise ? ' \u00B7 ' + p.entreprise : '');
   document.getElementById('sig-client').textContent = ((state.client.prenom||'')+' '+(state.client.nom||'')).trim() || '\u2013';
   document.getElementById('sig-addr').textContent = state.client.adresse || '\u2013';
   document.getElementById('sig-travaux').textContent = state.descGlobale || 'Travaux';
-  document.getElementById('sig-tva-label').textContent = 'TVA ' + String(tvaRate()).replace('.',',') + '%';
-  document.getElementById('sig-ht').textContent = fmt(state._ht || 0);
-  document.getElementById('sig-tva').textContent = fmt(state._tva || 0);
-  document.getElementById('sig-ttc').textContent = fmt(state._ttc || 0);
+  document.getElementById('sig-tva-label').textContent = libelleTva(devisTva());
+  document.getElementById('sig-ht').textContent = fmtEur(state._ht || 0);
+  document.getElementById('sig-tva').textContent = fmtEur(state._tva || 0);
+  document.getElementById('sig-ttc').textContent = fmtEur(state._ttc || 0);
   state.cgvChecked = false;
   state.hasSig = false;
   document.getElementById('cgv-chk').classList.remove('checked');
@@ -2621,6 +2735,7 @@ function ajouterPrestation() {
   if (!nom) { showToast('Entrez un nom'); return; }
   if (isNaN(prix) || prix <= 0) { showToast('Entrez un prix de vente valide'); return; }
   if (achat < 0) { showToast('Le coût d’achat ne peut pas être négatif'); return; }
+  prix = arrondi2(prix); achat = arrondi2(achat);
   var b = document.getElementById('cat-metier').value || bucketActif();
   // Premier ajout dans un autre métier : on garde aussi ses prestations types
   if (!state.catalogues[b]) state.catalogues[b] = (b === bucketActif()) ? [] : clonerDefaut(b);
@@ -2642,6 +2757,7 @@ function ajouterPrestation() {
     state.catalogues[b].push({ id: uid(), nom: nom, prix: prix, cout_achat: achat, unite: unite, categorie: categorie });
     msg = nom + ' ajouté';
   }
+  if (achat > prix) msg += ' · attention : coût d’achat supérieur au prix de vente';
   sauvegarderDonnees();
   annulerEditionPrestation();
   showToast(msg);
@@ -2793,7 +2909,7 @@ function importerTexteCSV(texte) {
     var n = normTexte(nom);
     if (vus[b][n]) { doublons++; return; }
     vus[b][n] = 1;
-    state.catalogues[b].push({ id: uid(), nom: nom, prix: prix, cout_achat: achat, unite: uniteDepuisCSV(cols[3]), categorie: categorieDepuisCSV(cols[4]) });
+    state.catalogues[b].push({ id: uid(), nom: nom, prix: arrondi2(prix), cout_achat: arrondi2(achat), unite: uniteDepuisCSV(cols[3]), categorie: categorieDepuisCSV(cols[4]) });
     ajoutees++;
   });
   if (ajoutees) sauvegarderDonnees();
@@ -3372,7 +3488,8 @@ function rowToQuote(r) {
   var ci = r.client || {};
   return { id: r.id, num: r.numero, client: ((ci.prenom || '') + ' ' + (ci.nom || '')).trim() || 'Client',
     clientInfo: ci, desc: r.description || '', lignes: r.lignes || [],
-    montant: Math.round(Number(r.montant_ttc) || 0), ht: Number(r.montant_ht) || 0, tvaMontant: Number(r.montant_tva) || 0,
+    montant: arrondi2(r.montant_ttc), ht: Number(r.montant_ht) || 0, tvaMontant: Number(r.montant_tva) || 0,
+    tauxTva: tauxDuDevis({ ht: r.montant_ht, tvaMontant: r.montant_tva }),
     marge: r.marge == null ? null : r.marge, statut: r.statut || 'brouillon', transcription: r.transcription || '',
     signature: r.signature || undefined, dateISO: r.created_at,
     date: new Date(r.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) };
