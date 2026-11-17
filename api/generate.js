@@ -82,10 +82,13 @@ export default async function handler(req, res) {
       (metier ? ` (métier : ${metier})` : '') +
       '. À partir de la dictée vocale de l\'artisan, tu identifies les prestations, quantités et unités.\n\n' +
       'RÈGLES :\n' +
-      '1. Si une prestation correspond à une entrée du catalogue ci-dessous, renvoie son numéro dans "ref" et ne renvoie PAS de prix (il sera relu depuis le catalogue).\n' +
-      '2. Si aucune entrée ne correspond, mets "ref": null et propose un libellé clair, une unité et un prix unitaire HT réaliste pour le marché français.\n' +
+      '1. PRIORITÉ AU CATALOGUE : pour chaque travail dicté, cherche d\'abord l\'entrée du catalogue qui a le même sens, même si les mots diffèrent (accents, articles, "électrique", pluriel, ordre des mots, abréviations). Si une entrée correspond, renvoie son numéro dans "ref" et ne renvoie AUCUN prix ni libellé (ils seront relus depuis le catalogue). Exemple : la dictée "remplacement du tableau électrique complet 13 modules" correspond à l\'entrée "Remplacement tableau complet 13 modules".\n' +
+      '2. N\'utilise "ref": null QUE si aucune entrée du catalogue ne correspond au sens du travail dicté. Dans ce cas seulement, mets "ref": null et propose un libellé clair, une unité et un prix unitaire HT réaliste pour le marché français.\n' +
+      '2bis. Le catalogue est classé par priorité : les prestations du métier de l\'artisan viennent en premier, celles des autres métiers ensuite. Si deux entrées conviennent, choisis celle qui apparaît le plus haut dans la liste.\n' +
       '3. Les quantités viennent de la dictée. Si une quantité est absente, mets 1.\n' +
+      '3bis. Le texte vient d\'une reconnaissance vocale : il peut contenir des mots mal transcrits, des homophones, des nombres en toutes lettres ou des unités abrégées (m², ml). Interprète-les d\'après le contexte du métier (ex. "seize ampères" = 16A), sans ajouter de travaux.\n' +
       '4. N\'invente JAMAIS de prestation non mentionnée dans la dictée.\n' +
+      '4bis. Si la dictée mentionne des travaux, même sommairement, renvoie au moins une ligne. Si vraiment aucun travail n\'est identifiable, renvoie "lignes": [] et explique en une courte phrase dans "raison".\n' +
       '5. Réponds UNIQUEMENT avec un objet JSON valide, sans backticks ni texte autour, au format :\n' +
       '{"description_globale": "résumé en moins de 12 mots", "lignes": [{"ref": 0, "quantite": 1}, {"ref": null, "libelle": "...", "quantite": 2, "unite": "m2", "prix_unitaire": 45, "cout_achat": 0}]}\n\n' +
       'CATALOGUE DE L\'ARTISAN :\n' + (catalogueTexte || '(catalogue vide)');
@@ -153,12 +156,22 @@ export default async function handler(req, res) {
       return res.status(502).json({ ok: false, error: 'Réponse IA invalide, veuillez réessayer' });
     }
 
-    if (!devis || !Array.isArray(devis.lignes) || devis.lignes.length === 0) {
-      return res.status(502).json({ ok: false, error: 'Aucune prestation détectée dans la dictée' });
+    // Tolérance de format : tableau seul, ou clé "prestations" au lieu de "lignes"
+    if (Array.isArray(devis)) devis = { lignes: devis };
+    const brutes = Array.isArray(devis && devis.lignes) ? devis.lignes
+      : (Array.isArray(devis && devis.prestations) ? devis.prestations : []);
+    if (brutes.length === 0) {
+      console.error('Aucune ligne dans la réponse IA. Dictée :', transcription.slice(0, 200), '| Réponse :', texte.slice(0, 500));
+      const raison = devis && typeof devis.raison === 'string' ? devis.raison.trim().slice(0, 160) : '';
+      return res.status(422).json({
+        ok: false,
+        error: 'Aucune prestation détectée dans la dictée' + (raison ? ' (' + raison + ')' : '') +
+          '. Précisez les travaux, les quantités et les matériaux.'
+      });
     }
 
     // Sanitation de sortie : on ne renvoie que les champs attendus
-    const lignes = devis.lignes.slice(0, 40).map((l) => ({
+    const lignes = brutes.slice(0, 40).map((l) => ({
       ref: Number.isInteger(l.ref) && l.ref >= 0 && l.ref < cat.length ? l.ref : null,
       libelle: String(l.libelle || '').slice(0, 160),
       quantite: Number(l.quantite) > 0 ? Number(l.quantite) : 1,
@@ -167,8 +180,12 @@ export default async function handler(req, res) {
       cout_achat: Number(l.cout_achat) >= 0 ? Number(l.cout_achat) : 0
     }));
 
+    console.log('generate : métier=%s, catalogue=%d prestations, lignes=%d (dont %d ancrées au catalogue)',
+      metier, cat.length, lignes.length, lignes.filter((l) => l.ref !== null).length);
+
     return res.status(200).json({
       ok: true,
+      meta: { catalogue: cat.length, ancrees: lignes.filter((l) => l.ref !== null).length },
       devis: {
         description_globale: String(devis.description_globale || '').slice(0, 120),
         lignes
