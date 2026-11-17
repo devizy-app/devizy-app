@@ -141,6 +141,9 @@ input, textarea, select { font-size: 16px !important; }
 .vocal-hint { font-size: 12px; color: var(--text-light); text-align: center; line-height: 1.5; }
 .transcript-box { margin: 12px 16px 0; background: var(--card); border-radius: var(--radius-sm); padding: 14px; box-shadow: var(--shadow); }
 .transcript-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.vocal-exemple { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.5; font-style: italic; padding: 0 4px; }
+.transcript-links { display: flex; gap: 14px; }
+.transcript-meta { font-size: 11px; color: var(--text-light); margin-top: 8px; min-height: 14px; line-height: 1.4; }
 .transcript-edit-link { font-size: 11px; color: var(--g-med); cursor: pointer; text-transform: none; letter-spacing: 0; font-weight: 500; }
 .transcript-text { font-size: 13px; color: var(--text); line-height: 1.6; min-height: 40px; }
 .transcript-textarea { width: 100%; min-height: 90px; padding: 10px; border: 1px solid var(--border-med); border-radius: 8px; resize: vertical; line-height: 1.5; color: var(--text); background: var(--card); display: none; }
@@ -176,6 +179,9 @@ input, textarea, select { font-size: 16px !important; }
 .pi-name { font-size: 13px; font-weight: 500; flex: 1; margin-right: 8px; }
 .pi-remove { font-size: 18px; color: var(--text-light); cursor: pointer; line-height: 1; }
 .pi-detail { display: flex; align-items: center; gap: 8px; }
+.pi-tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 10px; margin-top: 8px; cursor: pointer; }
+.pi-tag.estime { background: #FFFBEB; color: #B45309; border: 1px solid #FDE68A; }
+.pi-tag.cat { background: var(--g-light); color: #065F46; cursor: default; }
 .pi-input { width: 64px; background: var(--bg); border: 1px solid var(--border-med); border-radius: 7px; padding: 5px 6px; text-align: center; font-family: 'DM Mono', monospace; }
 .pi-unit { font-size: 12px; color: var(--text-muted); }
 .pi-price-u { font-size: 12px; color: var(--text-muted); }
@@ -229,6 +235,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 
 /* ── TOAST / MODAL ── */
 .toast { position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--g-dark); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 100; }
+.toast { white-space: normal; width: max-content; max-width: 88vw; text-align: center; line-height: 1.4; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 60; display: none; align-items: center; justify-content: center; padding: 24px; }
 .modal-overlay.open { display: flex; }
@@ -297,6 +304,15 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 .cat-price-item strong { color: var(--text); font-size: 13px; }
 .cat-metier-tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 10px; background: var(--g-pale); color: var(--g-med); margin-left: 6px; vertical-align: 1px; }
 .cat-delete { font-size: 20px; color: var(--text-light); cursor: pointer; line-height: 1; padding: 4px; }
+.cat-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.cat-edit { padding: 6px; cursor: pointer; display: flex; }
+.cat-edit svg { width: 16px; height: 16px; stroke: var(--text-light); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.cat-card.editing { outline: 2px solid var(--g-mid); }
+.cat-card-cat { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+.cat-others-head { display: flex; justify-content: space-between; align-items: center; margin: 18px 0 6px; padding: 12px 14px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; }
+.cat-others-hint { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0 2px 8px; }
+.sheet-group { font-size: 11px; font-weight: 600; color: var(--g-med); text-transform: uppercase; letter-spacing: 0.5px; margin: 8px 0 2px; }
+.sheet-create-link { padding: 11px 13px; border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; }
 .cat-import-row { margin: 0 16px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .cat-import-btn { padding: 12px; background: var(--card); border: 1.5px dashed var(--border-med); border-radius: var(--radius-sm); color: var(--g-med); font-size: 13px; cursor: pointer; text-align: center; }
 .cat-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 13px; line-height: 1.6; }
@@ -364,8 +380,8 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="onb-field"><label>Nom de votre entreprise</label><input id="onb-entreprise" type="text" autocomplete="organization"></div>
       <div class="onb-field"><label>Votre métier principal</label>
         <select id="onb-metier">
-          <option>Climatisation</option><option>Plomberie</option><option>Electricite</option>
-          <option>Maconnerie</option><option>Peinture</option><option>Menuiserie</option><option>Multi-metiers</option>
+          <option value="Climatisation">Climatisation</option><option value="Plomberie">Plomberie</option><option value="Electricite">Électricité</option>
+          <option value="Maconnerie">Maçonnerie</option><option value="Peinture">Peinture</option><option value="Menuiserie">Menuiserie</option><option value="Multi-metiers">Multi-métiers</option>
         </select>
       </div>
       <button class="onb-btn" onclick="terminerOnboarding()">Créer mon espace</button>
@@ -469,7 +485,7 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <div class="screen" id="screen-vocal">
   <div class="topbar">
     <button class="back-btn" onclick="quitterVocal()"><svg viewBox="0 0 24 24"><polyline points="15,18 9,12 15,6"/></svg></button>
-    <span class="topbar-title">Devis vocal</span>
+    <span class="topbar-title" id="vocal-title">Devis vocal</span>
   </div>
   <div class="scroll-body">
     <div class="vocal-client">
@@ -494,18 +510,23 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       </button>
       <div class="timer" id="timer">0:00</div>
       <div class="vocal-hint" id="vocal-hint">Décrivez les travaux, les matériaux<br>et les quantités à voix haute</div>
+      <div class="vocal-exemple" id="vocal-exemple"></div>
     </div>
     <div class="transcript-box">
       <div class="transcript-label">
         <span>Transcription en direct</span>
-        <span class="transcript-edit-link" onclick="toggleEditTranscript()">Corriger le texte</span>
+        <span class="transcript-links">
+          <span class="transcript-edit-link" onclick="effacerDictee()">Effacer</span>
+          <span class="transcript-edit-link" onclick="toggleEditTranscript()">Corriger le texte</span>
+        </span>
       </div>
       <div class="transcript-text" id="transcript-text"><span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span></div>
-      <textarea class="transcript-textarea" id="transcript-textarea" placeholder="Décrivez les travaux : prestations, quantités, matériaux..." oninput="onManualTranscript(this.value)"></textarea>
+      <textarea class="transcript-textarea" id="transcript-textarea" placeholder="Décrivez les travaux : prestations, quantités, matériaux..." maxlength="4000" oninput="onManualTranscript(this.value)"></textarea>
+      <div class="transcript-meta" id="transcript-meta"></div>
     </div>
     <button class="gen-btn" id="gen-btn" onclick="generateDevis()" disabled>
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-      Générer le devis avec l'IA
+      <span id="gen-btn-label">Générer le devis avec l’IA</span>
     </button>
     <div style="height:20px;"></div>
   </div>
@@ -550,11 +571,16 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="tr-label">Extrait de votre dictée</div>
       <div class="tr-text" id="tr-text"></div>
     </div>
+    <div id="devis-notice" style="display:none;margin:8px 16px 0;padding:10px 12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;font-size:12px;color:#92400E;line-height:1.5;"></div>
     <div style="padding:14px 16px 0;"><span style="font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Prestations</span></div>
     <div class="presta-list" id="presta-list"></div>
     <button class="add-btn" onclick="openCatalog()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Ajouter depuis le catalogue
+    </button>
+    <button class="add-btn" onclick="completerALaVoix()">
+      <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+      Compléter à la voix
     </button>
     <div class="totaux">
       <div class="total-row"><span class="lbl">Sous-total HT</span><span id="total-ht">0 €</span></div>
@@ -727,39 +753,52 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
     <span class="topbar-title" id="cat-screen-title">Mon catalogue</span>
   </div>
   <div class="scroll-body">
-    <div class="cat-form">
-      <div class="cat-form-title">Ajouter une prestation</div>
-      <div><label class="field-label">Nom *</label><input id="cat-nom" class="field-input" type="text" placeholder="Ex: Pose climatiseur monosplit"></div>
+    <div class="cat-form" id="cat-form">
+      <div class="cat-form-title" id="cat-form-title">Ajouter une prestation</div>
+      <div><label class="field-label" for="cat-nom">Nom *</label><input id="cat-nom" class="field-input" type="text" maxlength="120" placeholder="Ex : Pose de 6 prises 16A"></div>
+      <div id="cat-metier-wrap" style="display:none;"><label class="field-label" for="cat-metier">Métier</label>
+        <select id="cat-metier" class="field-select">
+          <option value="Multi-metiers">Commun à tous les métiers</option>
+          <option value="Climatisation">Climatisation</option><option value="Plomberie">Plomberie</option>
+          <option value="Electricite">Électricité</option><option value="Maconnerie">Maçonnerie</option>
+          <option value="Peinture">Peinture</option><option value="Menuiserie">Menuiserie</option>
+        </select>
+      </div>
       <div class="field-row">
-        <div><label class="field-label">Catégorie</label>
+        <div><label class="field-label" for="cat-categorie">Catégorie</label>
           <select id="cat-categorie" class="field-select">
-            <option>Installation</option><option>Fourniture materiel</option><option>Raccordement</option>
-            <option>Mise en service</option><option>Depose</option><option>Maintenance</option>
-            <option>Maconnerie</option><option>Plomberie</option><option>Electricite</option>
-            <option>Etude</option><option>Autre</option>
+            <option value="Installation">Installation</option><option value="Fourniture materiel">Fourniture matériel</option>
+            <option value="Raccordement">Raccordement</option><option value="Mise en service">Mise en service</option>
+            <option value="Depose">Dépose</option><option value="Maintenance">Maintenance</option>
+            <option value="Maconnerie">Maçonnerie</option><option value="Plomberie">Plomberie</option>
+            <option value="Electricite">Électricité</option><option value="Etude">Étude</option><option value="Autre">Autre</option>
           </select>
         </div>
-        <div><label class="field-label">Unité</label>
+        <div><label class="field-label" for="cat-unite">Unité</label>
           <select id="cat-unite" class="field-select">
             <option value="forfait">forfait</option><option value="u">unité</option>
-            <option value="m2">m²</option><option value="ml">ml</option>
-            <option value="heure">heure</option><option value="point">point</option>
+            <option value="m2">m²</option><option value="ml">ml</option><option value="m3">m³</option>
+            <option value="heure">heure</option><option value="jour">jour</option><option value="point">point</option>
           </select>
         </div>
       </div>
       <div class="field-row">
-        <div><label class="field-label">Prix vente HT (€) *</label><input id="cat-prix-vente" class="field-input" type="number" placeholder="950" min="0" step="0.5"></div>
-        <div><label class="field-label">Coût achat HT (€)</label><input id="cat-prix-achat" class="field-input" type="number" placeholder="420" min="0" step="0.5"></div>
+        <div><label class="field-label" for="cat-prix-vente">Prix vente HT (€) *</label><input id="cat-prix-vente" class="field-input" type="number" inputmode="decimal" placeholder="950" min="0" step="0.01"></div>
+        <div><label class="field-label" for="cat-prix-achat">Coût achat HT (€)</label><input id="cat-prix-achat" class="field-input" type="number" inputmode="decimal" placeholder="420" min="0" step="0.01"></div>
       </div>
-      <button class="cat-add-btn" onclick="ajouterPrestation()">Ajouter au catalogue</button>
+      <button class="cat-add-btn" id="cat-submit" onclick="ajouterPrestation()">Ajouter au catalogue</button>
+      <button class="btn btn-outline" id="cat-cancel" style="display:none;width:100%;" onclick="annulerEditionPrestation()">Annuler</button>
     </div>
     <div class="cat-import-row">
       <label class="cat-import-btn" for="csv-import">Importer un CSV</label>
+      <div class="cat-import-btn" onclick="exporterCatalogueCSV()">Exporter en CSV</div>
       <div class="cat-import-btn" onclick="telechargerModeleCSV()">Modèle CSV</div>
+      <div class="cat-import-btn" onclick="ajouterPrestationsTypes()">Prestations types</div>
     </div>
-    <input id="csv-import" type="file" accept=".csv" style="display:none;" onchange="importerCSV(this)">
+    <input id="csv-import" type="file" accept=".csv,text/csv" style="display:none;" onchange="importerCSV(this)">
     <div class="cat-list-section">
       <div class="cat-list-title">Mes prestations (<span id="cat-count">0</span>)</div>
+      <input id="cat-search" class="field-input" type="search" placeholder="Rechercher une prestation" aria-label="Rechercher une prestation" oninput="renderCatalogueScreen()" style="margin-bottom:10px;">
       <div id="cat-list-display"></div>
     </div>
     <div style="height:20px;"></div>
@@ -795,8 +834,8 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
       <div class="profil-2col">
         <div class="profil-field"><label>Corps de métier</label>
           <select id="profil-metier">
-            <option>Climatisation</option><option>Plomberie</option><option>Electricite</option>
-            <option>Maconnerie</option><option>Peinture</option><option>Menuiserie</option><option>Multi-metiers</option>
+            <option value="Climatisation">Climatisation</option><option value="Plomberie">Plomberie</option><option value="Electricite">Électricité</option>
+            <option value="Maconnerie">Maçonnerie</option><option value="Peinture">Peinture</option><option value="Menuiserie">Menuiserie</option><option value="Multi-metiers">Multi-métiers</option>
           </select>
         </div>
         <div class="profil-field"><label>Taux horaire (€/h)</label><input id="profil-taux" type="number" min="0"></div>
@@ -850,6 +889,18 @@ canvas#sig-canvas { display: block; width: 100%; height: 130px; cursor: crosshai
 <div class="catalog-sheet" id="catalog-sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title" id="sheet-title">Catalogue de prestations</div>
+  <div style="padding:10px 16px 0;"><input id="sheet-search" class="field-input" type="search" placeholder="Rechercher une prestation" aria-label="Rechercher une prestation" oninput="renderSheetItems()"></div>
+  <div id="sheet-create" style="display:none;padding:10px 16px 0;">
+    <input id="sc-nom" class="field-input" type="text" maxlength="120" placeholder="Nom du produit" aria-label="Nom du produit">
+    <div class="field-row" style="margin-top:8px;">
+      <input id="sc-prix" class="field-input" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Prix HT (€)" aria-label="Prix de vente hors taxes">
+      <select id="sc-unite" class="field-select" aria-label="Unité">
+        <option value="forfait">forfait</option><option value="u">unité</option><option value="m2">m²</option><option value="ml">ml</option>
+        <option value="m3">m³</option><option value="heure">heure</option><option value="jour">jour</option><option value="point">point</option>
+      </select>
+    </div>
+    <button class="cat-add-btn" style="margin-top:8px;" onclick="creerDepuisDevis()">Créer et ajouter au devis</button>
+  </div>
   <div class="catalog-items" id="catalog-items"></div>
 </div>
 
@@ -885,101 +936,146 @@ var SUPABASE_JS_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.
 // ═══════════════════════════════ CATALOGUES PAR METIER ═══════════════════════════════
 var METIERS = ['Climatisation','Plomberie','Electricite','Maconnerie','Peinture','Menuiserie','Multi-metiers'];
 
+// Prix indicatifs : chaque artisan les adapte à ses tarifs.
 var CATALOGUES_DEFAUT = {
   'Climatisation': [
-    { nom:'Climatiseur monosplit - Pose complete', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur bisplit - Pose complete', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur trisplit - Pose complete', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
-    { nom:'Climatiseur gainable - Pose complete', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
-    { nom:'Unite interieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Unite exterieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Clim reversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
-    { nom:'Clim reversible multisplit 3 pieces - Fourniture + pose', prix:4600, cout_achat:1950, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Climatiseur monosplit - Pose complète', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur bisplit - Pose complète', prix:1600, cout_achat:680, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur trisplit - Pose complète', prix:2200, cout_achat:950, unite:'forfait', categorie:'Installation' },
+    { nom:'Climatiseur gainable - Pose complète', prix:4500, cout_achat:1800, unite:'forfait', categorie:'Installation' },
+    { nom:'Unité intérieure murale - Fourniture', prix:650, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Unité extérieure - Fourniture', prix:850, cout_achat:490, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Clim réversible monosplit - Fourniture + pose', prix:1850, cout_achat:820, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Clim réversible multisplit 3 pièces - Fourniture + pose', prix:4600, cout_achat:1950, unite:'forfait', categorie:'Fourniture materiel' },
     { nom:'Liaison frigorifique cuivre', prix:28, cout_achat:12, unite:'ml', categorie:'Raccordement' },
-    { nom:'Goulotte PVC passage cable', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
-    { nom:'Raccordement electrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Percage mur beton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
-    { nom:'Support mural unite exterieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
-    { nom:'Mise en service + verification etancheite', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
+    { nom:'Goulotte PVC passage câble', prix:18, cout_achat:7, unite:'ml', categorie:'Raccordement' },
+    { nom:'Raccordement électrique tableau', prix:180, cout_achat:45, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Perçage mur béton', prix:85, cout_achat:15, unite:'u', categorie:'Raccordement' },
+    { nom:'Support mural unité extérieure', prix:120, cout_achat:35, unite:'u', categorie:'Raccordement' },
+    { nom:'Évacuation condensats PVC', prix:22, cout_achat:7, unite:'ml', categorie:'Raccordement' },
+    { nom:'Pompe de relevage condensats', prix:140, cout_achat:55, unite:'u', categorie:'Raccordement' },
+    { nom:'Dalle béton support unité extérieure', prix:180, cout_achat:55, unite:'u', categorie:'Raccordement' },
+    { nom:'Mise en service + vérification étanchéité', prix:220, cout_achat:30, unite:'forfait', categorie:'Mise en service' },
     { nom:'Mise sous vide circuit frigorifique', prix:95, cout_achat:15, unite:'forfait', categorie:'Mise en service' },
-    { nom:'Charge fluide frigorigene R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
-    { nom:'Depose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
-    { nom:'Recuperation fluide frigorigene F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
+    { nom:'Charge fluide frigorigène R32', prix:75, cout_achat:25, unite:'u', categorie:'Mise en service' },
+    { nom:'Dépose ancienne climatisation', prix:180, cout_achat:20, unite:'forfait', categorie:'Depose' },
+    { nom:'Récupération fluide frigorigène F-Gaz', prix:95, cout_achat:25, unite:'forfait', categorie:'Depose' },
     { nom:'Contrat entretien annuel monosplit', prix:150, cout_achat:40, unite:'forfait', categorie:'Maintenance' },
     { nom:'Contrat entretien annuel multisplit', prix:220, cout_achat:60, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Nettoyage filtres + verification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Deplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Nettoyage filtres + vérification', prix:90, cout_achat:15, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Recherche de fuite + recharge fluide', prix:260, cout_achat:60, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Déplacement + diagnostic panne', prix:95, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
     { nom:'Bilan thermique logement', prix:150, cout_achat:0, unite:'forfait', categorie:'Etude' }
   ],
   'Plomberie': [
     { nom:'Remplacement mitigeur lavabo', prix:180, cout_achat:65, unite:'u', categorie:'Installation' },
     { nom:'Remplacement mitigeur thermostatique douche', prix:260, cout_achat:110, unite:'u', categorie:'Installation' },
-    { nom:'Pose WC suspendu (bati-support + cuvette)', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose WC suspendu (bâti-support + cuvette)', prix:950, cout_achat:420, unite:'forfait', categorie:'Installation' },
     { nom:'Remplacement WC complet au sol', prix:380, cout_achat:160, unite:'forfait', categorie:'Installation' },
-    { nom:'Pose chauffe-eau electrique 200L', prix:850, cout_achat:390, unite:'forfait', categorie:'Installation' },
-    { nom:'Remplacement groupe de securite', prix:160, cout_achat:35, unite:'u', categorie:'Installation' },
+    { nom:'Pose chauffe-eau électrique 200L', prix:850, cout_achat:390, unite:'forfait', categorie:'Installation' },
+    { nom:'Remplacement groupe de sécurité', prix:160, cout_achat:35, unite:'u', categorie:'Installation' },
     { nom:'Pose receveur de douche + paroi', prix:780, cout_achat:350, unite:'forfait', categorie:'Installation' },
     { nom:'Pose meuble vasque', prix:320, cout_achat:90, unite:'forfait', categorie:'Installation' },
-    { nom:'Creation alimentation eau cuivre', prix:45, cout_achat:15, unite:'ml', categorie:'Raccordement' },
-    { nom:'Evacuation PVC diametre 100', prix:38, cout_achat:12, unite:'ml', categorie:'Raccordement' },
+    { nom:'Pose évier + mitigeur cuisine', prix:290, cout_achat:110, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose baignoire acrylique', prix:650, cout_achat:280, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose lave-mains', prix:240, cout_achat:90, unite:'u', categorie:'Installation' },
+    { nom:'Création alimentation eau cuivre', prix:45, cout_achat:15, unite:'ml', categorie:'Raccordement' },
+    { nom:'Alimentation PER / multicouche', prix:32, cout_achat:9, unite:'ml', categorie:'Raccordement' },
+    { nom:'Évacuation PVC diamètre 100', prix:38, cout_achat:12, unite:'ml', categorie:'Raccordement' },
     { nom:'Raccordement lave-linge / lave-vaisselle', prix:140, cout_achat:35, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Recherche de fuite + reparation', prix:220, cout_achat:30, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Debouchage canalisation', prix:150, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
-    { nom:'Depose sanitaire existant', prix:120, cout_achat:15, unite:'u', categorie:'Depose' }
+    { nom:'Recherche de fuite + réparation', prix:220, cout_achat:30, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Débouchage canalisation', prix:150, cout_achat:20, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Remplacement robinet d’arrêt', prix:85, cout_achat:15, unite:'u', categorie:'Maintenance' },
+    { nom:'Remplacement mécanisme de chasse d’eau', prix:110, cout_achat:25, unite:'u', categorie:'Maintenance' },
+    { nom:'Remplacement siphon', prix:70, cout_achat:12, unite:'u', categorie:'Maintenance' },
+    { nom:'Déplacement + diagnostic plomberie', prix:80, cout_achat:10, unite:'forfait', categorie:'Maintenance' },
+    { nom:'Dépose sanitaire existant', prix:120, cout_achat:15, unite:'u', categorie:'Depose' }
   ],
   'Electricite': [
-    { nom:'Mise en securite tableau electrique', prix:980, cout_achat:380, unite:'forfait', categorie:'Installation' },
+    { nom:'Mise en sécurité tableau électrique', prix:980, cout_achat:380, unite:'forfait', categorie:'Installation' },
     { nom:'Remplacement tableau complet 13 modules', prix:1450, cout_achat:520, unite:'forfait', categorie:'Installation' },
     { nom:'Pose point lumineux DCL', prix:95, cout_achat:22, unite:'point', categorie:'Installation' },
     { nom:'Pose prise 16A', prix:75, cout_achat:18, unite:'point', categorie:'Installation' },
+    { nom:'Pose prise RJ45', prix:95, cout_achat:22, unite:'point', categorie:'Installation' },
+    { nom:'Pose interrupteur simple', prix:65, cout_achat:12, unite:'point', categorie:'Installation' },
     { nom:'Pose interrupteur va-et-vient', prix:85, cout_achat:20, unite:'point', categorie:'Installation' },
-    { nom:'Ligne specialisee 32A (plaque cuisson)', prix:180, cout_achat:55, unite:'forfait', categorie:'Installation' },
-    { nom:'Pose radiateur electrique a inertie', prix:320, cout_achat:140, unite:'u', categorie:'Installation' },
+    { nom:'Ligne spécialisée 32A (plaque cuisson)', prix:180, cout_achat:55, unite:'forfait', categorie:'Installation' },
+    { nom:'Ligne spécialisée 20A (lave-linge, four)', prix:150, cout_achat:40, unite:'forfait', categorie:'Installation' },
+    { nom:'Pose radiateur électrique à inertie', prix:320, cout_achat:140, unite:'u', categorie:'Installation' },
     { nom:'Pose VMC simple flux', prix:480, cout_achat:180, unite:'forfait', categorie:'Installation' },
     { nom:'Pose luminaire fourni par le client', prix:60, cout_achat:8, unite:'u', categorie:'Installation' },
-    { nom:'Saignee + rebouchage', prix:28, cout_achat:6, unite:'ml', categorie:'Raccordement' },
+    { nom:'Pose spot LED encastré', prix:55, cout_achat:15, unite:'u', categorie:'Installation' },
+    { nom:'Pose détecteur de fumée', prix:45, cout_achat:15, unite:'u', categorie:'Installation' },
+    { nom:'Pose sonnette / carillon', prix:110, cout_achat:35, unite:'u', categorie:'Installation' },
+    { nom:'Pose borne de recharge véhicule électrique 7 kW', prix:1350, cout_achat:750, unite:'forfait', categorie:'Installation' },
+    { nom:'Saignée + rebouchage', prix:28, cout_achat:6, unite:'ml', categorie:'Raccordement' },
     { nom:'Passage gaine ICTA', prix:12, cout_achat:4, unite:'ml', categorie:'Raccordement' },
-    { nom:'Mise a la terre installation', prix:350, cout_achat:90, unite:'forfait', categorie:'Raccordement' },
-    { nom:'Remplacement interrupteur differentiel 30mA', prix:190, cout_achat:70, unite:'u', categorie:'Maintenance' },
-    { nom:'Diagnostic panne electrique', prix:90, cout_achat:10, unite:'forfait', categorie:'Maintenance' }
+    { nom:'Tirage de câble sous goulotte', prix:14, cout_achat:4, unite:'ml', categorie:'Raccordement' },
+    { nom:'Mise à la terre installation', prix:350, cout_achat:90, unite:'forfait', categorie:'Raccordement' },
+    { nom:'Remplacement interrupteur différentiel 30mA', prix:190, cout_achat:70, unite:'u', categorie:'Maintenance' },
+    { nom:'Diagnostic panne électrique', prix:90, cout_achat:10, unite:'forfait', categorie:'Maintenance' }
   ],
   'Maconnerie': [
     { nom:'Ouverture mur porteur + pose IPN', prix:2800, cout_achat:900, unite:'forfait', categorie:'Installation' },
     { nom:'Cloison placo BA13 sur rails', prix:48, cout_achat:18, unite:'m2', categorie:'Installation' },
+    { nom:'Faux plafond BA13 sur ossature', prix:55, cout_achat:20, unite:'m2', categorie:'Installation' },
+    { nom:'Doublage isolant collé', prix:42, cout_achat:16, unite:'m2', categorie:'Installation' },
     { nom:'Montage mur parpaing 20 cm', prix:75, cout_achat:28, unite:'m2', categorie:'Installation' },
-    { nom:'Dalle beton 12 cm', prix:95, cout_achat:35, unite:'m2', categorie:'Installation' },
+    { nom:'Dalle béton 12 cm', prix:95, cout_achat:35, unite:'m2', categorie:'Installation' },
+    { nom:'Terrasse béton désactivé', prix:110, cout_achat:45, unite:'m2', categorie:'Installation' },
+    { nom:'Fondation semelle filante', prix:140, cout_achat:55, unite:'ml', categorie:'Installation' },
     { nom:'Chape de ravoirage', prix:32, cout_achat:12, unite:'m2', categorie:'Installation' },
+    { nom:'Ragréage sol', prix:18, cout_achat:6, unite:'m2', categorie:'Installation' },
     { nom:'Pose carrelage sol 60x60', prix:55, cout_achat:18, unite:'m2', categorie:'Installation' },
-    { nom:'Pose faience murale', prix:60, cout_achat:20, unite:'m2', categorie:'Installation' },
-    { nom:'Enduit facade monocouche', prix:45, cout_achat:15, unite:'m2', categorie:'Installation' },
-    { nom:'Seuil beton', prix:180, cout_achat:45, unite:'ml', categorie:'Installation' },
+    { nom:'Pose faïence murale', prix:60, cout_achat:20, unite:'m2', categorie:'Installation' },
+    { nom:'Pose plinthes carrelage', prix:14, cout_achat:5, unite:'ml', categorie:'Installation' },
+    { nom:'Enduit façade monocouche', prix:45, cout_achat:15, unite:'m2', categorie:'Installation' },
+    { nom:'Seuil béton', prix:180, cout_achat:45, unite:'ml', categorie:'Installation' },
     { nom:'Percement + pose linteau', prix:850, cout_achat:280, unite:'forfait', categorie:'Installation' },
-    { nom:'Depose carrelage existant', prix:22, cout_achat:4, unite:'m2', categorie:'Depose' },
-    { nom:'Evacuation gravats (big bag)', prix:220, cout_achat:80, unite:'u', categorie:'Depose' }
+    { nom:'Reprise de maçonnerie / rebouchage', prix:120, cout_achat:25, unite:'forfait', categorie:'Installation' },
+    { nom:'Démolition cloison', prix:28, cout_achat:5, unite:'m2', categorie:'Depose' },
+    { nom:'Dépose carrelage existant', prix:22, cout_achat:4, unite:'m2', categorie:'Depose' },
+    { nom:'Évacuation gravats (big bag)', prix:220, cout_achat:80, unite:'u', categorie:'Depose' }
   ],
   'Peinture': [
     { nom:'Peinture murs 2 couches', prix:28, cout_achat:7, unite:'m2', categorie:'Installation' },
     { nom:'Peinture plafond 2 couches', prix:32, cout_achat:8, unite:'m2', categorie:'Installation' },
-    { nom:'Preparation supports (rebouchage, poncage)', prix:12, cout_achat:3, unite:'m2', categorie:'Installation' },
+    { nom:'Sous-couche d’impression', prix:9, cout_achat:3, unite:'m2', categorie:'Installation' },
+    { nom:'Préparation supports (rebouchage, ponçage)', prix:12, cout_achat:3, unite:'m2', categorie:'Installation' },
     { nom:'Enduit de lissage complet', prix:16, cout_achat:4, unite:'m2', categorie:'Installation' },
     { nom:'Pose toile de verre', prix:18, cout_achat:6, unite:'m2', categorie:'Installation' },
-    { nom:'Pose papier peint intisse (fourniture client)', prix:22, cout_achat:5, unite:'m2', categorie:'Installation' },
-    { nom:'Peinture porte interieure (2 faces)', prix:95, cout_achat:15, unite:'u', categorie:'Installation' },
+    { nom:'Pose papier peint intissé (fourniture client)', prix:22, cout_achat:5, unite:'m2', categorie:'Installation' },
+    { nom:'Peinture porte intérieure (2 faces)', prix:95, cout_achat:15, unite:'u', categorie:'Installation' },
+    { nom:'Peinture fenêtre (2 faces)', prix:110, cout_achat:18, unite:'u', categorie:'Installation' },
+    { nom:'Peinture boiseries / plinthes', prix:12, cout_achat:3, unite:'ml', categorie:'Installation' },
     { nom:'Laque radiateur', prix:85, cout_achat:12, unite:'u', categorie:'Installation' },
-    { nom:'Peinture facade pliolite', prix:35, cout_achat:10, unite:'m2', categorie:'Installation' },
-    { nom:'Protection chantier (baches, adhesifs)', prix:80, cout_achat:25, unite:'forfait', categorie:'Autre' }
+    { nom:'Peinture sol garage', prix:26, cout_achat:9, unite:'m2', categorie:'Installation' },
+    { nom:'Peinture façade pliolite', prix:35, cout_achat:10, unite:'m2', categorie:'Installation' },
+    { nom:'Lasure bois extérieur 2 couches', prix:30, cout_achat:9, unite:'m2', categorie:'Installation' },
+    { nom:'Traitement anti-humidité', prix:24, cout_achat:9, unite:'m2', categorie:'Installation' },
+    { nom:'Nettoyage haute pression façade', prix:12, cout_achat:2, unite:'m2', categorie:'Maintenance' },
+    { nom:'Décollage papier peint', prix:10, cout_achat:2, unite:'m2', categorie:'Depose' },
+    { nom:'Protection chantier (bâches, adhésifs)', prix:80, cout_achat:25, unite:'forfait', categorie:'Autre' }
   ],
   'Menuiserie': [
-    { nom:'Pose fenetre PVC double vitrage (hors fourniture)', prix:380, cout_achat:90, unite:'u', categorie:'Installation' },
-    { nom:'Fourniture + pose fenetre PVC 115x100', prix:720, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
-    { nom:'Pose porte interieure complete (bloc-porte)', prix:290, cout_achat:110, unite:'u', categorie:'Installation' },
-    { nom:'Pose porte d entree aluminium', prix:1450, cout_achat:780, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Pose fenêtre PVC double vitrage (hors fourniture)', prix:380, cout_achat:90, unite:'u', categorie:'Installation' },
+    { nom:'Fourniture + pose fenêtre PVC 115x100', prix:720, cout_achat:380, unite:'u', categorie:'Fourniture materiel' },
+    { nom:'Pose porte-fenêtre PVC 2 vantaux (hors fourniture)', prix:480, cout_achat:120, unite:'u', categorie:'Installation' },
+    { nom:'Fourniture + pose baie coulissante aluminium', prix:1900, cout_achat:1150, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Pose fenêtre de toit', prix:650, cout_achat:330, unite:'u', categorie:'Installation' },
+    { nom:'Pose porte intérieure complète (bloc-porte)', prix:290, cout_achat:110, unite:'u', categorie:'Installation' },
+    { nom:'Pose porte d’entrée aluminium', prix:1450, cout_achat:780, unite:'forfait', categorie:'Fourniture materiel' },
+    { nom:'Fourniture + pose porte de garage sectionnelle', prix:1650, cout_achat:950, unite:'forfait', categorie:'Fourniture materiel' },
     { nom:'Pose parquet flottant', prix:32, cout_achat:9, unite:'m2', categorie:'Installation' },
-    { nom:'Pose parquet massif colle', prix:58, cout_achat:18, unite:'m2', categorie:'Installation' },
+    { nom:'Pose parquet massif collé', prix:58, cout_achat:18, unite:'m2', categorie:'Installation' },
     { nom:'Pose plinthes', prix:12, cout_achat:4, unite:'ml', categorie:'Installation' },
-    { nom:'Pose volet roulant electrique', prix:520, cout_achat:260, unite:'u', categorie:'Installation' },
+    { nom:'Pose terrasse bois', prix:95, cout_achat:45, unite:'m2', categorie:'Installation' },
+    { nom:'Pose volet roulant électrique', prix:520, cout_achat:260, unite:'u', categorie:'Installation' },
     { nom:'Pose placard / dressing sur mesure', prix:850, cout_achat:320, unite:'forfait', categorie:'Installation' },
-    { nom:'Ajustement / reglage menuiserie', prix:75, cout_achat:5, unite:'u', categorie:'Maintenance' }
+    { nom:'Pose plan de travail cuisine', prix:95, cout_achat:30, unite:'ml', categorie:'Installation' },
+    { nom:'Pose escalier bois', prix:1200, cout_achat:300, unite:'forfait', categorie:'Installation' },
+    { nom:'Dépose menuiserie existante', prix:70, cout_achat:8, unite:'u', categorie:'Depose' },
+    { nom:'Ajustement / réglage menuiserie', prix:75, cout_achat:5, unite:'u', categorie:'Maintenance' }
   ],
   'Multi-metiers': []
 };
@@ -1003,6 +1099,7 @@ var state = {
   compteur: { annee: new Date().getFullYear(), n: 0 },
   profil: null,
   user: null,
+  genNotice: '',
   sync: syncParDefaut(),
   _ht: 0, _tva: 0, _ttc: 0, _marge: null
 };
@@ -1132,6 +1229,56 @@ function clonerDefaut(metier) {
 }
 
 // ═══════════════════════════════ CATALOGUE ACTIF (par métier) ═══════════════════════════════
+// ── Libellés d'affichage (les clés enregistrées restent sans accent pour ne rien casser) ──
+var METIER_LABELS = { 'Electricite': 'Électricité', 'Maconnerie': 'Maçonnerie', 'Multi-metiers': 'Multi-métiers' };
+function metierLabel(m) { return METIER_LABELS[m] || m || ''; }
+function bucketLabel(m) { return m === 'Multi-metiers' ? 'Commun à tous les métiers' : metierLabel(m); }
+var CATEGORIE_LABELS = { 'Fourniture materiel': 'Fourniture matériel', 'Depose': 'Dépose', 'Etude': 'Étude', 'Maconnerie': 'Maçonnerie', 'Electricite': 'Électricité' };
+function categorieLabel(c) { return CATEGORIE_LABELS[c] || c || 'Autre'; }
+var UNITE_LABELS = { 'm2': 'm²', 'm3': 'm³' };
+function uniteLabel(u) { return UNITE_LABELS[u] || u || ''; }
+function fmtPrix(n) { return (Number(n) || 0).toLocaleString('fr-FR', { maximumFractionDigits: 2 }); }
+function estMulti() { return !!(state.profil && state.profil.metier === 'Multi-metiers'); }
+// Comparaison de textes sans accents, casse ni ponctuation
+function normTexte(s) {
+  return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+}
+function dansCatalogue(nom) {
+  var n = normTexte(nom);
+  return catalogueComplet().some(function(e){ return normTexte(e.item.nom) === n; });
+}
+
+// Les prestations types d'origine étaient écrites sans accents : on rétablit l'orthographe
+// des noms restés tels quels (un nom modifié par l'artisan n'est jamais touché).
+function accentuerCatalogue() {
+  var change = false;
+  for (var m in state.catalogues) {
+    var ref = {};
+    (CATALOGUES_DEFAUT[m] || []).forEach(function(c){ ref[normTexte(c.nom)] = c.nom; });
+    (state.catalogues[m] || []).forEach(function(it){
+      var bon = ref[normTexte(it.nom)];
+      if (bon && bon !== it.nom && !/[^\x00-\x7F]/.test(it.nom)) { it.nom = bon; change = true; }
+    });
+  }
+  if (change) ecrireLocal();
+  return change;
+}
+
+// Le serveur accepte 200 prestations : au-delà, on envoie les plus proches de la dictée
+function selectionnerPourIA(entries, texte, max) {
+  if (entries.length <= max) return entries;
+  var mots = {};
+  normTexte(texte).split(' ').forEach(function(w){ if (w.length >= 3) mots[w] = 1; });
+  var notes = entries.map(function(e, i){
+    var s = 0;
+    normTexte(e.item.nom).split(' ').forEach(function(w){ if (w.length >= 3 && mots[w]) s++; });
+    return { e: e, s: s, i: i };
+  });
+  notes.sort(function(a, b){ return (b.s - a.s) || (a.i - b.i); });
+  return notes.slice(0, max).map(function(x){ return x.e; });
+}
+
 function bucketActif() {
   return state.profil && state.profil.metier === 'Multi-metiers' ? 'Multi-metiers' : (state.profil ? state.profil.metier : 'Climatisation');
 }
@@ -1147,7 +1294,43 @@ function catalogueActif() {
   var b = bucketActif();
   return (state.catalogues[b] || []).map(function(c){ return { item:c, metier:b }; });
 }
+// Tout le catalogue, dans l'ordre de priorité : les prestations du métier choisi, puis celles des
+// autres métiers. Un métier jamais ouvert est servi par ses prestations types, sans rien enregistrer.
+var RE_TYPE = /^type:([^:]+):(\d+)$/;
+function catalogueComplet() {
+  if (estMulti()) return catalogueActif().map(function(e){ return { item: e.item, metier: e.metier, propre: true }; });
+  var b = bucketActif(), out = [];
+  (state.catalogues[b] || []).forEach(function(c){ out.push({ item: c, metier: b, propre: true }); });
+  METIERS.forEach(function(m){
+    if (m === b) return;
+    if (state.catalogues[m]) {
+      state.catalogues[m].forEach(function(c){ out.push({ item: c, metier: m, propre: false }); });
+    } else {
+      (CATALOGUES_DEFAUT[m] || []).forEach(function(c, i){
+        out.push({ item: { id: 'type:' + m + ':' + i, nom: c.nom, prix: c.prix, cout_achat: c.cout_achat, unite: c.unite, categorie: c.categorie }, metier: m, propre: false });
+      });
+    }
+  });
+  return out;
+}
+// Modifier ou supprimer une prestation type d'un autre métier : ce métier est d'abord copié dans le catalogue
+function materialiserPrestation(id) {
+  var mt = RE_TYPE.exec(String(id));
+  if (!mt) return id;
+  var m = mt[1], d = (CATALOGUES_DEFAUT[m] || [])[parseInt(mt[2], 10)];
+  if (!d) return null;
+  if (!state.catalogues[m]) { state.catalogues[m] = clonerDefaut(m); sauvegarderDonnees(); }
+  var n = normTexte(d.nom), trouve = null;
+  state.catalogues[m].forEach(function(it){ if (!trouve && normTexte(it.nom) === n) trouve = it.id; });
+  return trouve;
+}
 function trouverPrestation(id) {
+  var mt = RE_TYPE.exec(String(id));
+  if (mt) {
+    var d = (CATALOGUES_DEFAUT[mt[1]] || [])[parseInt(mt[2], 10)];
+    if (!d || state.catalogues[mt[1]]) return null;
+    return { item: { id: id, nom: d.nom, prix: d.prix, cout_achat: d.cout_achat, unite: d.unite, categorie: d.categorie }, metier: mt[1], index: parseInt(mt[2], 10), type: true };
+  }
   for (var m in state.catalogues) {
     var arr = state.catalogues[m];
     for (var i=0; i<arr.length; i++) {
@@ -1218,31 +1401,95 @@ function resetFilter() {
 
 // Ouvrir un devis existant depuis la liste (par id, plus jamais "le dernier")
 function viewDevis(id) {
+  state.genNotice = '';
   var d = null;
   for (var i=0; i<state.devisList.length; i++) { if (state.devisList[i].id === id) { d = state.devisList[i]; break; } }
   if (!d) return;
   state.currentDevisId = d.id;
   state.currentNum = d.num;
   state.client = d.clientInfo || { prenom: d.client, nom:'', adresse:'', email:'', tel:'' };
-  state.lignes = (d.lignes || []).map(function(l){ return { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; });
+  state.lignes = (d.lignes || []).map(function(l){ var o = { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; if (l.estime) o.estime = true; if (l.horsCat) o.horsCat = true; return o; });
   state.descGlobale = d.desc || '';
   state.transcription = d.transcription || '';
   buildDevisScreen(d.statut);
 }
 
 // ═══════════════════════════════ NOUVEAU DEVIS ═══════════════════════════════
-function nouveauDevis() {
-  ['client-prenom','client-nom','client-adresse','client-email','client-tel'].forEach(function(f){
-    document.getElementById(f).value = '';
-  });
-  goTo('screen-new-client');
-}
 
 // ═══════════════════════════════ VOCAL ═══════════════════════════════
 var isRec = false, timerInt = null, elapsed = 0, waveInt = null;
 var recognition = null;
 var fullTranscript = '';
+var interimTxt = '';          // texte en cours de reconnaissance, pas encore définitif
 var manualMode = false;
+var vocalMode = 'nouveau';    // 'nouveau' = nouveau devis, 'ajout' = complément d'un devis ouvert
+var recErreurs = 0, wakeLock = null, lastActivite = 0, vocalInstalle = false;
+var TRANSCRIPT_MAX = 4000;    // même plafond que le serveur
+var LS_DICTEE = 'devizy_v2_dictee';
+
+// Exemple de dictée adapté au métier actif (les mots collent au catalogue de départ)
+var EXEMPLES_DICTEE = {
+  'Climatisation': 'Pose d’un climatiseur monosplit, 5 mètres de liaison frigorifique et mise en service.',
+  'Plomberie': 'Remplacement d’un WC complet au sol, pose d’un meuble vasque et remplacement de 2 mitigeurs lavabo.',
+  'Electricite': 'Remplacement du tableau complet 13 modules, pose de 6 prises 16 ampères et de 4 points lumineux.',
+  'Maconnerie': 'Cloison placo sur 12 mètres carrés, pose de carrelage au sol sur 20 mètres carrés et évacuation des gravats.',
+  'Peinture': 'Peinture des murs en 2 couches sur 45 mètres carrés, plafond sur 18 mètres carrés et préparation des supports.',
+  'Menuiserie': 'Pose de 3 fenêtres PVC double vitrage, 2 portes intérieures et 25 mètres carrés de parquet flottant.',
+  'Multi-metiers': 'Pose de 6 prises 16 ampères, peinture des murs sur 30 mètres carrés et remplacement d’un mitigeur lavabo.'
+};
+
+function dicteeSupportee() {
+  return ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
+}
+
+// ── Brouillon de dictée : la dictée survit à un retour arrière, une coupure ou une fermeture ──
+function sauverDictee() {
+  if (vocalMode !== 'nouveau') return;   // un complément dépend d'un devis ouvert : non persistant
+  try {
+    var texte = fullTranscript.trim();
+    if (!texte) { localStorage.removeItem(LS_DICTEE); return; }
+    localStorage.setItem(LS_DICTEE, JSON.stringify({
+      client: state.client, texte: texte, elapsed: elapsed, ts: Date.now()
+    }));
+  } catch(e) { console.error('Sauvegarde de la dictée impossible:', e); }
+}
+function lireDictee() {
+  try {
+    var v = localStorage.getItem(LS_DICTEE);
+    if (!v) return null;
+    var d = JSON.parse(v);
+    return (d && d.texte && d.client) ? d : null;
+  } catch(e) { return null; }
+}
+function effacerDicteeSauvee() {
+  try { localStorage.removeItem(LS_DICTEE); } catch(e) {}
+}
+
+function nouveauDevis() {
+  var d = lireDictee();
+  if (d) {
+    var qui = ((d.client.prenom || '') + ' ' + (d.client.nom || '')).trim() || 'un client';
+    askConfirm('Reprendre la dictée ?',
+      'Une dictée non terminée pour ' + qui + ' est enregistrée sur cet appareil. Vous pouvez la reprendre là où vous l’avez laissée.',
+      'Reprendre', function(){
+        state.client = { prenom: d.client.prenom || '', nom: d.client.nom || '', adresse: d.client.adresse || '', email: d.client.email || '', tel: d.client.tel || '' };
+        state.currentDevisId = null;
+        state.currentNum = '';
+        ouvrirVocal('nouveau', d.texte, d.elapsed || 0);
+      }, false, function(){
+        effacerDicteeSauvee();
+        ouvrirFormulaireClient();
+      });
+    return;
+  }
+  ouvrirFormulaireClient();
+}
+function ouvrirFormulaireClient() {
+  ['client-prenom','client-nom','client-adresse','client-email','client-tel'].forEach(function(f){
+    document.getElementById(f).value = '';
+  });
+  goTo('screen-new-client');
+}
 
 function goToVocal() {
   var prenom = document.getElementById('client-prenom').value.trim();
@@ -1255,29 +1502,57 @@ function goToVocal() {
   state.client.tel = document.getElementById('client-tel').value.trim();
   state.currentDevisId = null; // nouveau devis
   state.currentNum = '';
+  ouvrirVocal('nouveau', '', 0);
+}
+
+// Complément vocal d'un devis déjà ouvert : les nouvelles lignes s'ajoutent aux existantes
+function completerALaVoix() {
+  ouvrirVocal('ajout', '', 0);
+}
+
+function ouvrirVocal(mode, texte, duree) {
+  vocalMode = mode;
+  var prenom = state.client.prenom || '', nom = state.client.nom || '';
   var initials = ((prenom[0]||'') + (nom[0]||'')) || '?';
   document.getElementById('v-avatar').textContent = initials.toUpperCase();
-  document.getElementById('v-name').textContent = (prenom + ' ' + nom).trim();
-  document.getElementById('v-addr').textContent = state.client.adresse || 'Adresse non renseign\u00E9e';
-  fullTranscript = '';
-  state.transcription = '';
+  document.getElementById('v-name').textContent = (prenom + ' ' + nom).trim() || 'Client';
+  document.getElementById('v-addr').textContent = state.client.adresse || 'Adresse non renseignée';
+  document.getElementById('vocal-title').textContent = mode === 'ajout' ? 'Compléter le devis' : 'Devis vocal';
+  document.getElementById('gen-btn-label').textContent = mode === 'ajout' ? 'Ajouter au devis' : 'Générer le devis avec l’IA';
+  fullTranscript = texte || '';
+  interimTxt = '';
+  if (mode === 'nouveau') state.transcription = fullTranscript.trim();
   manualMode = false;
-  elapsed = 0;
-  document.getElementById('timer').textContent = '0:00';
+  elapsed = duree || 0;
+  recErreurs = 0;
+  majTimer();
   document.getElementById('transcript-text').style.display = 'block';
   document.getElementById('transcript-textarea').style.display = 'none';
   document.getElementById('transcript-textarea').value = '';
-  document.getElementById('transcript-text').innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription appara\u00EEtra ici...</span>';
-  document.getElementById('gen-btn').disabled = true;
-  document.getElementById('vocal-state').textContent = 'Appuyez pour dicter votre devis';
-  document.getElementById('vocal-hint').innerHTML = 'D\u00E9crivez les travaux, les mat\u00E9riaux<br>et les quantit\u00E9s \u00E0 voix haute';
+  document.getElementById('vocal-state').textContent = fullTranscript
+    ? 'Dictée reprise : appuyez pour continuer'
+    : (mode === 'ajout' ? 'Appuyez pour dicter les travaux à ajouter' : 'Appuyez pour dicter votre devis');
+  document.getElementById('vocal-hint').innerHTML = 'Décrivez les travaux, les matériaux<br>et les quantités à voix haute';
+  var metier = state.profil ? state.profil.metier : '';
+  document.getElementById('vocal-exemple').textContent = 'Exemple : « ' + (EXEMPLES_DICTEE[metier] || EXEMPLES_DICTEE['Multi-metiers']) + ' »';
   resetMicBtn();
+  afficherTranscript();
   goTo('screen-vocal');
+  if (!dicteeSupportee()) {
+    // Navigateur sans reconnaissance vocale : on ouvre directement la saisie, sans faire appuyer pour rien
+    passerEnSaisie('Dictée indisponible sur ce navigateur',
+      'Saisissez le texte ci-dessous. Astuce : la touche micro de votre clavier permet de dicter dans ce champ.');
+  }
 }
 
 function quitterVocal() {
   if (isRec) stopRec();
   goBack();
+}
+
+function majTimer() {
+  var m = Math.floor(elapsed/60), s = elapsed%60;
+  document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
 }
 
 function resetMicBtn() {
@@ -1299,89 +1574,202 @@ function killRecognition() {
   }
 }
 
+// Écran allumé pendant la dictée (sinon le téléphone se verrouille et coupe le micro)
+function demanderWakeLock() {
+  try {
+    if (navigator.wakeLock && navigator.wakeLock.request) {
+      navigator.wakeLock.request('screen').then(function(w){ wakeLock = w; }).catch(function(){});
+    }
+  } catch(e) {}
+}
+function libererWakeLock() {
+  try { if (wakeLock && wakeLock.release) wakeLock.release(); } catch(e) {}
+  wakeLock = null;
+}
+
+// Unités dictées en toutes lettres → notation devis
+function normaliserDictee(t) {
+  return String(t)
+    .replace(/(^|[^a-zà-ÿ])m[eè]tres?\s+carr[ée]s?(?![a-zà-ÿ])/gi, '$1m²')
+    .replace(/(^|[^a-zà-ÿ])m[eè]tres?\s+cubes?(?![a-zà-ÿ])/gi, '$1m³')
+    .replace(/(^|[^a-zà-ÿ])m[eè]tres?\s+lin[ée]aires?(?![a-zà-ÿ])/gi, '$1ml')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Ajoute un segment reconnu à la dictée. Renvoie false si le plafond est atteint.
+function ajouterSegment(t) {
+  t = normaliserDictee(t || '');
+  if (!t) return true;
+  var actuel = fullTranscript.trim();
+  // Certains Android renvoient deux fois le même segment : on ignore la répétition exacte
+  if (t.split(' ').length >= 3 && actuel.toLowerCase().slice(-t.length) === t.toLowerCase()) return true;
+  var suite = actuel ? actuel + ' ' + t : t;
+  if (suite.length > TRANSCRIPT_MAX) {
+    fullTranscript = suite.slice(0, TRANSCRIPT_MAX);
+    return false;
+  }
+  fullTranscript = suite + ' ';
+  return true;
+}
+
+function afficherTranscript() {
+  var el = document.getElementById('transcript-text');
+  var texte = fullTranscript.trim();
+  if (!texte && !interimTxt) {
+    el.innerHTML = '<span style="color:var(--text-light);font-style:italic;">La transcription apparaîtra ici...</span>';
+  } else {
+    el.innerHTML = esc(texte) + (interimTxt ? ' <span style="color:var(--text-light);">' + esc(interimTxt) + '</span>' : '') +
+      (isRec ? '<span class="cursor"></span>' : '');
+  }
+  majGenBtn();
+}
+
+function passerEnSaisie(etat, conseil) {
+  if (etat) document.getElementById('vocal-state').textContent = etat;
+  if (conseil) document.getElementById('vocal-hint').textContent = conseil;
+  toggleEditTranscript(true);
+}
+
 function startRec() {
+  if (!dicteeSupportee()) {
+    passerEnSaisie('Dictée indisponible sur ce navigateur', 'Saisissez le texte ci-dessous, ou utilisez la touche micro de votre clavier.');
+    return;
+  }
+  if (navigator.onLine === false) {
+    passerEnSaisie('Pas de connexion', 'La dictée vocale a besoin d’internet. Saisissez le texte, il est conservé sur cet appareil.');
+    return;
+  }
+  if (fullTranscript.trim().length >= TRANSCRIPT_MAX) { showToast('Dictée complète : générez le devis'); return; }
   isRec = true;
   manualMode = false;
+  recErreurs = 0;
+  interimTxt = '';
   document.getElementById('transcript-text').style.display = 'block';
   document.getElementById('transcript-textarea').style.display = 'none';
   var btn = document.getElementById('mic-btn');
   btn.classList.add('recording');
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
-  document.getElementById('vocal-state').textContent = 'Enregistrement en cours...';
-  document.getElementById('vocal-hint').textContent = 'Appuyez de nouveau pour arr\u00EAter';
-  elapsed = 0;
-  timerInt = setInterval(function(){
-    elapsed++;
-    var m = Math.floor(elapsed/60), s = elapsed%60;
-    document.getElementById('timer').textContent = m+':'+(s<10?'0':'')+s;
-  }, 1000);
+  document.getElementById('vocal-state').textContent = 'Je vous écoute...';
+  document.getElementById('vocal-hint').textContent = 'Appuyez de nouveau pour mettre en pause';
+  // Le chrono est cumulé : une pause ne remet pas la dictée à zéro
+  clearInterval(timerInt);
+  timerInt = setInterval(function(){ elapsed++; majTimer(); }, 1000);
+  clearInterval(waveInt);
   waveInt = setInterval(animWave, 130);
+  demanderWakeLock();
+  afficherTranscript();
+  lancerReco();
+}
 
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    killRecognition();
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang = 'fr-FR';
-    // continuous=false + redémarrage auto : seul mode fiable sur Safari iOS,
-    // fonctionne aussi sur Chrome.
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.onresult = function(e) {
-      var interim = '';
-      for (var i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) fullTranscript += e.results[i][0].transcript + ' ';
-        else interim = e.results[i][0].transcript;
-      }
-      document.getElementById('transcript-text').innerHTML = esc(fullTranscript) + '<span style="color:var(--text-light);">' + esc(interim) + '</span><span class="cursor"></span>';
-      majGenBtn();
-    };
-    recognition.onend = function() {
-      // Redémarrage automatique tant que l'utilisateur n'a pas arrêté
-      if (isRec) {
-        setTimeout(function(){
-          if (isRec && recognition) { try { recognition.start(); } catch(e) {} }
-        }, 150);
-      }
-    };
-    recognition.onerror = function(ev) {
-      if (ev && (ev.error === 'not-allowed' || ev.error === 'service-not-allowed')) {
+function lancerReco() {
+  killRecognition();
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  try { recognition = new SR(); }
+  catch(e) { stopRec(); passerEnSaisie('Dictée indisponible', 'Saisissez le texte ci-dessous.'); return; }
+  recognition.lang = 'fr-FR';
+  // continuous=false + redémarrage auto : seul mode fiable sur Safari iOS, fonctionne aussi sur Chrome.
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+  recognition.onresult = function(e) {
+    var interim = '', plein = false;
+    for (var i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) { if (!ajouterSegment(e.results[i][0].transcript)) plein = true; }
+      else interim += e.results[i][0].transcript;
+    }
+    interimTxt = interim;
+    lastActivite = Date.now();
+    recErreurs = 0;
+    afficherTranscript();
+    sauverDictee();
+    if (plein) {
+      interimTxt = '';
+      stopRec();
+      document.getElementById('vocal-state').textContent = 'Dictée complète';
+      document.getElementById('vocal-hint').textContent = 'Longueur maximale atteinte. Générez le devis, puis complétez-le à la voix si besoin.';
+    }
+  };
+  recognition.onend = function() {
+    if (!isRec) return;
+    // Safari iOS termine parfois une session sans résultat définitif : on garde ce qui a été entendu
+    if (interimTxt) { ajouterSegment(interimTxt); interimTxt = ''; afficherTranscript(); sauverDictee(); }
+    // Redémarrage automatique tant que l'utilisateur n'a pas mis en pause (délai croissant après erreur)
+    var delai = recErreurs ? Math.min(2000, 400 * recErreurs) : 150;
+    setTimeout(function(){
+      if (!isRec || !recognition) return;
+      try { recognition.start(); }
+      catch(e) { lancerReco(); }
+    }, delai);
+  };
+  recognition.onerror = function(ev) {
+    var code = ev && ev.error;
+    if (code === 'not-allowed' || code === 'service-not-allowed') {
+      stopRec();
+      passerEnSaisie('Micro non autorisé', 'Autorisez le micro pour ce site dans les réglages du navigateur, ou saisissez le texte.');
+    } else if (code === 'audio-capture') {
+      stopRec();
+      passerEnSaisie('Aucun micro détecté', 'Vérifiez le micro de l’appareil, ou saisissez le texte.');
+    } else if (code === 'no-speech' || code === 'aborted') {
+      // Silence : la session se termine et redémarre toute seule
+    } else {
+      // Réseau ou service instable : on réessaie, puis on s'arrête proprement sans rien perdre
+      recErreurs++;
+      if (recErreurs >= 3) {
         stopRec();
-        document.getElementById('vocal-state').textContent = 'Micro non autoris\u00E9';
-        document.getElementById('vocal-hint').textContent = 'Autorisez le micro dans les r\u00E9glages, ou saisissez le texte manuellement.';
-        toggleEditTranscript(true);
+        document.getElementById('vocal-state').textContent = 'Dictée interrompue';
+        document.getElementById('vocal-hint').textContent = code === 'network'
+          ? 'Connexion instable. Votre texte est conservé : reprenez la dictée ou complétez au clavier.'
+          : 'La reconnaissance vocale s’est arrêtée. Votre texte est conservé : reprenez ou complétez au clavier.';
       }
-    };
-    try { recognition.start(); } catch(e) {}
-  } else {
-    stopRec();
-    document.getElementById('vocal-state').textContent = 'Dict\u00E9e non disponible sur ce navigateur';
-    showToast('Saisissez le texte manuellement');
-    toggleEditTranscript(true);
-  }
+    }
+  };
+  try { recognition.start(); } catch(e) {}
 }
 
 function stopRec() {
+  // Les derniers mots encore « en cours » au moment de la pause ne doivent pas être perdus
+  if (interimTxt) { ajouterSegment(interimTxt); interimTxt = ''; }
   isRec = false;
   clearInterval(timerInt);
   clearInterval(waveInt);
   killRecognition();
+  libererWakeLock();
   resetMicBtn();
   for (var i=1; i<=12; i++) document.getElementById('wb'+i).style.height = '8px';
-  state.transcription = fullTranscript.trim();
-  if (state.transcription.length > 10) {
-    document.getElementById('vocal-state').textContent = 'Enregistrement termin\u00E9';
-    document.getElementById('vocal-hint').textContent = 'V\u00E9rifiez la transcription puis g\u00E9n\u00E9rez le devis';
+  if (vocalMode === 'nouveau') state.transcription = fullTranscript.trim();
+  if (fullTranscript.trim().length > 10) {
+    document.getElementById('vocal-state').textContent = 'Dictée en pause';
+    document.getElementById('vocal-hint').textContent = 'Relisez le texte, reprenez la dictée ou générez le devis';
   } else {
-    document.getElementById('vocal-state').textContent = 'Aucune transcription capt\u00E9e';
-    document.getElementById('vocal-hint').textContent = 'R\u00E9essayez en parlant plus pr\u00E8s du micro, ou corrigez le texte manuellement.';
+    document.getElementById('vocal-state').textContent = 'Rien n’a été capté';
+    document.getElementById('vocal-hint').textContent = 'Réessayez en parlant plus près du micro, ou saisissez le texte.';
   }
-  majGenBtn();
+  afficherTranscript();
+  sauverDictee();
+}
+
+function effacerDictee() {
+  if (!fullTranscript.trim() && !interimTxt) return;
+  askConfirm('Effacer la dictée ?', 'Le texte dicté sera supprimé et le chrono remis à zéro.', 'Effacer', function(){
+    if (isRec) stopRec();
+    fullTranscript = '';
+    interimTxt = '';
+    elapsed = 0;
+    majTimer();
+    if (vocalMode === 'nouveau') state.transcription = '';
+    document.getElementById('transcript-textarea').value = '';
+    document.getElementById('vocal-state').textContent = 'Appuyez pour dicter';
+    effacerDicteeSauvee();
+    afficherTranscript();
+  }, true);
 }
 
 function toggleEditTranscript(force) {
   var ta = document.getElementById('transcript-textarea');
   var txt = document.getElementById('transcript-text');
   if (force === true || ta.style.display !== 'block') {
+    if (isRec) stopRec();
     ta.value = fullTranscript.trim();
     ta.style.display = 'block';
     txt.style.display = 'none';
@@ -1390,23 +1778,51 @@ function toggleEditTranscript(force) {
   } else {
     ta.style.display = 'none';
     txt.style.display = 'block';
-    txt.innerHTML = esc(fullTranscript.trim()) || '<span style="color:var(--text-light);font-style:italic;">La transcription appara\u00EEtra ici...</span>';
     manualMode = false;
+    afficherTranscript();
   }
+  majGenBtn();
 }
 function onManualTranscript(v) {
-  fullTranscript = v;
-  state.transcription = v.trim();
+  fullTranscript = v.slice(0, TRANSCRIPT_MAX);
+  if (vocalMode === 'nouveau') state.transcription = fullTranscript.trim();
+  sauverDictee();
   majGenBtn();
 }
 function majGenBtn() {
-  var t = manualMode ? document.getElementById('transcript-textarea').value.trim() : fullTranscript.trim();
+  var t = (manualMode ? document.getElementById('transcript-textarea').value : fullTranscript).trim();
   document.getElementById('gen-btn').disabled = !(t && t.length > 10);
+  var meta = document.getElementById('transcript-meta');
+  if (!meta) return;
+  if (!t) { meta.textContent = ''; return; }
+  var mots = t.split(/\s+/).length;
+  var txt = mots + ' mot' + (mots > 1 ? 's' : '');
+  if (t.length > TRANSCRIPT_MAX - 400) txt += ' · ' + t.length + ' / ' + TRANSCRIPT_MAX + ' caractères';
+  var aQuantite = /\d|(^|\s)(un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix)(\s|$)/i.test(t);
+  if (mots >= 4 && !aQuantite) txt += ' · Pensez aux quantités (ex. 6 prises, 12 m²)';
+  meta.textContent = txt;
+}
+
+// La reconnaissance s'arrête quand l'app passe en arrière-plan : on met en pause proprement
+function installerVocal() {
+  if (vocalInstalle) return;
+  vocalInstalle = true;
+  document.addEventListener('visibilitychange', function(){
+    if (document.visibilityState === 'hidden' && isRec) stopRec();
+  });
+  window.addEventListener('offline', function(){
+    if (!isRec) return;
+    stopRec();
+    document.getElementById('vocal-state').textContent = 'Connexion perdue';
+    document.getElementById('vocal-hint').textContent = 'Votre texte est conservé. Reprenez la dictée au retour du réseau, ou complétez au clavier.';
+  });
 }
 
 function animWave() {
+  // Les barres ne bougent franchement que si la voix vient d'être entendue
+  var actif = (Date.now() - lastActivite) < 1500;
   for (var i=1; i<=12; i++) {
-    document.getElementById('wb'+i).style.height = Math.round(6+Math.random()*36)+'px';
+    document.getElementById('wb'+i).style.height = Math.round(actif ? 6 + Math.random()*36 : 6 + Math.random()*5) + 'px';
   }
 }
 
@@ -1415,8 +1831,11 @@ var procSteps = ['Analyse de la transcription...','D\u00E9tection des prestation
 var stepInt = null;
 
 function generateDevis() {
-  state.transcription = (manualMode ? document.getElementById('transcript-textarea').value : fullTranscript).trim();
-  if (!state.transcription || state.transcription.length < 10) { showToast('Transcription trop courte'); return; }
+  if (isRec) stopRec();   // valide les derniers mots et coupe le micro avant l'envoi
+  var texteDicte = (manualMode ? document.getElementById('transcript-textarea').value : fullTranscript).trim().slice(0, TRANSCRIPT_MAX);
+  if (!texteDicte || texteDicte.length < 10) { showToast('Transcription trop courte'); return; }
+  var modeAjout = vocalMode === 'ajout';
+  if (!modeAjout) state.transcription = texteDicte;
   goTo('screen-processing');
   document.getElementById('proc-loading').style.display = 'flex';
   document.getElementById('proc-error').style.display = 'none';
@@ -1427,7 +1846,7 @@ function generateDevis() {
 
   // Catalogue actif envoyé avec des IDs indexés : l'IA référence l'ID,
   // les prix sont relus localement (zéro dérive de prix).
-  var cat = catalogueActif();
+  var cat = selectionnerPourIA(catalogueComplet(), texteDicte, 200);
   var catalogueAPI = cat.map(function(e, i){
     return { ref: i, nom: e.item.nom, prix: e.item.prix, cout_achat: e.item.cout_achat || 0, unite: e.item.unite };
   });
@@ -1436,7 +1855,7 @@ function generateDevis() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      transcription: state.transcription,
+      transcription: texteDicte,
       catalogue: catalogueAPI,
       metier: state.profil ? state.profil.metier : ''
     })
@@ -1458,7 +1877,7 @@ function generateDevis() {
     if (!data || !data.ok || !data.devis || !Array.isArray(data.devis.lignes) || data.devis.lignes.length === 0) {
       throw new Error((data && data.error) || 'R\u00E9ponse invalide');
     }
-    state.lignes = data.devis.lignes.map(function(l){
+    var nouvelles = data.devis.lignes.map(function(l){
       // Si l'IA référence le catalogue, on reprend NOS prix (pas les siens)
       if (l.ref !== null && l.ref !== undefined && catalogueAPI[l.ref]) {
         var c = catalogueAPI[l.ref];
@@ -1469,11 +1888,30 @@ function generateDevis() {
         quantite: numOk(l.quantite, 1),
         unite: String(l.unite || 'forfait'),
         prix_unitaire: numOk(l.prix_unitaire, 0),
-        cout_achat: numOk(l.cout_achat, 0)
+        cout_achat: numOk(l.cout_achat, 0),
+        horsCat: true,
+        estime: true   // prix proposé par l'IA, absent du catalogue : à faire vérifier
       };
     });
-    state.descGlobale = String(data.devis.description_globale || '').substring(0, 120) || state.transcription.substring(0, 80);
-    buildDevisScreen('brouillon');
+    var nomMetier = metierLabel(state.profil ? state.profil.metier : '');
+    var nbPropres = cat.filter(function(e){ return e.propre; }).length;
+    state.genNotice = 'Catalogue utilisé : ' + nomMetier + (nbPropres === cat.length
+      ? ' (' + cat.length + ' prestation' + (cat.length > 1 ? 's' : '') + ').'
+      : ' en priorité (' + nbPropres + '), puis ' + (cat.length - nbPropres) + ' prestations d’autres métiers.');
+    var statutDevis = 'brouillon';
+    if (modeAjout) {
+      // Complément : les lignes dictées s'ajoutent, rien de l'existant n'est remplacé
+      state.lignes = state.lignes.concat(nouvelles);
+      state.transcription = ((state.transcription || '') + ' ' + texteDicte).trim();
+      state.genNotice = nouvelles.length + ' ligne' + (nouvelles.length > 1 ? 's ajout\u00E9es' : ' ajout\u00E9e') + ' \u00E0 la voix. ' + state.genNotice;
+      for (var k = 0; k < state.devisList.length; k++) { if (state.devisList[k].id === state.currentDevisId) { statutDevis = state.devisList[k].statut; break; } }
+      fullTranscript = '';
+    } else {
+      state.lignes = nouvelles;
+      state.descGlobale = String(data.devis.description_globale || '').substring(0, 120) || state.transcription.substring(0, 80);
+      effacerDicteeSauvee();   // la dict\u00E9e a abouti : plus de brouillon \u00E0 reprendre
+    }
+    buildDevisScreen(statutDevis);
   })
   .catch(function(err){
     clearInterval(stepInt);
@@ -1514,6 +1952,8 @@ function buildDevisScreen(statut) {
   }
   renderPrestas();
   updateTotaux();
+  majBandeauEstimes();
+  state.genNotice = '';
   var delWrap = document.getElementById('devis-delete-wrap');
   if (delWrap) delWrap.style.display = state.currentDevisId ? 'block' : 'none';
   goTo('screen-devis');
@@ -1555,14 +1995,43 @@ function renderPrestas() {
       '<div class="pi-top"><span class="pi-name">'+esc(l.libelle)+'</span><span class="pi-remove" onclick="removePresta('+i+')">\u00D7</span></div>' +
       '<div class="pi-detail">' +
       '<input class="pi-input" type="number" value="'+l.quantite+'" min="0.5" step="0.5" inputmode="decimal" onchange="updateQte('+i+',this)">' +
-      '<span class="pi-unit">'+esc(l.unite)+'</span>' +
-      '<span class="pi-price-u">\u00D7 '+l.prix_unitaire+' \u20AC</span>' +
+      '<span class="pi-unit">'+esc(uniteLabel(l.unite))+'</span>' +
+      '<span class="pi-price-u">\u00D7</span>' +
+      '<input class="pi-input" style="width:76px;" type="number" value="'+l.prix_unitaire+'" min="0" step="0.5" inputmode="decimal" onchange="updatePrix('+i+',this)">' +
+      '<span class="pi-price-u">\u20AC</span>' +
       '<span class="pi-total" id="pi-total-'+i+'">'+fmt(total)+'</span>' +
-      '</div></div>';
+      '</div>' +
+      (l.estime ? '<span class="pi-tag estime" onclick="validerPrix('+i+')">Prix estim\u00E9 par l\u2019IA \u00B7 v\u00E9rifier (toucher pour valider)</span>' : '') +
+      (l.horsCat && !dansCatalogue(l.libelle) ? '<span class="pi-tag cat" style="cursor:pointer;margin-left:6px;" onclick="ajouterLigneAuCatalogue('+i+')">+ Ajouter à mon catalogue</span>' : '') +
+      '</div>';
   });
   document.getElementById('presta-list').innerHTML = html || '<div style="padding:14px;text-align:center;color:var(--text-muted);font-size:13px;">Aucune prestation. Ajoutez-en depuis le catalogue.</div>';
 }
 
+function updatePrix(idx, input) {
+  var v = parseFloat(input.value);
+  if (isNaN(v) || v < 0) { input.value = state.lignes[idx].prix_unitaire; return; }
+  state.lignes[idx].prix_unitaire = v;
+  state.lignes[idx].estime = false;   // prix saisi par l'artisan = vérifié
+  renderPrestas();
+  updateTotaux();
+}
+function validerPrix(idx) {
+  if (!state.lignes[idx]) return;
+  state.lignes[idx].estime = false;
+  renderPrestas();
+  majBandeauEstimes();
+}
+function majBandeauEstimes() {
+  var box = document.getElementById('devis-notice');
+  if (!box) return;
+  var nb = state.lignes.filter(function(l){ return l.estime; }).length;
+  if (nb === 0 && !state.genNotice) { box.style.display = 'none'; return; }
+  var txt = state.genNotice || '';
+  if (nb > 0) txt += (txt ? ' ' : '') + nb + ' ligne' + (nb > 1 ? 's' : '') + ' au prix estim\u00E9 par l\u2019IA : v\u00E9rifiez-' + (nb > 1 ? 'les' : 'la') + ' avant d\u2019envoyer le devis.';
+  box.textContent = txt;
+  box.style.display = txt ? 'block' : 'none';
+}
 function updateQte(idx, input) {
   var v = parseFloat(input.value);
   if (isNaN(v) || v <= 0) { input.value = state.lignes[idx].quantite; return; }
@@ -1618,7 +2087,7 @@ function enregistrerDevis(toast) {
   record.client = nomClient;
   record.clientInfo = { prenom:state.client.prenom, nom:state.client.nom, adresse:state.client.adresse, email:state.client.email, tel:state.client.tel };
   record.desc = state.descGlobale || 'Devis';
-  record.lignes = state.lignes.map(function(l){ return { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; });
+  record.lignes = state.lignes.map(function(l){ var o = { libelle:l.libelle, quantite:l.quantite, unite:l.unite, prix_unitaire:l.prix_unitaire, cout_achat:l.cout_achat||0 }; if (l.estime) o.estime = true; if (l.horsCat) o.horsCat = true; return o; });
   record.montant = Math.round(state._ttc || 0);
   record.ht = state._ht || 0;
   record.tvaMontant = state._tva || 0;
@@ -1639,20 +2108,71 @@ function enregistrerDevis(toast) {
 
 // ═══════════════════════════════ SHEET CATALOGUE ═══════════════════════════════
 function openCatalog() {
-  var cat = catalogueActif();
-  var multi = state.profil && state.profil.metier === 'Multi-metiers';
-  document.getElementById('sheet-title').textContent = 'Catalogue ' + (multi ? '(tous m\u00E9tiers)' : '\u2014 ' + (state.profil ? state.profil.metier : ''));
-  var html = '';
-  cat.forEach(function(e){
-    var c = e.item;
-    html += '<div class="cat-item" onclick="addFromCatalog(\''+c.id+'\')">' +
-      '<div><div class="cat-name">'+esc(c.nom)+ (multi ? '<span class="cat-metier-tag">'+esc(e.metier)+'</span>' : '') +'</div><div class="cat-price">'+c.prix+' \u20AC/'+esc(c.unite)+'</div></div>' +
-      '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
-      '</div>';
-  });
-  document.getElementById('catalog-items').innerHTML = html || '<div class="cat-empty">Catalogue vide. Ajoutez vos prestations depuis l\u2019onglet Catalogue.</div>';
+  document.getElementById('sheet-title').textContent = 'Ajouter une prestation';
+  document.getElementById('sheet-search').value = '';
+  document.getElementById('sheet-create').style.display = 'none';
+  document.getElementById('sc-nom').value = '';
+  document.getElementById('sc-prix').value = '';
+  renderSheetItems();
   document.getElementById('sheet-overlay').classList.add('open');
   document.getElementById('catalog-sheet').classList.add('open');
+}
+function renderSheetItems() {
+  var multi = estMulti();
+  var cat = catalogueComplet();
+  var brut = document.getElementById('sheet-search').value.trim();
+  var mots = normTexte(brut).split(' ').filter(function(w){ return w; });
+  var vus = !mots.length ? cat : cat.filter(function(e){
+    var h = normTexte(e.item.nom + ' ' + categorieLabel(e.item.categorie) + ' ' + metierLabel(e.metier));
+    return mots.every(function(w){ return h.indexOf(w) > -1; });
+  });
+  var tri = function(x, y){ return String(x.item.nom).localeCompare(String(y.item.nom), 'fr'); };
+  var propres = vus.filter(function(e){ return e.propre; }).sort(tri);
+  var autres = vus.filter(function(e){ return !e.propre; }).sort(tri);
+  var ligne = function(e, avecMetier) {
+    var c = e.item;
+    return '<div class="cat-item" onclick="addFromCatalog(\'' + esc(c.id) + '\')">' +
+      '<div><div class="cat-name">' + esc(c.nom) + (avecMetier ? '<span class="cat-metier-tag">' + esc(bucketLabel(e.metier)) + '</span>' : '') + '</div>' +
+      '<div class="cat-price">' + fmtPrix(c.prix) + ' €/' + esc(uniteLabel(c.unite)) + '</div></div>' +
+      '<div class="cat-add"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>' +
+      '</div>';
+  };
+  var enCreation = document.getElementById('sheet-create').style.display === 'block';
+  var html = enCreation ? '' : '<div class="sheet-create-link" role="button" onclick="ouvrirCreationRapide()">+ Créer ' + (brut ? '« ' + esc(brut) + ' »' : 'un nouveau produit') + '</div>';
+  if (propres.length) {
+    if (!multi) html += '<div class="sheet-group">' + esc(metierLabel(state.profil ? state.profil.metier : '')) + '</div>';
+    propres.forEach(function(e){ html += ligne(e, multi); });
+  }
+  if (autres.length) {
+    html += '<div class="sheet-group">Autres métiers</div>';
+    autres.forEach(function(e){ html += ligne(e, true); });
+  }
+  if (!vus.length) html += '<div class="cat-empty">' + (brut ? 'Aucune prestation ne correspond à « ' + esc(brut) + ' ».' : 'Catalogue vide.') + '</div>';
+  document.getElementById('catalog-items').innerHTML = html;
+}
+// Création rapide depuis un devis : le produit est enregistré au catalogue et ajouté au devis
+function ouvrirCreationRapide() {
+  var nom = document.getElementById('sheet-search').value.trim().slice(0, 120);
+  document.getElementById('sheet-create').style.display = 'block';
+  document.getElementById('sc-nom').value = nom;
+  renderSheetItems();
+  document.getElementById(nom ? 'sc-prix' : 'sc-nom').focus();
+}
+function creerDepuisDevis() {
+  var nom = document.getElementById('sc-nom').value.trim().slice(0, 120);
+  var prix = parseFloat(document.getElementById('sc-prix').value);
+  if (!nom) { showToast('Entrez un nom'); return; }
+  if (isNaN(prix) || prix <= 0) { showToast('Entrez un prix de vente valide'); return; }
+  var n = normTexte(nom), id = null;
+  catalogueComplet().forEach(function(e){ if (!id && normTexte(e.item.nom) === n) id = e.item.id; });
+  if (!id) {
+    var b = bucketActif();
+    if (!state.catalogues[b]) state.catalogues[b] = [];
+    id = uid();
+    state.catalogues[b].push({ id: id, nom: nom, prix: prix, cout_achat: 0, unite: document.getElementById('sc-unite').value, categorie: 'Autre' });
+    sauvegarderDonnees();
+  }
+  addFromCatalog(id);
 }
 function closeCatalog() {
   document.getElementById('sheet-overlay').classList.remove('open');
@@ -1709,8 +2229,8 @@ function exportPDF() {
   var rate = tvaRate();
   var lignesHTML = state.lignes.map(function(l){
     return '<tr><td style="padding:8px 12px;border-bottom:1px solid #eee;">'+esc(l.libelle)+'</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+l.quantite+' '+esc(l.unite)+'</td>' +
-      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+l.prix_unitaire+' \u20AC</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">'+fmtPrix(l.quantite)+' '+esc(uniteLabel(l.unite))+'</td>' +
+      '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">'+fmtPrix(l.prix_unitaire)+' €</td>' +
       '<td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;font-weight:500;">'+ fmt(l.quantite*l.prix_unitaire)+'</td></tr>';
   }).join('');
   var ht = state._ht||0, tva = state._tva||0, ttc = state._ttc||0;
@@ -1744,7 +2264,7 @@ function exportPDF() {
     '.sig-zone{margin-top:30px;border:2px dashed #9FE1CB;border-radius:12px;padding:26px;text-align:center;color:#0F6E56;}' +
     '</style></head><body>' +
     '<div class="header"><div><div class="brand">'+esc(p.entreprise || 'Devizy')+'</div>' +
-    '<div style="font-size:14px;color:#666;margin-top:4px;">'+esc(((p.prenom||'')+' '+(p.nom||'')).trim())+(p.metier ? ' \u00B7 '+esc(p.metier) : '')+'</div>' +
+    '<div style="font-size:14px;color:#666;margin-top:4px;">'+esc(((p.prenom||'')+' '+(p.nom||'')).trim())+(p.metier ? ' \u00B7 '+esc(metierLabel(p.metier)) : '')+'</div>' +
     (coordonnees.length ? '<div style="font-size:12px;color:#666;margin-top:2px;">'+coordonnees.join(' \u00B7 ')+'</div>' : '') +
     '</div>' +
     '<div class="devis-num"><div>'+esc(state.currentNum)+'</div><div style="font-size:14px;color:#666;margin-top:4px;">'+new Date().toLocaleDateString('fr-FR')+'</div></div></div>' +
@@ -1773,6 +2293,16 @@ function exportPDF() {
 // ═══════════════════════════════ ENVOI ═══════════════════════════════
 function ouvrirEnvoi() {
   if (state.lignes.length === 0) { showToast('Ajoutez au moins une prestation'); return; }
+  var nbEst = state.lignes.filter(function(l){ return l.estime; }).length;
+  if (nbEst > 0) {
+    askConfirm('Prix \u00E0 v\u00E9rifier',
+      nbEst + ' ligne' + (nbEst > 1 ? 's ont' : ' a') + ' un prix estim\u00E9 par l\u2019IA et non v\u00E9rifi\u00E9. Corrigez les montants ou touchez l\u2019\u00E9tiquette orange pour les valider avant d\u2019envoyer.',
+      'Envoyer quand m\u00EAme', function(){ ouvrirEnvoiSuite(); }, false);
+    return;
+  }
+  ouvrirEnvoiSuite();
+}
+function ouvrirEnvoiSuite() {
   var n = ((state.client.prenom||'') + ' ' + (state.client.nom||'')).trim();
   document.getElementById('send-avatar').textContent = (((state.client.prenom||'?')[0]||'?')+((state.client.nom||'')[0]||'')).toUpperCase();
   document.getElementById('send-name').textContent = n;
@@ -1951,115 +2481,365 @@ function refuserDevis(){
 }
 
 // ═══════════════════════════════ ECRAN CATALOGUE ═══════════════════════════════
-function renderCatalogueScreen() {
-  var multi = state.profil && state.profil.metier === 'Multi-metiers';
-  document.getElementById('cat-screen-title').textContent = multi ? 'Catalogue \u2014 tous m\u00E9tiers' : 'Catalogue \u2014 ' + (state.profil ? state.profil.metier : '');
-  var entries = catalogueActif();
-  document.getElementById('cat-count').textContent = entries.length;
-  if (entries.length === 0) {
-    document.getElementById('cat-list-display').innerHTML = '<div class="cat-empty">Aucune prestation pour ce m\u00E9tier.<br>Ajoutez-en ci-dessus ou importez un CSV.</div>';
-    return;
-  }
-  var groups = {};
-  entries.forEach(function(e) {
-    var key = multi ? e.metier : (e.item.categorie || 'Autre');
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(e);
-  });
+var catEditId = null;   // prestation en cours de modification (null = ajout)
+
+var catAutresOuvert = false;   // section « Autres métiers » dépliée
+var catMetierInit = null;      // métier pour lequel le formulaire a été préréglé
+
+function carteCatalogue(e, avecCategorie) {
+  var c = e.item;
+  var marge = (c.cout_achat > 0 && c.prix > 0) ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
+  var mc = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
+  return '<div class="cat-card' + (c.id === catEditId ? ' editing' : '') + '">' +
+    '<div class="cat-card-left">' +
+    '<div class="cat-card-name">' + esc(c.nom) + '</div>' +
+    (avecCategorie ? '<div class="cat-card-cat">' + esc(categorieLabel(c.categorie)) + '</div>' : '') +
+    '<div class="cat-card-prices">' +
+    '<div class="cat-price-item">Vente : <strong>' + fmtPrix(c.prix) + ' €/' + esc(uniteLabel(c.unite)) + '</strong></div>' +
+    (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + fmtPrix(c.cout_achat) + ' €</strong></div>' : '') +
+    (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + mc + '">' + marge + '%</strong></div>' : '') +
+    '</div></div>' +
+    '<div class="cat-actions">' +
+    '<span class="cat-edit" role="button" aria-label="Modifier" onclick="modifierPrestation(\'' + esc(c.id) + '\')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>' +
+    '<span class="cat-delete" role="button" aria-label="Supprimer" onclick="supprimerPrestation(\'' + esc(c.id) + '\')">×</span>' +
+    '</div></div>';
+}
+function groupesCatalogue(entries, cle, avecCategorie) {
+  var groups = {}, ordre = [];
+  entries.forEach(function(e){ var k = cle(e); if (!groups[k]) { groups[k] = []; ordre.push(k); } groups[k].push(e); });
   var html = '';
-  Object.keys(groups).sort().forEach(function(g) {
-    html += '<div class="cat-group-title">' + esc(g) + '</div>';
-    groups[g].forEach(function(e) {
-      var c = e.item;
-      var marge = c.cout_achat > 0 ? Math.round((c.prix - c.cout_achat) / c.prix * 100) : null;
-      var mc = marge !== null ? (marge >= 30 ? '#0F6E56' : marge >= 20 ? '#B45309' : '#DC2626') : '#9CA3AF';
-      html += '<div class="cat-card">' +
-        '<div class="cat-card-left">' +
-        '<div class="cat-card-name">' + esc(c.nom) + (multi ? '' : '') + '</div>' +
-        '<div class="cat-card-prices">' +
-        '<div class="cat-price-item">Vente : <strong>' + c.prix + ' \u20AC/' + esc(c.unite) + '</strong></div>' +
-        (c.cout_achat ? '<div class="cat-price-item">Achat : <strong>' + c.cout_achat + ' \u20AC</strong></div>' : '') +
-        (marge !== null ? '<div class="cat-price-item">Marge : <strong style="color:' + mc + '">' + marge + '%</strong></div>' : '') +
-        '</div></div>' +
-        '<div><span class="cat-delete" onclick="supprimerPrestation(\'' + c.id + '\')">\u00D7</span></div></div>';
-    });
+  ordre.sort(function(a, b){ return a.localeCompare(b, 'fr'); }).forEach(function(g){
+    html += '<div class="cat-group-title">' + esc(g) + ' (' + groups[g].length + ')</div>';
+    groups[g].sort(function(a, b){ return String(a.item.nom).localeCompare(String(b.item.nom), 'fr'); });
+    groups[g].forEach(function(e){ html += carteCatalogue(e, avecCategorie); });
   });
+  return html;
+}
+function toggleAutresMetiers() { catAutresOuvert = !catAutresOuvert; renderCatalogueScreen(); }
+// Recherche sans résultat : le texte cherché devient le nom du nouveau produit
+function creerDepuisRecherche() {
+  var s = document.getElementById('cat-search');
+  if (catEditId) annulerEditionPrestation();
+  document.getElementById('cat-nom').value = s.value.trim().slice(0, 120);
+  s.value = '';
+  renderCatalogueScreen();
+  var sc = document.querySelector('#screen-catalogue .scroll-body');
+  if (sc) sc.scrollTop = 0;
+  document.getElementById('cat-prix-vente').focus();
+}
+
+function renderCatalogueScreen() {
+  var multi = estMulti();
+  var metier = state.profil ? state.profil.metier : '';
+  document.getElementById('cat-screen-title').textContent = multi ? 'Catalogue — tous métiers' : 'Catalogue — ' + metierLabel(metier);
+  document.getElementById('cat-metier-wrap').style.display = 'block';
+  if (catMetierInit !== metier && !catEditId) { choisirOption('cat-metier', bucketActif(), bucketLabel(bucketActif())); catMetierInit = metier; }
+  var ex = (CATALOGUES_DEFAUT[metier] || [])[0];
+  document.getElementById('cat-nom').placeholder = 'Ex : ' + (ex ? ex.nom : 'Pose de 6 prises 16A');
+  var tous = catalogueComplet();
+  var propres = tous.filter(function(e){ return e.propre; }), autres = tous.filter(function(e){ return !e.propre; });
+  var brut = document.getElementById('cat-search').value.trim();
+  var mots = normTexte(brut).split(' ').filter(function(w){ return w; });
+  var garde = function(e) {
+    var h = normTexte(e.item.nom + ' ' + categorieLabel(e.item.categorie) + ' ' + metierLabel(e.metier));
+    return mots.every(function(w){ return h.indexOf(w) > -1; });
+  };
+  var vusP = mots.length ? propres.filter(garde) : propres;
+  var vusA = mots.length ? autres.filter(garde) : autres;
+  document.getElementById('cat-count').textContent = mots.length ? vusP.length + ' sur ' + propres.length : propres.length;
+  var html = '<div id="cat-own">';
+  if (propres.length === 0) {
+    html += '<div class="cat-empty">Aucune prestation dans ce catalogue.<br>Ajoutez-en ci-dessus, importez un CSV ou partez des prestations types.' +
+      '<button class="btn btn-primary" style="display:inline-flex;margin-top:14px;padding:12px 18px;" onclick="ajouterPrestationsTypes()">Charger les prestations types</button></div>';
+  } else if (vusP.length === 0) {
+    html += '<div class="cat-empty">' + (vusA.length ? 'Aucune prestation de votre métier ne correspond à « ' + esc(brut) + ' ». Voir les autres métiers ci-dessous.'
+      : 'Aucune prestation ne correspond à « ' + esc(brut) + ' ».') +
+      '<button class="btn btn-primary" style="display:inline-flex;margin-top:14px;padding:12px 18px;" onclick="creerDepuisRecherche()">Créer « ' + esc(brut) + ' »</button></div>';
+  } else {
+    html += groupesCatalogue(vusP, function(e){ return multi ? bucketLabel(e.metier) : categorieLabel(e.item.categorie); }, multi);
+  }
+  html += '</div>';
+  if (autres.length) {
+    var ouvert = catAutresOuvert || mots.length > 0;
+    html += '<div class="cat-others-head" role="button" onclick="toggleAutresMetiers()"><span>Autres métiers (' +
+      (mots.length ? vusA.length + ' sur ' + autres.length : autres.length) + ')</span><span>' + (ouvert ? '−' : '+') + '</span></div>';
+    if (!ouvert) html += '<div class="cat-others-hint">Aussi disponibles dans vos devis et pour la dictée, après les prestations de votre métier.</div>';
+    else html += '<div id="cat-others">' + groupesCatalogue(vusA, function(e){ return bucketLabel(e.metier); }, true) + '</div>';
+  }
   document.getElementById('cat-list-display').innerHTML = html;
 }
 
+// Sélectionne une valeur dans une liste, en l'ajoutant si elle n'y figure pas (valeur venue d'un import)
+function choisirOption(selectId, valeur, libelle) {
+  var sel = document.getElementById(selectId);
+  for (var i = 0; i < sel.options.length; i++) { if (sel.options[i].value === valeur) { sel.selectedIndex = i; return; } }
+  var o = document.createElement('option');
+  o.value = valeur; o.textContent = libelle || valeur;
+  sel.appendChild(o);
+  sel.selectedIndex = sel.options.length - 1;
+}
+
+function modifierPrestation(id) {
+  id = materialiserPrestation(id);
+  var found = trouverPrestation(id);
+  if (!found) return;
+  var c = found.item;
+  catEditId = id;
+  document.getElementById('cat-nom').value = c.nom;
+  document.getElementById('cat-prix-vente').value = c.prix;
+  document.getElementById('cat-prix-achat').value = c.cout_achat || '';
+  choisirOption('cat-unite', c.unite || 'forfait', uniteLabel(c.unite));
+  choisirOption('cat-categorie', c.categorie || 'Autre', categorieLabel(c.categorie));
+  choisirOption('cat-metier', found.metier, bucketLabel(found.metier));
+  document.getElementById('cat-form-title').textContent = 'Modifier la prestation';
+  document.getElementById('cat-submit').textContent = 'Enregistrer les modifications';
+  document.getElementById('cat-cancel').style.display = 'flex';
+  renderCatalogueScreen();
+  var sc = document.querySelector('#screen-catalogue .scroll-body');
+  if (sc) sc.scrollTop = 0;
+}
+
+function annulerEditionPrestation() {
+  catEditId = null;
+  document.getElementById('cat-nom').value = '';
+  document.getElementById('cat-prix-vente').value = '';
+  document.getElementById('cat-prix-achat').value = '';
+  document.getElementById('cat-form-title').textContent = 'Ajouter une prestation';
+  document.getElementById('cat-submit').textContent = 'Ajouter au catalogue';
+  document.getElementById('cat-cancel').style.display = 'none';
+  choisirOption('cat-metier', bucketActif(), bucketLabel(bucketActif()));
+  renderCatalogueScreen();
+}
+
+// Ajout ou enregistrement d'une modification (même formulaire)
 function ajouterPrestation() {
-  var nom = document.getElementById('cat-nom').value.trim();
+  var nom = document.getElementById('cat-nom').value.trim().slice(0, 120);
   var prix = parseFloat(document.getElementById('cat-prix-vente').value);
   var achat = parseFloat(document.getElementById('cat-prix-achat').value) || 0;
   var unite = document.getElementById('cat-unite').value;
   var categorie = document.getElementById('cat-categorie').value;
   if (!nom) { showToast('Entrez un nom'); return; }
-  if (!prix || prix <= 0) { showToast('Entrez un prix valide'); return; }
-  var b = bucketActif();
-  if (!state.catalogues[b]) state.catalogues[b] = [];
-  state.catalogues[b].push({ id: uid(), nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie });
-  document.getElementById('cat-nom').value = '';
-  document.getElementById('cat-prix-vente').value = '';
-  document.getElementById('cat-prix-achat').value = '';
+  if (isNaN(prix) || prix <= 0) { showToast('Entrez un prix de vente valide'); return; }
+  if (achat < 0) { showToast('Le coût d’achat ne peut pas être négatif'); return; }
+  var b = document.getElementById('cat-metier').value || bucketActif();
+  // Premier ajout dans un autre métier : on garde aussi ses prestations types
+  if (!state.catalogues[b]) state.catalogues[b] = (b === bucketActif()) ? [] : clonerDefaut(b);
+  var n = normTexte(nom);
+  var doublon = state.catalogues[b].some(function(it){ return it.id !== catEditId && normTexte(it.nom) === n; });
+  if (doublon) { showToast('Cette prestation existe déjà dans le catalogue'); return; }
+  var msg;
+  if (catEditId) {
+    var found = trouverPrestation(catEditId);
+    if (!found) { annulerEditionPrestation(); return; }
+    var it = found.item;
+    it.nom = nom; it.prix = prix; it.cout_achat = achat; it.unite = unite; it.categorie = categorie;
+    if (found.metier !== b) {   // changement de métier : la prestation garde son identifiant
+      state.catalogues[found.metier].splice(found.index, 1);
+      state.catalogues[b].push(it);
+    }
+    msg = 'Prestation modifiée';
+  } else {
+    state.catalogues[b].push({ id: uid(), nom: nom, prix: prix, cout_achat: achat, unite: unite, categorie: categorie });
+    msg = nom + ' ajouté';
+  }
   sauvegarderDonnees();
-  renderCatalogueScreen();
-  showToast(nom + ' ajout\u00E9');
+  annulerEditionPrestation();
+  showToast(msg);
 }
 
 function supprimerPrestation(id) {
   var found = trouverPrestation(id);
   if (!found) return;
-  askConfirm('Supprimer la prestation', '\u00AB ' + found.item.nom + ' \u00BB sera supprim\u00E9e du catalogue. Cette action est d\u00E9finitive.', 'Supprimer', function(){
-    state.catalogues[found.metier].splice(found.index, 1);
+  askConfirm('Supprimer la prestation', '« ' + found.item.nom + ' » sera supprimée du catalogue. Les devis déjà créés ne changent pas.', 'Supprimer', function(){
+    var f = trouverPrestation(materialiserPrestation(id));
+    if (!f) return;
+    state.catalogues[f.metier].splice(f.index, 1);
     sauvegarderDonnees();
-    renderCatalogueScreen();
-    showToast('Prestation supprim\u00E9e');
+    if (catEditId === id) annulerEditionPrestation(); else renderCatalogueScreen();
+    showToast('Prestation supprimée');
   }, true);
 }
 
-function telechargerModeleCSV() {
-  var csv = 'nom;prix_vente_ht;cout_achat_ht;unite;categorie\n' +
-    'Pose climatiseur monosplit;950;420;forfait;Installation\n' +
-    'Liaison frigorifique cuivre;28;12;ml;Raccordement\n';
-  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+// Ajoute les prestations types qui manquent, sans toucher aux prestations existantes
+function ajouterPrestationsTypes() {
+  var metiers = estMulti() ? METIERS.filter(function(m){ return m !== 'Multi-metiers'; }) : [bucketActif()];
+  var manquantes = [];
+  metiers.forEach(function(m){
+    var deja = {};
+    (state.catalogues[m] || []).forEach(function(it){ deja[normTexte(it.nom)] = 1; });
+    (CATALOGUES_DEFAUT[m] || []).forEach(function(c){ if (!deja[normTexte(c.nom)]) manquantes.push({ m: m, c: c }); });
+  });
+  if (!manquantes.length) { showToast('Toutes les prestations types sont déjà dans votre catalogue'); return; }
+  var nb = manquantes.length;
+  askConfirm('Ajouter les prestations types',
+    nb + ' prestation' + (nb > 1 ? 's types seront ajoutées' : ' type sera ajoutée') + ' à votre catalogue. Vos prestations actuelles ne changent pas. Les prix sont indicatifs : adaptez-les à vos tarifs.',
+    'Ajouter', function(){
+      manquantes.forEach(function(x){
+        if (!state.catalogues[x.m]) state.catalogues[x.m] = [];
+        state.catalogues[x.m].push({ id: uid(), nom: x.c.nom, prix: x.c.prix, cout_achat: x.c.cout_achat, unite: x.c.unite, categorie: x.c.categorie });
+      });
+      sauvegarderDonnees();
+      renderCatalogueScreen();
+      showToast(nb + ' prestation' + (nb > 1 ? 's ajoutées' : ' ajoutée'));
+    }, false);
+}
+
+// ── CSV ──
+function telechargerFichier(nom, contenu, type) {
+  var blob = new Blob([contenu], { type: type });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'modele-catalogue-devizy.csv';
+  a.download = nom;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  showToast('Mod\u00E8le CSV t\u00E9l\u00E9charg\u00E9');
+}
+function champCSV(v) {
+  var s = String(v == null ? '' : v);
+  return /[";\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+var CSV_ENTETE = 'nom;prix_vente_ht;cout_achat_ht;unite;categorie;metier';
+function ligneCSV(c, metier) {
+  return [c.nom, String(c.prix).replace('.', ','), String(c.cout_achat || 0).replace('.', ','), uniteLabel(c.unite), categorieLabel(c.categorie), metierLabel(metier)].map(champCSV).join(';');
+}
+function telechargerModeleCSV() {
+  var metier = estMulti() ? 'Climatisation' : bucketActif();
+  var ex = (CATALOGUES_DEFAUT[metier] || CATALOGUES_DEFAUT['Climatisation']).slice(0, 2);
+  var csv = CSV_ENTETE + '\n' + ex.map(function(c){ return ligneCSV(c, metier); }).join('\n') + '\n';
+  telechargerFichier('modele-catalogue-devizy.csv', '\uFEFF' + csv, 'text/csv;charset=utf-8');
+  showToast('Modèle CSV téléchargé');
+}
+function exporterCatalogueCSV() {
+  var entries = catalogueActif();
+  if (!entries.length) { showToast('Catalogue vide : rien à exporter'); return; }
+  var csv = CSV_ENTETE + '\n' + entries.map(function(e){ return ligneCSV(e.item, e.metier); }).join('\n') + '\n';
+  var suffixe = estMulti() ? 'tous-metiers' : normTexte(bucketActif()).replace(/ /g, '-');
+  telechargerFichier('catalogue-devizy-' + suffixe + '.csv', '\uFEFF' + csv, 'text/csv;charset=utf-8');
+  showToast(entries.length + ' prestation' + (entries.length > 1 ? 's exportées' : ' exportée'));
+}
+
+// Lecture d'un CSV : séparateur ; , ou tabulation, guillemets, retours à la ligne dans un champ
+function parserCSV(texte) {
+  texte = String(texte || '').replace(/^\uFEFF/, '');
+  var premiere = texte.split(/\r?\n/)[0] || '';
+  var sep = ';', max = premiere.split(';').length;
+  [',', '\t'].forEach(function(s){ var n = premiere.split(s).length; if (n > max) { max = n; sep = s; } });
+  var rows = [], row = [], champ = '', q = false;
+  for (var i = 0; i < texte.length; i++) {
+    var ch = texte[i];
+    if (q) {
+      if (ch === '"') { if (texte[i + 1] === '"') { champ += '"'; i++; } else q = false; }
+      else champ += ch;
+    }
+    else if (ch === '"' && champ === '') q = true;
+    else if (ch === sep) { row.push(champ); champ = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && texte[i + 1] === '\n') i++;
+      row.push(champ); champ = '';
+      if (row.some(function(c){ return c.trim() !== ''; })) rows.push(row);
+      row = [];
+    }
+    else champ += ch;
+  }
+  row.push(champ);
+  if (row.some(function(c){ return c.trim() !== ''; })) rows.push(row);
+  return rows;
+}
+function nombreCSV(v) {
+  var s = String(v == null ? '' : v).replace(/[\s\u00A0\u202F€]/g, '');
+  if (s.indexOf(',') > -1 && s.indexOf('.') > -1) s = s.replace(/\./g, '');   // 1.250,50
+  return parseFloat(s.replace(',', '.'));
+}
+var UNITES_CSV = { 'm2': 'm2', 'm²': 'm2', 'metre carre': 'm2', 'm3': 'm3', 'm³': 'm3', 'unite': 'u', 'u': 'u', 'piece': 'u', 'pce': 'u',
+  'h': 'heure', 'heure': 'heure', 'heures': 'heure', 'ml': 'ml', 'metre lineaire': 'ml', 'forfait': 'forfait', 'ft': 'forfait', 'point': 'point', 'jour': 'jour', 'lot': 'lot', 'kg': 'kg' };
+function uniteDepuisCSV(v) {
+  var brut = String(v || '').trim();
+  if (!brut) return 'forfait';
+  return UNITES_CSV[brut.toLowerCase()] || UNITES_CSV[normTexte(brut)] || brut.slice(0, 12);
+}
+function categorieDepuisCSV(v) {
+  var brut = String(v || '').trim();
+  if (!brut) return 'Autre';
+  var n = normTexte(brut), sel = document.getElementById('cat-categorie');
+  for (var i = 0; i < sel.options.length; i++) {
+    if (normTexte(sel.options[i].value) === n || normTexte(sel.options[i].textContent) === n) return sel.options[i].value;
+  }
+  return brut.slice(0, 40);
+}
+function metierDepuisCSV(v) {
+  var n = normTexte(v);
+  for (var i = 0; i < METIERS.length; i++) {
+    if (n && (normTexte(METIERS[i]) === n || normTexte(metierLabel(METIERS[i])) === n)) return METIERS[i];
+  }
+  return null;
+}
+
+function importerTexteCSV(texte) {
+  var rows = parserCSV(texte);
+  // La première ligne est un en-tête si sa colonne « prix » n'est pas un nombre
+  if (rows.length && isNaN(nombreCSV(rows[0][1]))) rows.shift();
+  var multi = estMulti(), defaut = bucketActif();
+  var ajoutees = 0, doublons = 0, invalides = 0, vus = {};
+  rows.forEach(function(cols){
+    var nom = String(cols[0] || '').trim().slice(0, 120);
+    var prix = nombreCSV(cols[1]);
+    if (!nom || isNaN(prix) || prix <= 0) { invalides++; return; }
+    var achat = nombreCSV(cols[2]);
+    if (isNaN(achat) || achat < 0) achat = 0;
+    // Hors mode multi-métiers, tout va dans le catalogue du métier affiché
+    var b = multi ? (metierDepuisCSV(cols[5]) || defaut) : defaut;
+    if (!state.catalogues[b]) state.catalogues[b] = [];
+    if (!vus[b]) { vus[b] = {}; state.catalogues[b].forEach(function(it){ vus[b][normTexte(it.nom)] = 1; }); }
+    var n = normTexte(nom);
+    if (vus[b][n]) { doublons++; return; }
+    vus[b][n] = 1;
+    state.catalogues[b].push({ id: uid(), nom: nom, prix: prix, cout_achat: achat, unite: uniteDepuisCSV(cols[3]), categorie: categorieDepuisCSV(cols[4]) });
+    ajoutees++;
+  });
+  if (ajoutees) sauvegarderDonnees();
+  renderCatalogueScreen();
+  if (!ajoutees && !doublons && !invalides) { showToast('Aucune prestation trouvée dans ce fichier'); return; }
+  var msg = ajoutees + ' prestation' + (ajoutees > 1 ? 's importées' : ' importée');
+  if (doublons) msg += ' · ' + doublons + ' déjà présente' + (doublons > 1 ? 's' : '');
+  if (invalides) msg += ' · ' + invalides + ' ligne' + (invalides > 1 ? 's ignorées' : ' ignorée') + ' (nom ou prix manquant)';
+  showToast(msg);
 }
 
 function importerCSV(input) {
   var file = input.files[0];
   if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var lines = e.target.result.split('\n');
-    var added = 0;
+  var lire = function(encodage, repli) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var texte = String(e.target.result || '');
+      // Fichier enregistré par Excel en Windows-1252 : les accents sont illisibles en UTF-8
+      if (repli && texte.indexOf('\uFFFD') > -1) { lire('windows-1252', false); return; }
+      input.value = '';
+      importerTexteCSV(texte);
+    };
+    reader.onerror = function() { input.value = ''; showToast('Lecture du fichier impossible'); };
+    reader.readAsText(file, encodage);
+  };
+  lire('UTF-8', true);
+}
+
+// Une ligne de devis absente du catalogue peut y être enregistrée pour les prochains devis
+function ajouterLigneAuCatalogue(idx) {
+  var l = state.lignes[idx];
+  if (!l) return;
+  if (!(l.prix_unitaire > 0)) { showToast('Indiquez d’abord un prix pour cette ligne'); return; }
+  if (!dansCatalogue(l.libelle)) {
     var b = bucketActif();
     if (!state.catalogues[b]) state.catalogues[b] = [];
-    lines.forEach(function(line, i) {
-      if (i === 0) return; // entête
-      var cols = line.split(/[;,]/);
-      if (cols.length < 2) return;
-      var nom = (cols[0]||'').trim().replace(/"/g,'');
-      var prix = parseFloat((cols[1]||'0').replace(',','.'));
-      var achat = parseFloat((cols[2]||'0').replace(',','.')) || 0;
-      var unite = (cols[3]||'forfait').trim().replace(/"/g,'') || 'forfait';
-      var categorie = (cols[4]||'Autre').trim().replace(/"/g,'') || 'Autre';
-      if (nom && prix > 0) {
-        state.catalogues[b].push({ id: uid(), nom:nom, prix:prix, cout_achat:achat, unite:unite, categorie:categorie });
-        added++;
-      }
-    });
+    state.catalogues[b].push({ id: uid(), nom: String(l.libelle).slice(0, 120), prix: l.prix_unitaire, cout_achat: l.cout_achat || 0,
+      unite: String(l.unite || 'forfait').slice(0, 12), categorie: 'Autre' });
     sauvegarderDonnees();
-    renderCatalogueScreen();
-    showToast(added + ' prestation(s) import\u00E9e(s)');
-    input.value = '';
-  };
-  reader.readAsText(file, 'UTF-8');
+    showToast('Ajouté à votre catalogue');
+  }
+  l.horsCat = false;
+  l.estime = false;   // un prix enregistré au catalogue est un prix validé
+  renderPrestas();
+  majBandeauEstimes();
 }
 
 // ═══════════════════════════════ PROFIL ═══════════════════════════════
@@ -2090,7 +2870,7 @@ function ouvrirProfil() {
   var ini = ((p.prenom||'')[0]||'') + ((p.nom||'')[0]||'');
   document.getElementById('profil-avatar-big').textContent = ini.toUpperCase() || '\u2013';
   document.getElementById('profil-name-big').textContent = ((p.prenom||'') + ' ' + (p.nom||'')).trim() || '\u2013';
-  document.getElementById('profil-metier-display').textContent = p.metier || '\u2013';
+  document.getElementById('profil-metier-display').textContent = metierLabel(p.metier) || '\u2013';
 }
 
 function sauvegarderProfil() {
@@ -2122,15 +2902,15 @@ function sauvegarderProfil() {
     var bucketCible = nouveauMetier === 'Multi-metiers' ? null : nouveauMetier;
     var cibleVide = bucketCible !== null && (!state.catalogues[bucketCible] || state.catalogues[bucketCible].length === 0);
     var nbDefaut = bucketCible !== null ? (CATALOGUES_DEFAUT[bucketCible] || []).length : 0;
-    var texte = 'Votre catalogue ' + ancienMetier + ' sera conserv\u00E9 et restera accessible si vous revenez \u00E0 ce m\u00E9tier. ';
+    var texte = 'Votre catalogue ' + metierLabel(ancienMetier) + ' sera conserv\u00E9 et restera accessible si vous revenez \u00E0 ce m\u00E9tier. ';
     if (nouveauMetier === 'Multi-metiers') {
       texte += 'En mode Multi-m\u00E9tiers, vous verrez les prestations de tous vos m\u00E9tiers.';
     } else if (cibleVide) {
-      texte += 'Le catalogue ' + nouveauMetier + ' (' + nbDefaut + ' prestations types) sera charg\u00E9.';
+      texte += 'Le catalogue ' + metierLabel(nouveauMetier) + ' (' + nbDefaut + ' prestations types) sera charg\u00E9.';
     } else {
-      texte += 'Votre catalogue ' + nouveauMetier + ' existant sera r\u00E9activ\u00E9.';
+      texte += 'Votre catalogue ' + metierLabel(nouveauMetier) + ' existant sera r\u00E9activ\u00E9.';
     }
-    askConfirm('Changer de m\u00E9tier ?', texte, 'Basculer vers ' + nouveauMetier, function(){
+    askConfirm('Changer de m\u00E9tier ?', texte, 'Basculer vers ' + metierLabel(nouveauMetier), function(){
       state.profil.metier = nouveauMetier;
       chargerCatalogueDefaut(nouveauMetier);
       appliquer();
@@ -2372,7 +3152,6 @@ function routerDemarrage() {
   if (!state.profil) {
     montrerEcran('screen-onboarding');
   } else {
-    chargerCatalogueDefaut(state.profil.metier);
     appliquerProfil();
     montrerEcran('screen-home');
     renderHome();
@@ -2825,8 +3604,8 @@ async function cycleSync() {
 }
 
 function rafraichirApresSync() {
+  if (accentuerCatalogue()) planifierSync(800);   // noms venus d'un appareil pas encore à jour
   if (state.currentScreen === 'screen-onboarding' && state.profil) {
-    chargerCatalogueDefaut(state.profil.metier);
     appliquerProfil();
     montrerEcran('screen-home');
     renderHome();
@@ -2841,7 +3620,9 @@ document.addEventListener('DOMContentLoaded', function(){
   installerCaptureErreurs();
   chargerDonnees();
   normaliserIds();
+  accentuerCatalogue();
   installerSync();
+  installerVocal();
   demarrerApp();
   // Service Worker = amélioration progressive (hors-ligne). Son absence n'est pas une erreur :
   // dans un aperçu sans backend, /sw.js renvoie 404, l'app fonctionne sans. Échec silencieux.
